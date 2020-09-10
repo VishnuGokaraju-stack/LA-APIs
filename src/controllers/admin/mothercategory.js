@@ -114,22 +114,32 @@ exports.getMC = async (req, res) => {
 
 exports.updateMC = async (req, res) => {
   try {
-    await motherCategory.findByIdAndUpdate(
+    let updateMC = await motherCategory.findByIdAndUpdate(
       { _id: req.mcData._id },
       { $set: req.body },
-      { new: true, useFindAndModify: true },
-      (error, mc) => {
-        if (error) {
-          return res.status(400).json({
-            error: "Mothercategory not updated. Please try again",
-          });
-        }
-        res.json({
-          error: null,
-          data: mc,
-        });
-      }
+      { new: true, useFindAndModify: false }
+      // (error, mc) => {
+      //   if (error) {
+      //     return res.status(400).json({
+      //       error: "Mothercategory not updated. Please try again",
+      //     });
+      //   }
+      //   res.json({
+      //     error: null,
+      //     data: mc,
+      //   });
+      // }
     );
+    if (updateMC) {
+      res.status(201).json({
+        error: null,
+        data: updateMC,
+      });
+    } else {
+      return res.status(400).json({
+        error: "Mothercategory not updated. Please try again",
+      });
+    }
   } catch (error) {
     return res.status(500).json({
       error: error.message,
