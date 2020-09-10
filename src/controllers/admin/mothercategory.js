@@ -22,40 +22,48 @@ exports.insertMC = async (req, res) => {
   try {
     const { mcName } = req.body;
     // check if same mothercategory already exists
-    await motherCategory.findOne({ mcName }, (error, mc) => {
-      if (error) {
-        return res.status(400).json({
-          error: "Something went wrong. Please try again",
-        });
-      }
-      if (mc) {
-        return res.status(400).json({
-          error: "Mothercategory already exists",
-        });
-      }
-    });
+    let duplicateCheck = await motherCategory.findOne({ mcName });
+    if (duplicateCheck) {
+      return res.status(400).json({
+        error: "Mothercategory already exists",
+      });
+    }
+    // await motherCategory.findOne({ mcName }, (error, mc) => {
+    //   console.log("mc : " + mc);
+    //   console.log("error : " + error);
+    //   if (error) {
+    //     return res.status(400).json({
+    //       error: "Something went wrong. Please try again",
+    //     });
+    //   }
+    //   if (mc) {
+    //     return res.status(400).json({
+    //       error: "Mothercategory already exists",
+    //     });
+    //   }
+    // });
     // insert into mothercategory table
     const newMC = new motherCategory({
       mcName: req.body.mcName,
       mcSmallDesc: req.body.mcSmallDesc,
       mcDesc: req.body.mcDesc,
-      minOrderValue: req.body.minOrderValue,
-      deliveryCharge: req.body.deliveryCharge,
-      deliveryDuration: req.body.deliveryDuration,
-      deliveryDurationText: req.body.deliveryDurationText,
-      expressMultiplier: req.body.expressMultiplier,
-      expressDeliveryDuration: req.body.expressDeliveryDuration,
-      expressDeliveryDurationText: req.body.expressDeliveryDurationText,
+      mcMinOrderValue: req.body.mcMinOrderValue,
+      mcDeliveryCharge: req.body.mcDeliveryCharge,
+      mcDeliveryDuration: req.body.mcDeliveryDuration,
+      mcDeliveryDurationText: req.body.mcDeliveryDurationText,
+      mcExpressMultiplier: req.body.mcExpressMultiplier,
+      mcExpressDeliveryDuration: req.body.mcExpressDeliveryDuration,
+      mcExpressDeliveryDurationText: req.body.mcExpressDeliveryDurationText,
       mcImage: req.body.mcImage,
     });
     //console.log(newMC);
     newMC.save((error, mc) => {
       if (error) {
         return res.status(400).json({
-          error: "Not able to insert user in DB - MC",
+          error: "Not able to insert in DB - MC",
         });
       }
-      res.json({
+      res.status(201).json({
         error: null,
         data: {
           message: "Mothercategory added successfully",
