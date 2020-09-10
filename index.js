@@ -43,7 +43,7 @@ app.use("/admin/service", serviceRoutes);
 // api Routes
 
 // Port
-const port = process.env.PORT;
+const port = process.env.PORT || 1338;
 // starting server
 app.listen(port, () => {
   console.log(`Listening to port http://localhost:${port}`);
