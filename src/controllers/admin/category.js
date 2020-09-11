@@ -77,7 +77,7 @@ exports.insertCat = async (req, res) => {
 exports.getAllCat = async (req, res) => {
   try {
     await category.find().exec((error, cat) => {
-      if (error || !category) {
+      if (error || !cat) {
         return res.status(400).json({
           error: "Categories not found",
         });
