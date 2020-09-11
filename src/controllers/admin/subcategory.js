@@ -22,23 +22,29 @@ exports.insertSubcat = async (req, res) => {
   try {
     const { subcatName } = req.body;
     // check if same subcategory already exists
-    await subCategory.findOne({ subcatName }, (error, subcat) => {
-      if (error) {
-        return res.status(400).json({
-          error: "Something went wrong. Please try again",
-        });
-      }
-      if (subcat) {
-        return res.status(400).json({
-          error: "Subcategory already exists",
-        });
-      }
-    });
+    const duplicateCheck = await subCategory.findOne({ subcatName });
+    // await subCategory.findOne({ subcatName }, (error, subcat) => {
+    //   if (error) {
+    //     return res.status(400).json({
+    //       error: "Something went wrong. Please try again",
+    //     });
+    //   }
+    //   if (subcat) {
+    //     return res.status(400).json({
+    //       error: "Subcategory already exists",
+    //     });
+    //   }
+    // });
+    if (duplicateCheck) {
+      return res.status(400).json({
+        error: "Subcategory already exists",
+      });
+    }
     // insert into subcategory table
     const newSubcat = new subCategory({
       subcatName: req.body.subcatName,
       mcId: req.body.mcId,
-      subcatId: req.body.subcatId,
+      catId: req.body.catId,
       subcatSmallDesc: req.body.subcatSmallDesc,
       subcatDesc: req.body.subcatDesc,
       subcatImage: req.body.subcatImage,
@@ -49,7 +55,7 @@ exports.insertSubcat = async (req, res) => {
           error: "Not able to insert user in DB - subcat",
         });
       }
-      res.json({
+      res.status(201).json({
         error: null,
         data: {
           message: "Subcategory added successfully",
@@ -71,7 +77,7 @@ exports.getAllSubcat = async (req, res) => {
           error: "Subcategories not found",
         });
       }
-      res.json({
+      res.status(201).json({
         error: null,
         data: {
           subcat,
@@ -87,7 +93,7 @@ exports.getAllSubcat = async (req, res) => {
 
 exports.getSubcat = async (req, res) => {
   try {
-    return res.json({
+    return res.status(201).json({
       error: null,
       data: req.subcatData,
     });
@@ -100,22 +106,28 @@ exports.getSubcat = async (req, res) => {
 
 exports.updateSubcat = async (req, res) => {
   try {
-    await subCategory.findByIdAndUpdate(
+    let updateSubCat = await subCategory.findByIdAndUpdate(
       { _id: req.subcatData._id },
       { $set: req.body },
-      { new: true, useFindAndModify: true },
-      (error, subcat) => {
-        if (error) {
-          return res.status(400).json({
-            error: "Subcategory not updated. Please try again",
-          });
-        }
-        res.json({
-          error: null,
-          data: subcat,
-        });
-      }
+      { new: true, useFindAndModify: false }
+      // (error, subcat) => {
+      //   if (error) {
+      //     return res.status(400).json({
+      //       error: "Subcategory not updated. Please try again",
+      //     });
+      //   }
+      //   res.json({
+      //     error: null,
+      //     data: subcat,
+      //   });
+      // }
     );
+    if (updateSubCat) {
+      res.status(201).json({
+        error: null,
+        data: updateSubCat,
+      });
+    }
   } catch (error) {
     return res.status(500).json({
       error: error.message,

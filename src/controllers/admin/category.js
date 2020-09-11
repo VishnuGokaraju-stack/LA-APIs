@@ -22,18 +22,24 @@ exports.insertCat = async (req, res) => {
   try {
     const { catName } = req.body;
     // check if same category already exists
-    await category.findOne({ catName }, (error, cat) => {
-      if (error) {
-        return res.status(400).json({
-          error: "Something went wrong. Please try again",
-        });
-      }
-      if (cat) {
-        return res.status(400).json({
-          error: "Category already exists",
-        });
-      }
-    });
+    let validateCheck = await category.findOne({ catName });
+    if (validateCheck) {
+      return res.status(400).json({
+        error: "Category already exists",
+      });
+    }
+    // await category.findOne({ catName }, (error, cat) => {
+    //   if (error) {
+    //     return res.status(400).json({
+    //       error: "Something went wrong. Please try again",
+    //     });
+    //   }
+    //   if (cat) {
+    //     return res.status(400).json({
+    //       error: "Category already exists",
+    //     });
+    //   }
+    // });
     // insert into category table
     const newCat = new category({
       catName: req.body.catName,
@@ -105,22 +111,32 @@ exports.getCat = async (req, res) => {
 
 exports.updateCat = async (req, res) => {
   try {
-    await category.findByIdAndUpdate(
+    let updateCat = await category.findByIdAndUpdate(
       { _id: req.catData._id },
       { $set: req.body },
-      { new: true, useFindAndModify: true },
-      (error, cat) => {
-        if (error) {
-          return res.status(400).json({
-            error: "Category not updated. Please try again",
-          });
-        }
-        res.json({
-          error: null,
-          data: cat,
-        });
-      }
+      { new: true, useFindAndModify: false }
+      // (error, cat) => {
+      //   if (error) {
+      //     return res.status(400).json({
+      //       error: "Category not updated. Please try again",
+      //     });
+      //   }
+      //   res.json({
+      //     error: null,
+      //     data: cat,
+      //   });
+      // }
     );
+    if (updateCat) {
+      res.status(201).json({
+        error: null,
+        data: updateCat,
+      });
+    } else {
+      return res.status(400).json({
+        error: "Category not updated. Please try again",
+      });
+    }
   } catch (error) {
     return res.status(500).json({
       error: error.message,
