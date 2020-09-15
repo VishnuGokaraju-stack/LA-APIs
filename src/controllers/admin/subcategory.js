@@ -44,7 +44,7 @@ exports.insertSubcat = async (req, res) => {
     const newSubcat = new subCategory({
       subcatName: req.body.subcatName,
       mcId: req.body.mcId,
-      catId: req.body.catId,
+      subcatId: req.body.subcatId,
       subcatSmallDesc: req.body.subcatSmallDesc,
       subcatDesc: req.body.subcatDesc,
       subcatImage: req.body.subcatImage,
@@ -77,7 +77,7 @@ exports.getAllSubcat = async (req, res) => {
           error: "Subcategories not found",
         });
       }
-      res.status(201).json({
+      res.json({
         error: null,
         data: {
           subcat,
@@ -93,7 +93,7 @@ exports.getAllSubcat = async (req, res) => {
 
 exports.getSubcat = async (req, res) => {
   try {
-    return res.status(201).json({
+    return res.json({
       error: null,
       data: req.subcatData,
     });
@@ -109,7 +109,7 @@ exports.updateSubcat = async (req, res) => {
     let updateSubCat = await subCategory.findByIdAndUpdate(
       { _id: req.subcatData._id },
       { $set: req.body },
-      { new: true, useFindAndModify: false }
+      { new: true, useFindAndModify: true }
       // (error, subcat) => {
       //   if (error) {
       //     return res.status(400).json({

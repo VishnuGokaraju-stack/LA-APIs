@@ -1,18 +1,9 @@
 const adminlogin = require("../models/authenticationadmin");
-const { check, validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
 // signup
 exports.signup = async (req, res) => {
-  const errors = validationResult(req);
-  //console.log(errors);
-  //console.log(errors.array());
-  if (!errors.isEmpty()) {
-    return res.status(422).json({
-      error: errors.array()[0].msg,
-    });
-  }
   //TODO check if username already exists
   const isUserExist = await adminlogin.findOne({ username: req.body.username });
   if (isUserExist) {
@@ -49,14 +40,6 @@ exports.signup = async (req, res) => {
 
 // signin
 exports.signin = async (req, res) => {
-  const errors = validationResult(req);
-  //console.log(errors);
-  //console.log(errors.array());
-  if (!errors.isEmpty()) {
-    return res.status(422).json({
-      error: errors.array()[0].msg,
-    });
-  }
   const { username, password } = req.body;
   await adminlogin.findOne({ username }, (error, user) => {
     if (error) {

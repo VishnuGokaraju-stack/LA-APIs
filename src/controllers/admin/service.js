@@ -22,24 +22,18 @@ exports.insertService = async (req, res) => {
   try {
     const { serviceName } = req.body;
     // check if same serviceName already exists
-    let validateCheck = await service.findOne({ serviceName });
-    // await service.findOne({ serviceName }, (error, service) => {
-    //   if (error) {
-    //     return res.status(400).json({
-    //       error: "Something went wrong. Please try again",
-    //     });
-    //   }
-    //   if (service) {
-    //     return res.status(400).json({
-    //       error: "Service already exists",
-    //     });
-    //   }
-    // });
-    if (validateCheck) {
-      return res.status(400).json({
-        error: "Service already exists",
-      });
-    }
+    await service.findOne({ serviceName }, (error, service) => {
+      if (error) {
+        return res.status(400).json({
+          error: "Something went wrong. Please try again",
+        });
+      }
+      if (service) {
+        return res.status(400).json({
+          error: "Service already exists",
+        });
+      }
+    });
     // insert into service table
     const newService = new service({
       serviceName: req.body.serviceName,
@@ -58,7 +52,7 @@ exports.insertService = async (req, res) => {
           error: "Not able to insert user in DB - service",
         });
       }
-      res.status(201).json({
+      res.json({
         error: null,
         data: {
           message: "Service added successfully",
@@ -75,12 +69,12 @@ exports.insertService = async (req, res) => {
 exports.getAllService = async (req, res) => {
   try {
     await service.find().exec((error, service) => {
-      if (error || !service) {
+      if (error || !subcat) {
         return res.status(400).json({
           error: "Services not found",
         });
       }
-      res.status(201).json({
+      res.json({
         error: null,
         data: {
           service,
@@ -109,28 +103,22 @@ exports.getService = async (req, res) => {
 
 exports.updateService = async (req, res) => {
   try {
-    let updateService = await service.findByIdAndUpdate(
+    await service.findByIdAndUpdate(
       { _id: req.serviceData._id },
       { $set: req.body },
-      { new: true, useFindAndModify: false }
-      // (error, service) => {
-      //   if (error) {
-      //     return res.status(400).json({
-      //       error: "Service not updated. Please try again",
-      //     });
-      //   }
-      //   res.json({
-      //     error: null,
-      //     data: service,
-      //   });
-      // }
+      { new: true, useFindAndModify: true },
+      (error, service) => {
+        if (error) {
+          return res.status(400).json({
+            error: "Service not updated. Please try again",
+          });
+        }
+        res.json({
+          error: null,
+          data: service,
+        });
+      }
     );
-    if (updateService) {
-      res.status(201).json({
-        error: null,
-        data: updateService,
-      });
-    }
   } catch (error) {
     return res.status(500).json({
       error: error.message,

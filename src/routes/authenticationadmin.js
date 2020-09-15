@@ -1,7 +1,10 @@
 var express = require("express");
 var router = express.Router();
-const { check, validationResult } = require("express-validator");
-
+const {
+  validateSignin,
+  validateSignup,
+  dataValidationResult,
+} = require("../validations/authenticationadmin");
 const {
   signup,
   signin,
@@ -9,36 +12,24 @@ const {
 } = require("../controllers/authenticationadmin");
 
 // signup route
-router.post(
-  "/signup",
-  [
-    check("username")
-      .not()
-      .isEmpty()
-      .isLength({ min: 10 })
-      .withMessage("Please enter a valid user name"),
-    check("password")
-      .isLength({ min: 5 })
-      .withMessage("Please enter a valid password"),
-  ],
-  signup
-);
+router.post("/signup", validateSignup, dataValidationResult, signup);
 
 // signin route
-router.post(
-  "/signin",
-  [
-    check("username")
-      .not()
-      .isEmpty()
-      .isLength({ min: 10 })
-      .withMessage("Please enter a valid user name"),
-    check("password")
-      .isLength({ min: 5 })
-      .withMessage("Please enter a valid password"),
-  ],
-  signin
-);
+// router.post(
+//   "/signin",
+//   [
+//     check("username")
+//       .not()
+//       .isEmpty()
+//       .isLength({ min: 10 })
+//       .withMessage("Please enter a valid user name"),
+//     check("password")
+//       .isLength({ min: 5 })
+//       .withMessage("Please enter a valid password"),
+//   ],
+//   signin
+// );
+router.post("/signin", validateSignin, dataValidationResult, signin);
 
 // signout route
 router.get("/signout", signout);

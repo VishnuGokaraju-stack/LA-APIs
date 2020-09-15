@@ -33,14 +33,32 @@ const mothercategoryRoutes = require("./src/routes/admin/mothercategory");
 const categoryRoutes = require("./src/routes/admin/category");
 const subcategoryRoutes = require("./src/routes/admin/subcategory");
 const serviceRoutes = require("./src/routes/admin/service");
+const companyRoutes = require("./src/routes/admin/company");
+const storeRoutes = require("./src/routes/admin/store");
 app.use("/admin", adminAuthenticationRoutes);
 app.use("/admin/mc", mothercategoryRoutes);
 app.use("/admin/cat", categoryRoutes);
 app.use("/admin/subcat", subcategoryRoutes);
 app.use("/admin/service", serviceRoutes);
+app.use("/admin/company", companyRoutes);
+app.use("/admin/store", storeRoutes);
 // admin + api routes
-
+const cityRoutes = require("./src/routes/city");
+app.use("/city", cityRoutes);
 // api Routes
+
+// if not routes found show error
+// app.use((req, res, next) => {
+//   const error = new Error("Not found");
+//   error.status(404);
+//   next(error);
+// });
+// app.use((err, req, res, next) => {
+//   res.status(err.status || 500);
+//   res.json({
+//     error: err.error,
+//   });
+// });
 
 // Port
 const port = process.env.PORT || 1338;

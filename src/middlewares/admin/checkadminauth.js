@@ -4,6 +4,9 @@ const adminlogin = require("../../models/authenticationadmin");
 // middleware to validate token
 exports.verifyToken = async (req, res, next) => {
   try {
+    //TODO
+    // check cookie exists
+
     const token = req.header("Authorization").replace("Bearer ", "");
     const data = jwt.verify(token, process.env.AUTHENTICATION_SECRET);
     if (!token) {
