@@ -3,7 +3,7 @@ require("dotenv").config();
 
 const express = require("express");
 const mongoose = require("mongoose");
-
+const session = require("express-session");
 const app = express();
 
 // middlewares
@@ -26,6 +26,22 @@ mongoose
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(cors());
+// session
+// var sess = {
+//   key: "user_sid",
+//   secret: "sassprod",
+//   resave: false,
+//   saveUninitialized: false,
+//   cookie: {
+//     expires: 600000,
+//   },
+// };
+// if (app.get("env") === "production") {
+//   app.set("trust proxy", 1); // trust first proxy
+//   sess.cookie.secure = true; // serve secure cookies
+// }
+// app.use(session(sess));
+//session
 
 // admin routes
 const adminAuthenticationRoutes = require("./src/routes/authenticationadmin");

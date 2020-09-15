@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
-
+const {
+  validateInsertCity,
+  cityValidationResult,
+} = require("../validations/city");
 const { verifyToken } = require("../middlewares/admin/checkadminauth");
 
 const {
@@ -14,7 +17,13 @@ const {
 router.param("id", getCityById);
 
 // insert new city
-router.post("/", verifyToken, insertCity);
+router.post(
+  "/",
+  verifyToken,
+  validateInsertCity,
+  cityValidationResult,
+  insertCity
+);
 
 // get all cities
 router.get("/", verifyToken, getAllCities);

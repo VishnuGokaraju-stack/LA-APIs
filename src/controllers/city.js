@@ -1,5 +1,4 @@
 const city = require("../models/city");
-
 exports.getCityById = async (req, res, next, id) => {
   try {
     await city.findById(id).exec((error, city) => {
@@ -23,6 +22,7 @@ exports.insertCity = async (req, res) => {
     const { cityName } = req.body;
     // check if same city already exists
     let validateCheck = await city.findOne({ cityName });
+    console.log("bbb : " + validateCheck);
     if (validateCheck) {
       return res.status(400).json({
         error: "City already exists",

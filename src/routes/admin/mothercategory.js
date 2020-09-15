@@ -1,5 +1,9 @@
 const express = require("express");
 const router = express.Router();
+const {
+  validateInsertMC,
+  MCValidationResult,
+} = require("../../validations/mothercategory");
 const { verifyToken } = require("../../middlewares/admin/checkadminauth");
 const {
   insertMC,
@@ -12,7 +16,7 @@ const {
 router.param("id", getMCById);
 
 // insert new mothercategory
-router.post("/", verifyToken, insertMC);
+router.post("/", verifyToken, validateInsertMC, MCValidationResult, insertMC);
 
 // get all mothercategories
 router.get("/", verifyToken, getAllMC);
