@@ -41,18 +41,13 @@ exports.signup = async (req, res) => {
 // signin
 exports.signin = async (req, res) => {
   const { username, password } = req.body;
-  await adminlogin.findOne({ username }, (error, user) => {
-    if (error) {
-      return res.status(400).json({
-        error: "Please enter valid user name",
-      });
-    }
-    if (!user) {
-      return res.status(400).json({
-        error: "Please enter valid user name",
-      });
-    }
-    const validatePassword = bcrypt.compare(req.body.password, user.password);
+  const user = await adminlogin.findOne({ username });
+  if (!user) {
+    return res.status(400).json({
+      error: "Username not exists",
+    });
+  }
+    const validatePassword = await bcrypt.compare(req.body.password, user.password);
     if (!validatePassword) {
       return res.stats(400).json({
         error: "Username and Password do not match",
@@ -66,16 +61,15 @@ exports.signin = async (req, res) => {
     // put token in cookie
     res.cookie("token", token, { expire: new Date() + 9999 });
     // send response to front end
-    const { logintype, username } = user;
+    const { logintype } = user;
     return res.header("Authorization").json({
       error: null,
       data: {
         token,
-        username,
         logintype,
       },
     });
-  });
+  //});
 };
 
 // signout
