@@ -1,10 +1,10 @@
 var express = require("express");
 var router = express.Router();
-const {
-  validateSignin,
-  validateSignup,
-  dataValidationResult,
-} = require("../validations/authenticationadmin");
+// const {
+//   validateSignin,
+//   validateSignup,
+//   dataValidationResult,
+// } = require("../validations/authenticationadmin");
 const {
   signup,
   signin,
