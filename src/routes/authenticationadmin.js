@@ -12,7 +12,7 @@ const {
 } = require("../controllers/authenticationadmin");
 
 // signup route
-router.post("/signup", validateSignup, dataValidationResult, signup);
+router.post("/signup", signup);
 
 // signin route
 // router.post(
@@ -29,7 +29,7 @@ router.post("/signup", validateSignup, dataValidationResult, signup);
 //   ],
 //   signin
 // );
-router.post("/signin", validateSignin, dataValidationResult, signin);
+router.post("/signin", signin);
 
 // signout route
 router.get("/signout", signout);
