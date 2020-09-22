@@ -1,11 +1,11 @@
-const service = require("../../models/service");
+const service = require('../../models/service');
 
 exports.getServiceById = async (req, res, next, id) => {
   try {
     await service.findById(id).exec((error, service) => {
       if (error || !service) {
         return res.status(400).json({
-          error: "Something went wrong. Please try again",
+          error: 'Something went wrong. Please try again',
         });
       }
       req.serviceData = service;
@@ -25,12 +25,12 @@ exports.insertService = async (req, res) => {
     await service.findOne({ serviceName }, (error, service) => {
       if (error) {
         return res.status(400).json({
-          error: "Something went wrong. Please try again",
+          error: 'Something went wrong. Please try again',
         });
       }
       if (service) {
         return res.status(400).json({
-          error: "Service already exists",
+          error: 'Service already exists',
         });
       }
     });
@@ -49,13 +49,13 @@ exports.insertService = async (req, res) => {
     newService.save((error, service) => {
       if (error) {
         return res.status(400).json({
-          error: "Not able to insert user in DB - service",
+          error: 'Not able to insert user in DB - service',
         });
       }
       res.json({
         error: null,
         data: {
-          message: "Service added successfully",
+          message: 'Service added successfully',
         },
       });
     });
@@ -69,9 +69,9 @@ exports.insertService = async (req, res) => {
 exports.getAllService = async (req, res) => {
   try {
     await service.find().exec((error, service) => {
-      if (error || !subcat) {
+      if (error || !service) {
         return res.status(400).json({
-          error: "Services not found",
+          error: 'Services not found',
         });
       }
       res.json({
@@ -110,7 +110,7 @@ exports.updateService = async (req, res) => {
       (error, service) => {
         if (error) {
           return res.status(400).json({
-            error: "Service not updated. Please try again",
+            error: 'Service not updated. Please try again',
           });
         }
         res.json({
