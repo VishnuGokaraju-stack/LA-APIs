@@ -1,11 +1,11 @@
-const store = require("../../models/store");
+const store = require('../../models/store');
 
 exports.getStoreById = async (req, res, next, id) => {
   try {
     await store.findById(id).exec((error, store) => {
       if (error || !store) {
         return res.status(400).json({
-          error: "Store not exist",
+          error: 'Store not exist',
         });
       }
       req.storeData = store;
@@ -20,15 +20,16 @@ exports.getStoreById = async (req, res, next, id) => {
 
 exports.insertStore = async (req, res) => {
   try {
-    const { storeName, latitude, longitude } = req.body;
+    const { storeName, latitude, longitude, storeCoordinates } = req.body;
     // check if same store already exists
     let validateCheck = await store.findOne({ storeName });
     if (validateCheck) {
       return res.status(400).json({
-        error: "Store already exists",
+        error: 'Store already exists',
       });
     }
-    const geoLocation = { type: "Point", coordinates: [longitude, latitude] };
+    const geoLocation = { type: 'Point', coordinates: [longitude, latitude] };
+    const storePolygon = { type: 'Polygon', coordinates: storeCoordinates };
     // insert into store table
     const newstore = new store({
       storeName: req.body.storeName,
@@ -38,6 +39,7 @@ exports.insertStore = async (req, res) => {
       storeAddress: req.body.storeAddress,
       storePincode: req.body.storePincode,
       storeLocation: geoLocation,
+      storePolygon: storePolygon,
       storeMobile: req.body.storeMobile,
       storeMobileAlternate: req.body.storeMobileAlternate,
       isFranchise: req.body.isFranchise,
@@ -53,13 +55,13 @@ exports.insertStore = async (req, res) => {
     newstore.save((error, store) => {
       if (error) {
         return res.status(400).json({
-          error: "Not able to insert user in DB - store",
+          error: 'Not able to insert user in DB - store',
         });
       }
       res.json({
         error: null,
         data: {
-          message: "Store added successfully",
+          message: 'Store added successfully',
         },
       });
     });
@@ -75,7 +77,7 @@ exports.getAllStores = async (req, res) => {
     await store.find().exec((error, store) => {
       if (error || !store) {
         return res.status(400).json({
-          error: "Stores not found",
+          error: 'Stores not found',
         });
       }
       res.json({
@@ -109,7 +111,7 @@ exports.updateStore = async (req, res) => {
   try {
     if (req.body.latitude && req.body.longitude) {
       const { latitude, longitude } = req.body;
-      const geoLocation = { type: "Point", coordinates: [longitude, latitude] };
+      const geoLocation = { type: 'Point', coordinates: [longitude, latitude] };
       req.body.storeLocation = geoLocation;
       delete req.body.latitude;
       delete req.body.longitude;
@@ -127,7 +129,7 @@ exports.updateStore = async (req, res) => {
       });
     } else {
       return res.status(400).json({
-        error: "Store not updated. Please try again",
+        error: 'Store not updated. Please try again',
       });
     }
   } catch (error) {
