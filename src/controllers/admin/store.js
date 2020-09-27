@@ -110,11 +110,14 @@ exports.getStore = async (req, res) => {
 exports.updateStore = async (req, res) => {
   try {
     if (req.body.latitude && req.body.longitude) {
-      const { latitude, longitude } = req.body;
+      const { latitude, longitude, storeCoordinates } = req.body;
       const geoLocation = { type: 'Point', coordinates: [longitude, latitude] };
+      const storePolygon = { type: 'Polygon', coordinates: storeCoordinates };
       req.body.storeLocation = geoLocation;
+      req.body.storePolygon = storePolygon;
       delete req.body.latitude;
       delete req.body.longitude;
+      delete req.body.storeCoordinates;
     }
 
     let updateStore = await store.findByIdAndUpdate(
