@@ -22,7 +22,7 @@ const customerSchema = new mongoose.Schema(
     encryptPassword: {
       type: String,
       trim: true,
-      required: true,
+      // required: true,
     },
     email: {
       type: String,

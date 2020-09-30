@@ -1,4 +1,5 @@
 const customer = require('../models/customer');
+const customeraddress = require('../models/customeraddress');
 const bcrypt = require('bcryptjs');
 const uniqid = require('uniqid');
 
@@ -39,7 +40,7 @@ exports.insertCustomer = async (req, res) => {
       });
     }
     const salt = await bcrypt.genSalt(10);
-    const encry_password = await bcrypt.hash(req.body.password, salt);
+    //const encry_password = await bcrypt.hash(req.body.password, salt);
 
     // TODO
     // check if unique referral id is generated and check if it exists or not
@@ -49,7 +50,7 @@ exports.insertCustomer = async (req, res) => {
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       mobileNumber: req.body.mobileNumber,
-      encryptPassword: encry_password,
+      encryptPassword: '',
       email: req.body.email,
       gender: req.body.gender,
       dob: req.body.dob,
@@ -70,19 +71,33 @@ exports.insertCustomer = async (req, res) => {
         });
       }
     }
-    newCustomer.save((error, data) => {
-      if (error) {
-        return res.status(400).json({
-          error: 'Not able to insert user in DB - customer',
+    let insertCustomer = await newCustomer.save();
+    if (insertCustomer) {
+      if (req.body.address) {
+        // const addressGeoLocation = {
+        //   type: 'Point',
+        //   coordinates: [req.body.address.longitude, req.body.address.latitude],
+        // };
+        const newAddress = new customeraddress({
+          customerId: insertCustomer._id,
+          //addressLocation: addressGeoLocation,
+          address: req.body.address,
+        });
+        let addAddress = await newAddress.save();
+        if (addAddress) {
+        }
+        res.json({
+          error: null,
+          data: {
+            message: 'Customer added successfully',
+          },
         });
       }
-      res.json({
-        error: null,
-        data: {
-          message: 'Customer added successfully',
-        },
+    } else {
+      return res.status(400).json({
+        error: 'Not able to insert user in DB - customer',
       });
-    });
+    }
   } catch (error) {
     res.status(500).json({
       error: error.message,
@@ -127,6 +142,19 @@ exports.getCustomer = async (req, res) => {
 
 exports.updateCustomer = async (req, res) => {
   try {
+    const { mobileNumber, email, referarCode } = req.body;
+    // if referarCode is not empty check if customer exists or not
+    if (referarCode && referarCode != '') {
+      let referarCustomer = await customer.findOne({ referarCode });
+      if (referarCustomer) {
+        req.body.referarId = referarCustomer._id;
+        req.body.referarCode = referarCode;
+      } else {
+        return res.status(400).json({
+          error: 'Referrar Customer not exist',
+        });
+      }
+    }
     let updateCustomer = await customer.findByIdAndUpdate(
       { _id: req.customerData._id },
       { $set: req.body },
