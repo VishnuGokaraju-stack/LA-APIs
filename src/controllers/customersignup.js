@@ -24,7 +24,6 @@ exports.getCustomerById = async (req, res, next, id) => {
 exports.insertCustomer = async (req, res) => {
   try {
     const { mobileNumber, email, referarCode } = req.body;
-
     // check if same mobile already exists
     let mobileCheck = await customer.findOne({ mobileNumber });
     if (mobileCheck) {
