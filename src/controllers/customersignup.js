@@ -117,10 +117,14 @@ exports.insertCustomer = async (req, res) => {
 
 exports.getCustomer = async (req, res) => {
   try {
+    //console.log(req.query);
+    //console.log(req.query.name);
     if (typeof req.query.name !== 'undefined' && req.query.name !== '') {
+      //console.log('ifffff');
       let customerData = await customer.find({
-        firstName: req.query.name,
+        firstName: { $regex: req.query.name, $options: 'i' },
       });
+      //console.log(customerData);
       // TODO limit customers
       if (customerData) {
         return res.json({
@@ -135,7 +139,7 @@ exports.getCustomer = async (req, res) => {
     }
     if (typeof req.query.mobile !== 'undefined' && req.query.mobile !== '') {
       let customerData = await customer.find({
-        mobileNumber: req.query.mobile,
+        mobileNumber: { $regex: req.query.mobile, $options: 'i' },
       });
       // TODO limit customers
       if (customerData) {
