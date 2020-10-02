@@ -58,6 +58,10 @@ const customerSchema = new mongoose.Schema(
       type: ObjectId,
       ref: 'city',
     },
+    address: {
+      type: JSON,
+      trim: true,
+    },
     status: {
       type: String,
       enum: ['Active', 'Inactive', 'Deleted'],

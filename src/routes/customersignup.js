@@ -6,7 +6,7 @@ const { verifyToken } = require('../middlewares/admin/checkadminauth');
 const {
   getCustomerById,
   insertCustomer,
-  getAllCustomers,
+  //getAllCustomers,
   getCustomer,
   updateCustomer,
 } = require('../controllers/customersignup');
@@ -16,11 +16,11 @@ router.param('id', getCustomerById);
 // insert new customer
 router.post('/', verifyToken, insertCustomer);
 
-// get all categories
-router.get('/', verifyToken, getAllCustomers);
+// get all customer
+//router.get('/', verifyToken, getAllCustomers);
 
-// get single categories
-router.get('/:id', verifyToken, getCustomer);
+// get single customer
+router.get('/', verifyToken, getCustomer);
 
 // update customer
 router.put('/:id', verifyToken, updateCustomer);

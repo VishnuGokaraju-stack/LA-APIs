@@ -1,5 +1,5 @@
 const customer = require('../models/customer');
-const customeraddress = require('../models/customeraddress');
+//const customeraddress = require('../models/customeraddress');
 const bcrypt = require('bcryptjs');
 const uniqid = require('uniqid');
 
@@ -71,31 +71,20 @@ exports.insertCustomer = async (req, res) => {
         });
       }
     }
+    if (req.body.address) {
+      newCustomer.address = req.body.address;
+    }
     let insertCustomer = await newCustomer.save();
     if (insertCustomer) {
-      if (req.body.address) {
-        // const addressGeoLocation = {
-        //   type: 'Point',
-        //   coordinates: [req.body.address.longitude, req.body.address.latitude],
-        // };
-        const newAddress = new customeraddress({
-          customerId: insertCustomer._id,
-          //addressLocation: addressGeoLocation,
-          address: req.body.address,
-        });
-        let addAddress = await newAddress.save();
-        if (addAddress) {
-        }
-        res.json({
-          error: null,
-          data: {
-            message: 'Customer added successfully',
-          },
-        });
-      }
+      res.json({
+        error: null,
+        data: {
+          message: 'Customer added successfully',
+        },
+      });
     } else {
       return res.status(400).json({
-        error: 'Not able to insert user in DB - customer',
+        error: 'Something went wrong. Please try again - customer & address',
       });
     }
   } catch (error) {
@@ -105,33 +94,77 @@ exports.insertCustomer = async (req, res) => {
   }
 };
 
-exports.getAllCustomers = async (req, res) => {
-  try {
-    await customer.find().exec((error, customers) => {
-      if (error || !customers) {
-        return res.status(400).json({
-          error: 'Customers not found',
-        });
-      }
-      res.json({
-        error: null,
-        data: {
-          customers,
-        },
-      });
-    });
-  } catch (error) {
-    res.status(500).json({
-      error: error.message,
-    });
-  }
-};
+// exports.getAllCustomers = async (req, res) => {
+//   try {
+//     await customer.find().exec((error, customers) => {
+//       if (error || !customers) {
+//         return res.status(400).json({
+//           error: 'Customers not found',
+//         });
+//       }
+//       res.json({
+//         error: null,
+//         data: {
+//           customers,
+//         },
+//       });
+//     });
+//   } catch (error) {
+//     res.status(500).json({
+//       error: error.message,
+//     });
+//   }
+// };
 
 exports.getCustomer = async (req, res) => {
   try {
-    return res.json({
-      error: null,
-      data: req.customerData,
+    if (typeof req.query.name !== 'undefined' && req.query.name !== '') {
+      let customerData = await customer.find({
+        firstName: req.query.name,
+      });
+      if (customerData) {
+        return res.json({
+          error: null,
+          data: customerData,
+        });
+      } else {
+        return res.status(400).json({
+          error: 'Customer not exist with mobile number',
+        });
+      }
+    }
+    if (typeof req.query.mobile !== 'undefined' && req.query.mobile !== '') {
+      let customerData = await customer.findOne({
+        mobileNumber: req.query.mobile,
+      });
+      console.log(customerData);
+      if (customerData) {
+        return res.json({
+          error: null,
+          data: customerData,
+        });
+      } else {
+        return res.status(400).json({
+          error: 'Customer not exist with mobile number',
+        });
+      }
+    }
+    if (typeof req.query.id !== 'undefined' && req.query.id !== '') {
+      // get customer details & address
+      let customerData = await customer.findById(req.query.id);
+      if (customerData) {
+        return res.json({
+          error: null,
+          data: customerData,
+        });
+      } else {
+        return res.status(400).json({
+          error: 'Customer not exist',
+        });
+      }
+    }
+    return res.status(400).json({
+      error: 'Something went wrong. Please try again - get customer & address',
     });
   } catch (error) {
     res.status(500).json({
