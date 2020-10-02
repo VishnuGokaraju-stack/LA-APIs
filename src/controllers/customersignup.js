@@ -75,7 +75,7 @@ exports.insertCustomer = async (req, res) => {
     }
     let insertCustomer = await newCustomer.save();
     if (insertCustomer) {
-      res.json({
+      res.status(200).json({
         error: null,
         data: {
           message: 'Customer added successfully',
