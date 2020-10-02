@@ -47,22 +47,22 @@ const storeSchema = new mongoose.Schema(
       ref: 'city',
     },
     storeAddress: {
-      type: String,
+      type: JSON,
       trim: true,
     },
-    storeLandmark: {
-      type: String,
-      trim: true,
-    },
-    storePincode: {
-      type: String,
-      trim: true,
-    },
-    storeLocation: {
-      // longitude first , latitude second -  GeoJSON object types
-      type: storePointSchema,
-      //required: true,
-    },
+    // storeLandmark: {
+    //   type: String,
+    //   trim: true,
+    // },
+    // storePincode: {
+    //   type: String,
+    //   trim: true,
+    // },
+    // storeLocation: {
+    //   // longitude first , latitude second -  GeoJSON object types
+    //   type: storePointSchema,
+    //   //required: true,
+    // },
     storePolygon: storePolygonSchema,
     storeMobile: {
       type: String,
@@ -84,7 +84,12 @@ const storeSchema = new mongoose.Schema(
       type: Number,
       default: 0, // 0 - own store, 1 - franchise
     },
-    royalityPercentage: {
+    royalityOnlinePercentage: {
+      // royality percentage to be given to owner when others take franchaise from company
+      type: Number,
+      default: 0,
+    },
+    royalityOfflinePercentage: {
       // royality percentage to be given to owner when others take franchaise from company
       type: Number,
       default: 0,

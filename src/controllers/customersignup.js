@@ -122,6 +122,7 @@ exports.getCustomer = async (req, res) => {
       let customerData = await customer.find({
         firstName: req.query.name,
       });
+      // TODO limit customers
       if (customerData) {
         return res.json({
           error: null,
@@ -137,6 +138,7 @@ exports.getCustomer = async (req, res) => {
       let customerData = await customer.find({
         mobileNumber: req.query.mobile,
       });
+      // TODO limit customers
       if (customerData) {
         return res.json({
           error: null,

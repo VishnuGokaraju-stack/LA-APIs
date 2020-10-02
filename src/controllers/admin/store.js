@@ -20,7 +20,7 @@ exports.getStoreById = async (req, res, next, id) => {
 
 exports.insertStore = async (req, res) => {
   try {
-    const { storeName, latitude, longitude, storeCoordinates } = req.body;
+    const { storeName, storeCoordinates } = req.body;
     // check if same store already exists
     let validateCheck = await store.findOne({ storeName });
     if (validateCheck) {
@@ -28,7 +28,7 @@ exports.insertStore = async (req, res) => {
         error: 'Store already exists',
       });
     }
-    const geoLocation = { type: 'Point', coordinates: [longitude, latitude] };
+    //const geoLocation = { type: 'Point', coordinates: [longitude, latitude] };
     const storePolygon = { type: 'Polygon', coordinates: storeCoordinates };
     // insert into store table
     const newstore = new store({
@@ -37,13 +37,14 @@ exports.insertStore = async (req, res) => {
       companyId: req.body.companyId,
       cityId: req.body.cityId,
       storeAddress: req.body.storeAddress,
-      storePincode: req.body.storePincode,
-      storeLocation: geoLocation,
+      //storePincode: req.body.storePincode,
+      //storeLocation: geoLocation,
       storePolygon: storePolygon,
       storeMobile: req.body.storeMobile,
       storeMobileAlternate: req.body.storeMobileAlternate,
       isFranchise: req.body.isFranchise,
-      royalityPercentage: req.body.royalityPercentage,
+      royalityOnlinePercentage: req.body.royalityOnlinePercentage,
+      royalityOfflinePercentage: req.body.royalityOfflinePercentage,
       storeOwnerName: req.body.storeOwnerName,
       storeOwnerMobile: req.body.storeOwnerMobile,
       storeOwnerEmail: req.body.storeOwnerEmail,
@@ -110,14 +111,14 @@ exports.getStore = async (req, res) => {
 exports.updateStore = async (req, res) => {
   try {
     if (req.body.latitude && req.body.longitude) {
-      const { latitude, longitude, storeCoordinates } = req.body;
-      const geoLocation = { type: 'Point', coordinates: [longitude, latitude] };
+      const { storeCoordinates } = req.body;
+      //const geoLocation = { type: 'Point', coordinates: [longitude, latitude] };
       const storePolygon = { type: 'Polygon', coordinates: storeCoordinates };
-      req.body.storeLocation = geoLocation;
+      //req.body.storeLocation = geoLocation;
       req.body.storePolygon = storePolygon;
-      delete req.body.latitude;
-      delete req.body.longitude;
-      delete req.body.storeCoordinates;
+      //delete req.body.latitude;
+      //delete req.body.longitude;
+      //delete req.body.storeCoordinates;
     }
 
     let updateStore = await store.findByIdAndUpdate(
