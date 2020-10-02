@@ -134,10 +134,9 @@ exports.getCustomer = async (req, res) => {
       }
     }
     if (typeof req.query.mobile !== 'undefined' && req.query.mobile !== '') {
-      let customerData = await customer.findOne({
+      let customerData = await customer.find({
         mobileNumber: req.query.mobile,
       });
-      console.log(customerData);
       if (customerData) {
         return res.json({
           error: null,
