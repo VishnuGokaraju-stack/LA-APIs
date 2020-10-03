@@ -94,44 +94,56 @@ const storeSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-    storeOwnerName: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    storeOwnerMobile: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    storeOwnerEmail: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    storeOwnerProofType: {
-      type: String, // pancard, aadhar
-      trim: true,
-    },
-    storeOwnerProofNo: {
-      type: String, // pancard no , aadhar no
-      trim: true,
-    },
-    storeOwnerBankAccount: {
-      // sbi, ICICI
-      type: String,
-      trim: true,
-    },
-    storeOwnerBankAccountNo: {
-      // account number
-      type: String,
-      trim: true,
-    },
+    // storeOwnerName: {
+    //   type: String,
+    //   required: true,
+    //   trim: true,
+    // },
+    // storeOwnerMobile: {
+    //   type: String,
+    //   required: true,
+    //   trim: true,
+    // },
+    // storeOwnerEmail: {
+    //   type: String,
+    //   required: true,
+    //   trim: true,
+    // },
+    // storeOwnerProofType: {
+    //   type: String, // pancard, aadhar
+    //   trim: true,
+    // },
+    // storeOwnerProofNo: {
+    //   type: String, // pancard no , aadhar no
+    //   trim: true,
+    // },
+    // storeOwnerBankAccount: {
+    //   // sbi, ICICI
+    //   type: String,
+    //   trim: true,
+    // },
+    // storeOwnerBankAccountNo: {
+    //   // account number
+    //   type: String,
+    //   trim: true,
+    // },
     storeStatus: {
-      type: Number, // 0 - inactive, 1 - active, 2- deleted
-      min: 0,
-      max: 2,
-      default: 0,
+      type: String,
+      enum: ['Active', 'Inactive', 'Deleted'],
+      required: true,
+      default: 'Active',
+    },
+    storeOwners: {
+      type: Array,
+      trim: true,
+    },
+    storeDeliveryBoys: {
+      type: Array,
+      trim: true,
+    },
+    storeStaffBoys: {
+      type: Array,
+      trim: true,
     },
   },
   { timestamps: true }

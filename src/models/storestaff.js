@@ -1,11 +1,7 @@
 const mongoose = require('mongoose');
-const { ObjectId } = mongoose.Schema;
+//const { ObjectId } = mongoose.Schema;
 
 const storestaffSchema = new mongoose.Schema({
-  storeId: {
-    type: ObjectId,
-    ref: 'store',
-  },
   staffFirstName: {
     type: String,
     required: true,
@@ -45,10 +41,9 @@ const storestaffSchema = new mongoose.Schema({
     trim: true,
   },
   staffEmployeeType: {
-    // store staff, delivery staff, both related to master table
-    type: ObjectId,
+    type: String,
     required: true,
-    ref: 'masterstafftype',
+    enum: ['Delivery Staff', 'Store Staff', 'Owner'],
   },
   staffStatus: {
     type: String,

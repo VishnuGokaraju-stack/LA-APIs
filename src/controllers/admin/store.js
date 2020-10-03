@@ -45,13 +45,10 @@ exports.insertStore = async (req, res) => {
       isFranchise: req.body.isFranchise,
       royalityOnlinePercentage: req.body.royalityOnlinePercentage,
       royalityOfflinePercentage: req.body.royalityOfflinePercentage,
-      storeOwnerName: req.body.storeOwnerName,
-      storeOwnerMobile: req.body.storeOwnerMobile,
-      storeOwnerEmail: req.body.storeOwnerEmail,
-      storeOwnerProofType: req.body.storeOwnerProofType,
-      storeOwnerProofNo: req.body.storeOwnerProofNo,
-      storeOwnerBankAccount: req.body.storeOwnerBankAccount,
-      storeOwnerBankAccountNo: req.body.storeOwnerBankAccountNo,
+      storeOwners: req.body.storeOwners,
+      storeDeliveryBoys: req.body.storeDeliveryBoys,
+      storeStaffBoys: req.body.storeStaffBoys,
+      storeStatus: req.body.storeStatus,
     });
     newstore.save((error, store) => {
       if (error) {
@@ -129,7 +126,8 @@ exports.updateStore = async (req, res) => {
     if (updateStore) {
       res.status(201).json({
         error: null,
-        data: updateStore,
+        //data: updateStore,
+        message: 'Store updated successfully',
       });
     } else {
       return res.status(400).json({
