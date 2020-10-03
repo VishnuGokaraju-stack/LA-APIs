@@ -38,7 +38,7 @@ exports.insertStoreStaff = async (req, res) => {
       encryptPassword: encry_password,
       staffProof: req.body.staffProof, // JSON
       staffBankDetails: req.body.staffBankDetails, // JSON
-      staffEmployeeType: req.body.staffEmployeeType,
+      //staffEmployeeType: req.body.staffEmployeeType,
       staffStatus: req.body.staffStatus,
     });
     let insertStaff = await newStaff.save();
@@ -137,20 +137,20 @@ exports.getStoreStaff = async (req, res) => {
         });
       }
     }
-    if (typeof req.query.store !== 'undefined' && req.query.store !== '') {
-      // get staff details
-      let staffData = await storestaff.find({ storeId: req.query.store });
-      if (staffData) {
-        return res.json({
-          error: null,
-          data: staffData,
-        });
-      } else {
-        return res.status(400).json({
-          error: 'Staff not exist',
-        });
-      }
-    }
+    // if (typeof req.query.store !== 'undefined' && req.query.store !== '') {
+    //   // get staff details
+    //   let staffData = await storestaff.find({ storeId: req.query.store });
+    //   if (staffData) {
+    //     return res.json({
+    //       error: null,
+    //       data: staffData,
+    //     });
+    //   } else {
+    //     return res.status(400).json({
+    //       error: 'Staff not exist',
+    //     });
+    //   }
+    // }
     return res.status(400).json({
       error: 'Something went wrong. Please try again - get staff',
     });
