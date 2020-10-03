@@ -1,5 +1,4 @@
 const customer = require('../models/customer');
-//const customeraddress = require('../models/customeraddress');
 const bcrypt = require('bcryptjs');
 const uniqid = require('uniqid');
 
@@ -198,7 +197,7 @@ exports.updateCustomer = async (req, res) => {
       { new: true, useFindAndModify: false }
     );
     if (updateCustomer) {
-      res.status(201).json({
+      res.status(200).json({
         error: null,
         data: updateCustomer,
       });

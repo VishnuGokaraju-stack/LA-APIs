@@ -29,27 +29,19 @@ const storestaffSchema = new mongoose.Schema({
     type: String,
     trim: true,
   },
-  staffPassword: {
+  encryptPassword: {
     type: String,
     required: true,
     trim: true,
   },
-  staffProofType: {
-    type: String, // pancard, aadhar
+  staffProof: {
+    // pancard, aadhar
+    type: JSON,
     trim: true,
   },
-  staffProofNo: {
-    type: String, // pancard no , aadhar no
-    trim: true,
-  },
-  staffBankAccount: {
-    // sbi, ICICI
-    type: String,
-    trim: true,
-  },
-  staffBankAccountNo: {
-    // account number
-    type: String,
+  staffBankDetails: {
+    // SBI, ICICI
+    type: JSON,
     trim: true,
   },
   staffEmployeeType: {
@@ -59,10 +51,10 @@ const storestaffSchema = new mongoose.Schema({
     ref: 'masterstafftype',
   },
   staffStatus: {
-    type: Number, // 0 - inactive, 1 - active, 2 - deleted
-    min: 0,
-    max: 2,
-    default: 0,
+    type: String,
+    enum: ['Active', 'Inactive', 'Deleted'],
+    required: true,
+    default: 'Active',
   },
 });
 
