@@ -38,7 +38,7 @@ exports.insertStoreStaff = async (req, res) => {
       encryptPassword: encry_password,
       staffProof: req.body.staffProof, // JSON
       staffBankDetails: req.body.staffBankDetails, // JSON
-      //staffEmployeeType: req.body.staffEmployeeType,
+      staffEmployeeType: req.body.staffEmployeeType, //  Array
       staffStatus: req.body.staffStatus,
     });
     let insertStaff = await newStaff.save();

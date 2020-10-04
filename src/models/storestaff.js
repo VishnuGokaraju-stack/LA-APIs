@@ -40,11 +40,9 @@ const storestaffSchema = new mongoose.Schema({
     type: JSON,
     trim: true,
   },
-  // staffEmployeeType: {
-  //   type: String,
-  //   required: true,
-  //   enum: ['Delivery Staff', 'Store Staff', 'Owner'],
-  // },
+  staffEmployeeType: {
+    type: Array,
+  },
   staffStatus: {
     type: String,
     enum: ['Active', 'Inactive', 'Deleted'],
