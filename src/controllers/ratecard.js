@@ -86,80 +86,50 @@ exports.insertRateCard = async (req, res) => {
   };
   
 
-//   exports.getRateCard = async (req, res) => {
-//     try {
-//       if (typeof req.query === 'undefined') {
-//         return res.status(400).json({
-//           error:
-//             'Please enter a valid input to fetch ratecards. Please check the parameters',
-//         });
-//       }
-//       if (typeof req.query.name !== 'undefined' && req.query.name !== '') {
-//         let staffData = await storestaff.find({
-//           staffFirstName: { $regex: req.query.name, $options: 'i' },
-//         });
-//         // TODO limit staff
-//         if (staffData) {
-//           return res.json({
-//             error: null,
-//             data: staffData,
-//           });
-//         } else {
-//           return res.status(400).json({
-//             error: 'Staff does not exist with mobile number',
-//           });
-//         }
-//       }
-//       if (typeof req.query.mobile !== 'undefined' && req.query.mobile !== '') {
-//         let staffData = await storestaff.find({
-//           staffMobile: { $regex: req.query.mobile, $options: 'i' },
-//         });
-//         // TODO limit staff
-//         if (staffData) {
-//           return res.json({
-//             error: null,
-//             data: staffData,
-//           });
-//         } else {
-//           return res.status(400).json({
-//             error: 'Staff does not exist with mobile number',
-//           });
-//         }
-//       }
-//       if (typeof req.query.id !== 'undefined' && req.query.id !== '') {
-//         // get staff details
-//         let staffData = await storestaff.findById(req.query.id);
-//         if (staffData) {
-//           return res.json({
-//             error: null,
-//             data: staffData,
-//           });
-//         } else {
-//           return res.status(400).json({
-//             error: 'Staff not exist',
-//           });
-//         }
-//       }
-//       // if (typeof req.query.store !== 'undefined' && req.query.store !== '') {
-//       //   // get staff details
-//       //   let staffData = await storestaff.find({ storeId: req.query.store });
-//       //   if (staffData) {
-//       //     return res.json({
-//       //       error: null,
-//       //       data: staffData,
-//       //     });
-//       //   } else {
-//       //     return res.status(400).json({
-//       //       error: 'Staff not exist',
-//       //     });
-//       //   }
-//       // }
-//       return res.status(400).json({
-//         error: 'Something went wrong. Please try again - get staff',
-//       });
-//     } catch (error) {
-//       res.status(500).json({
-//         error: error.message,
-//       });
-//     }
-//   };
+  exports.getRateCard = async (req, res) => {
+    try {
+      if (typeof req.query === 'undefined') {
+        return res.status(400).json({
+          error:
+            'Please enter a valid input to fetch ratecards. Please check the parameters',
+        });
+      }
+      if (typeof req.query.companyId !== 'undefined' && req.query.companyId !== '') {
+        let companyData = await ratecard.find({
+            companyId: { $regex: req.query.companyId, $options: 'i' },
+        });
+        // TODO limit staff
+        if (companyData) {
+          return res.json({
+            error: null,
+            data: companyData,
+          });
+        } else {
+          return res.status(400).json({
+            error: 'Ratecards does not exist with company',
+          });
+        }
+      }
+      if (typeof req.query.id !== 'undefined' && req.query.id !== '') {
+        // get staff details
+        let companyData = await ratecard.findById(req.query.id);
+        if (companyData) {
+          return res.json({
+            error: null,
+            data: companyData,
+          });
+        } else {
+          return res.status(400).json({
+            error: 'Ratecard not exist',
+          });
+        }
+      }
+      return res.status(400).json({
+        error: 'Something went wrong. Please try again - get ratecards',
+      });
+    } catch (error) {
+      res.status(500).json({
+        error: error.message,
+      });
+    }
+  };

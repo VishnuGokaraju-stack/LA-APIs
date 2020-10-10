@@ -4,7 +4,7 @@ const { verifyToken } = require('../middlewares/admin/checkadminauth');
 const {
   //getRatecardById,
   insertRateCard,
-  //getRateCard,
+  getRateCard,
   updateRateCard,
 } = require('../controllers/ratecard');
 // validation 
@@ -12,7 +12,7 @@ const {
 // insert ratecard
 router.post('/', verifyToken, insertRateCard);
 // get ratecard
-//router.get('/', verifyToken, getRateCard); // query params - id, name, mobile, store
+router.get('/', verifyToken, getRateCard); // query params - id, name, mobile, store
 // update ratecard
 router.put('/', verifyToken, updateRateCard);
 
