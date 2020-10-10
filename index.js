@@ -48,9 +48,11 @@ app.use('/admin/stafftypes', staffTypesRoutes);
 const cityRoutes = require('./src/routes/city');
 const storeStaffRoutes = require('./src/routes/storestaff');
 const customerSignupRoutes = require('./src/routes/customersignup');
+const rateCardRoutes = require('./src/routes/ratecard');
 app.use('/admin/customer/signup', customerSignupRoutes);
 app.use('/admin/city', cityRoutes);
 app.use('/admin/staff', storeStaffRoutes);
+app.use('/admin/ratecard', rateCardRoutes);
 // api Routes
 
 // if not routes found show error
