@@ -131,8 +131,8 @@ exports.updateStore = async (req, res) => {
     if (updateStore) {
       res.status(201).json({
         error: null,
-        //data: updateStore,
-        message: 'Store updated successfully',
+        data: updateStore,
+        //message: 'Store updated successfully',
       });
     } else {
       return res.status(400).json({
