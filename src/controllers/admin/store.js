@@ -20,7 +20,7 @@ exports.getStoreById = async (req, res, next, id) => {
 
 exports.insertStore = async (req, res) => {
   try {
-    const { storeName, storeCoordinates } = req.body;
+    const { storeName } = req.body;
     // check if same store already exists
     let validateCheck = await store.findOne({ storeName });
     if (validateCheck) {
@@ -28,8 +28,7 @@ exports.insertStore = async (req, res) => {
         error: 'Store already exists',
       });
     }
-    //const geoLocation = { type: 'Point', coordinates: [longitude, latitude] };
-    const storePolygon = { type: 'Polygon', coordinates: storeCoordinates };
+    
     // insert into store table
     const newstore = new store({
       storeName: req.body.storeName,
@@ -44,7 +43,7 @@ exports.insertStore = async (req, res) => {
       parentStore : req.body.parentStore,
       //storePincode: req.body.storePincode,
       //storeLocation: geoLocation,
-      storePolygon: storePolygon,
+      //storePolygon: storePolygon,
       storeMobile: req.body.storeMobile,
       storeMobileAlternate: req.body.storeMobileAlternate,
       isFranchise: req.body.isFranchise,
@@ -55,6 +54,10 @@ exports.insertStore = async (req, res) => {
       storeStaffBoys: req.body.storeStaffBoys,
       storeStatus: req.body.storeStatus,
     });
+    if(req.body.storeCoordinates) {
+      const storePolygon = { type: 'Polygon', coordinates: req.body.storeCoordinates };
+      newstore.storePolygon = storePolygon
+    }
     newstore.save((error, store) => {
       if (error) {
         return res.status(400).json({
@@ -112,17 +115,17 @@ exports.getStore = async (req, res) => {
 
 exports.updateStore = async (req, res) => {
   try {
-    if (req.body.latitude && req.body.longitude) {
+    if (req.body.storeCoordinates) {
       const { storeCoordinates } = req.body;
       //const geoLocation = { type: 'Point', coordinates: [longitude, latitude] };
       const storePolygon = { type: 'Polygon', coordinates: storeCoordinates };
+      //console.log(storePolygon);
       //req.body.storeLocation = geoLocation;
       req.body.storePolygon = storePolygon;
       //delete req.body.latitude;
       //delete req.body.longitude;
       //delete req.body.storeCoordinates;
     }
-
     let updateStore = await store.findByIdAndUpdate(
       { _id: req.storeData._id },
       { $set: req.body },
