@@ -3,12 +3,10 @@ const { ObjectId } = mongoose.Schema;
 
 const subcategorySchema = new mongoose.Schema(
   {
-    subcatName: {
-      type: String,
-      required: true,
-      trim: true,
-      unique: true,
-    },
+    companyId: {
+			type: ObjectId,
+			ref: 'company',
+		},
     mcId: {
       type: ObjectId,
       ref: "motherCategory",
@@ -16,6 +14,12 @@ const subcategorySchema = new mongoose.Schema(
     catId: {
       type: ObjectId,
       ref: "category",
+    },
+    subcatName: {
+      type: String,
+      required: true,
+      trim: true,
+      unique: true,
     },
     subcatSmallDesc: {
       type: String,

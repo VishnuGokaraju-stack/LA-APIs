@@ -3,15 +3,19 @@ const { ObjectId } = mongoose.Schema;
 
 const categorySchema = new mongoose.Schema(
 	{
+		companyId: {
+			type: ObjectId,
+			ref: 'company',
+		},
+		mcId: {
+			type: ObjectId,
+			ref: "motherCategory",
+		},
 		catName: {
 			type: String,
 			required: true,
 			trim: true,
 			unique: true,
-		},
-		mcId: {
-			type: ObjectId,
-			ref: "motherCategory",
 		},
 		catSmallDesc: {
 			type: String,

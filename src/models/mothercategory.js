@@ -1,7 +1,12 @@
 const mongoose = require("mongoose");
+const {ObjectId} = mongoose.Schema;
 
 const mothercategorySchema = new mongoose.Schema(
   {
+    companyId: {
+      type: ObjectId,
+      ref: 'company',
+    },
     mcName: {
       type: String,
       required: true,

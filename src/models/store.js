@@ -25,7 +25,6 @@ const storePolygonSchema = new mongoose.Schema({
     type: [[[Number]]],
   },
 });
-//console.log(storePolygonSchema);
 const storeSchema = new mongoose.Schema(
   {
     storeName: {
@@ -38,7 +37,7 @@ const storeSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
-    companyId: {
+    companyId: { // fetch from auth token companyId taken from DB
       type: ObjectId,
       ref: 'company',
     },
@@ -50,19 +49,24 @@ const storeSchema = new mongoose.Schema(
       type: JSON,
       trim: true,
     },
-    // storeLandmark: {
-    //   type: String,
-    //   trim: true,
-    // },
-    // storePincode: {
-    //   type: String,
-    //   trim: true,
-    // },
-    // storeLocation: {
-    //   // longitude first , latitude second -  GeoJSON object types
-    //   type: storePointSchema,
-    //   //required: true,
-    // },
+    ratecardOnline: {
+      type: String,
+    },
+    ratecardOffline: {
+      type: String,
+    },
+    isVirtual: {
+      type: Boolean,
+      default: false
+    },
+    showInStoreLocator : {
+      type: Boolean,
+      default: false
+    },
+    parentStore : {
+      type: ObjectId,
+      ref: "store"
+    },
     storePolygon: storePolygonSchema,
     storeMobile: {
       type: String,
