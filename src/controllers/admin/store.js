@@ -58,7 +58,7 @@ exports.insertStore = async (req, res) => {
     newstore.save((error, store) => {
       if (error) {
         return res.status(400).json({
-          error: 'Not able to insert user in DB - store',
+          error: error,
         });
       }
       res.json({

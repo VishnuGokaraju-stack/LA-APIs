@@ -64,8 +64,7 @@ const storeSchema = new mongoose.Schema(
       default: false
     },
     parentStore : {
-      type: ObjectId,
-      ref: "store"
+      type: String,
     },
     storePolygon: storePolygonSchema,
     storeMobile: {
