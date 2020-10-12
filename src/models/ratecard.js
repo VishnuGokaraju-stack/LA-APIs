@@ -3,10 +3,6 @@ const mongoose = require('mongoose');
 const { ObjectId } = mongoose.Schema;
 
 const ratecardSchema = new mongoose.Schema({
-  rateCardOwner: { // owner id  who created the rate card
-    type: String, // TODO convert to ObjectId
-    required: true
-  },
   rateCardName: {
     type: String,
     required: true,
@@ -18,11 +14,20 @@ const ratecardSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
+  rateCardType: {
+    type: String,
+    enum: ['Offline', 'Online'],
+    required: true,
+  },
   companyId: { // TODO ObjectId to replace with String
-    type: String
-    // type: ObjectId,
-    // ref: 'company',
-    // required: true,
+    //type: String
+    type: ObjectId,
+    ref: 'company',
+    required: true,
+  },
+  storeId: {
+    type: ObjectId,
+    ref: "store"
   },
   rateCardStatus: {
     type: String,

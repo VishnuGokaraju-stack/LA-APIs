@@ -31,10 +31,11 @@ exports.insertRateCard = async (req, res) => {
         });
       }
       const newRatecard = new ratecard({
-        rateCardOwner: req.body.rateCardOwner, // TODO owner should be dynamic
         rateCardName: req.body.rateCardName,
         companyId: req.body.companyId, // TODO based on login node js should get the companyid
         rateCardServices: req.body.rateCardServices,// JSON
+        storeId: req.body.storeId,
+        rateCardType: req.body.rateCardType, // Online , Offline
         rateCardStatus: req.body.rateCardStatus,
       });
       let insertRatecard = await newRatecard.save();
@@ -60,9 +61,20 @@ exports.insertRateCard = async (req, res) => {
 
   exports.updateRateCard = async (req, res) => {
     try {
-      // const { mobileNumber, email } = req.body;
       // TODO - check if duplicate rateCardName based on companyid exists
-    console.log(req.query);
+      // if(req.body.rateCardName) {
+      //   const { rateCardName, companyId } = req.body;
+      //   // check if rateCardName already exists for company
+      //   let ratecardCheck = await ratecard.findOne({
+      //     rateCardName: rateCardName,
+      //     companyId: companyId,
+      //   });
+      //   if (ratecardCheck) {
+      //     return res.status(400).json({
+      //       error: 'Ratecard already exists',
+      //     });
+      //   }
+      // }
       let updateRateCard = await ratecard.findByIdAndUpdate(
         { _id: req.query.id },
         { $set: req.body },
@@ -94,6 +106,7 @@ exports.insertRateCard = async (req, res) => {
             'Please enter a valid input to fetch ratecards. Please check the parameters',
         });
       }
+      // TODO companyId must be fetched based on login 
       if (typeof req.query.companyId !== 'undefined' && req.query.companyId !== '') {
         let companyData = await ratecard.find({
             companyId: { $regex: req.query.companyId, $options: 'i' },
@@ -121,6 +134,22 @@ exports.insertRateCard = async (req, res) => {
         } else {
           return res.status(400).json({
             error: 'Ratecard not exist',
+          });
+        }
+      }
+      if (typeof req.query.storeId !== 'undefined' && req.query.storeId !== '') {
+        let storeData = await ratecard.find({
+          storeId: { $regex: req.query.storeId, $options: 'i' },
+        });
+        // TODO limit staff
+        if (storeData) {
+          return res.json({
+            error: null,
+            data: storeData,
+          });
+        } else {
+          return res.status(400).json({
+            error: 'Ratecards does not exist with store',
           });
         }
       }
