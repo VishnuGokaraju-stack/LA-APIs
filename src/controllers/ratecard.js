@@ -109,7 +109,8 @@ exports.insertRateCard = async (req, res) => {
       // TODO companyId must be fetched based on login 
       if (typeof req.query.companyId !== 'undefined' && req.query.companyId !== '') {
         let companyData = await ratecard.find({
-            companyId: { $regex: req.query.companyId, $options: 'i' },
+            //companyId: { $regex: req.query.companyId, $options: 'i' },
+            companyId: req.query.companyId,
         });
         // TODO limit staff
         if (companyData) {
@@ -138,8 +139,10 @@ exports.insertRateCard = async (req, res) => {
         }
       }
       if (typeof req.query.storeId !== 'undefined' && req.query.storeId !== '') {
+        console.log("aaaaa");
         let storeData = await ratecard.find({
-          storeId: { $regex: req.query.storeId, $options: 'i' },
+          //storeId: { $regex: req.query.storeId, $options: 'i' },
+          storeId: req.query.storeId,
         });
         // TODO limit staff
         if (storeData) {
