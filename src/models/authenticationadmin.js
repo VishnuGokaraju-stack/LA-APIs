@@ -1,4 +1,5 @@
 var mongoose = require("mongoose");
+const { ObjectId } = mongoose.Schema;
 
 var adminLoginSchema = new mongoose.Schema(
   {
@@ -13,15 +14,27 @@ var adminLoginSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
-    logintype: {
-      type: String,
-      maxlength: 20,
+    companyId: {
+      type: ObjectId,
+      ref: 'company',
     },
+    storeId: {
+      type: ObjectId,
+      ref: 'store',
+    },
+    isCompanyOwner: {
+      type: Boolean,
+      default: false
+    },
+    // logintype: {
+    //   type: String,
+    //   maxlength: 20,
+    // },
     status: {
-      type: Number, // 0 - deleted, 1 - active, 2 - inactive
-      min: 0,
-      max: 2,
-      default: 1,
+      type: String,
+      enum: ['Active', 'Inactive', 'Deleted'],
+      required: true,
+      default: 'Active',
     },
   },
   { timestamps: true }

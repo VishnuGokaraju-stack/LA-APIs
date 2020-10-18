@@ -139,7 +139,6 @@ exports.insertRateCard = async (req, res) => {
         }
       }
       if (typeof req.query.storeId !== 'undefined' && req.query.storeId !== '') {
-        console.log("aaaaa");
         let storeData = await ratecard.find({
           //storeId: { $regex: req.query.storeId, $options: 'i' },
           storeId: req.query.storeId,

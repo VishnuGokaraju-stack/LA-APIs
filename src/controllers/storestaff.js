@@ -137,6 +137,20 @@ exports.getStoreStaff = async (req, res) => {
         });
       }
     }
+
+    let staffData = await storestaff.find();
+      if (staffData) {
+        return res.json({
+          error: null,
+          data: staffData,
+        });
+      } else {
+        return res.status(400).json({
+          error: 'Staff not exist',
+        });
+      }
+
+    
     // if (typeof req.query.store !== 'undefined' && req.query.store !== '') {
     //   // get staff details
     //   let staffData = await storestaff.find({ storeId: req.query.store });
