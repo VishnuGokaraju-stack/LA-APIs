@@ -68,6 +68,7 @@ exports.insertStore = async (req, res) => {
         error: null,
         data: {
           message: 'Store added successfully',
+          store
         },
       });
     });
