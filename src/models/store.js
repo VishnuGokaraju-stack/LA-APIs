@@ -29,7 +29,7 @@ const storeSchema = new mongoose.Schema(
   {
     storeName: {
       type: String,
-      required: true,
+      required: [true, "Please enter a valid store name"],
       trim: true,
       unique: true,
     },
@@ -69,7 +69,7 @@ const storeSchema = new mongoose.Schema(
     storePolygon: storePolygonSchema,
     storeMobile: {
       type: String,
-      required: true,
+      required: [true, "Please enter store mobile number"],
       trim: true,
       unique: true,
     },
@@ -132,8 +132,8 @@ const storeSchema = new mongoose.Schema(
     // },
     storeStatus: {
       type: String,
-      enum: ['Active', 'Inactive', 'Deleted'],
-      required: true,
+      enum: ['Active', 'Inactive', 'Incomplete'],
+      //required: true,
       default: 'Active',
     },
     storeOwners: {

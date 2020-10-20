@@ -114,6 +114,9 @@ exports.getMC = async (req, res) => {
 
 exports.updateMC = async (req, res) => {
   try {
+    if (req.body._id) {
+      delete req.body._id;
+    }
     let updateMC = await motherCategory.findByIdAndUpdate(
       { _id: req.mcData._id },
       { $set: req.body },

@@ -9,6 +9,10 @@ const ratecardSchema = new mongoose.Schema({
     trim: true,
     unique: true,
   },
+  isDefault: {
+    type: Boolean,
+    default: false
+  },
   rateCardServices: {
     type: JSON,
     required: true,
@@ -37,4 +41,4 @@ const ratecardSchema = new mongoose.Schema({
   }
 });
 
-module.exports = mongoose.model('ratecard', ratecardSchema);
+module.exports = mongoose.model('ratecards', ratecardSchema);

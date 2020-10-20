@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const { verifyToken } = require("../../middlewares/admin/checkadminauth");
+const { validateInsertStore, storeValidationResult } = require("../../validations/store");
 
 const {
   getStoreById,
@@ -14,7 +15,7 @@ const {
 router.param("id", getStoreById);
 
 // insert new category
-router.post("/", verifyToken, insertStore);
+router.post("/", verifyToken, validateInsertStore, storeValidationResult, insertStore);
 
 // get all categories
 router.get("/", verifyToken, getAllStores);
