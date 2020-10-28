@@ -49,12 +49,18 @@ const storeSchema = new mongoose.Schema(
       type: JSON,
       trim: true,
     },
-    // ratecardOnline: {
-    //   type: String,
-    // },
-    // ratecardOffline: {
-    //   type: String,
-    // },
+    ratecardOnline: {
+      type: ObjectId,
+      reg: 'ratecard'
+    },
+    ratecardOffline: {
+      type: ObjectId,
+      reg: 'ratecard'
+    },
+    ratecardOthers: {
+      type: Array,
+      trim: true
+    },
     isVirtual: {
       type: Boolean,
       default: false

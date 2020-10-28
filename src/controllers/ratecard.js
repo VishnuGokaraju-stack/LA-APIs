@@ -35,7 +35,7 @@ exports.insertRateCard = async (req, res) => {
         companyId: req.body.companyId, // TODO based on login node js should get the companyid
         rateCardServices: req.body.rateCardServices,// JSON
         storeId: req.body.storeId,
-        rateCardType: req.body.rateCardType, // Online , Offline
+        //rateCardType: req.body.rateCardType, // Online , Offline
         rateCardStatus: req.body.rateCardStatus,
       });
       let insertRatecard = await newRatecard.save();
@@ -75,6 +75,10 @@ exports.insertRateCard = async (req, res) => {
       //     });
       //   }
       // }
+
+      // TODO - if ratecard is making inactive, check if ratecard is assigned to a store or not. 
+      // Send error message that ratecard is assigned to store
+
       let updateRateCard = await ratecard.findByIdAndUpdate(
         { _id: req.query.id },
         { $set: req.body },
@@ -141,8 +145,8 @@ exports.insertRateCard = async (req, res) => {
       //console.log("aaa "+req.query.companyId);
       //if (typeof req.query.companyId !== 'undefined' && req.query.companyId !== '') {
       //}
-      //console.log("xxxxx");
-      let companyData = await ratecard.find({isDefault: true});
+      //console.log("xxxxx");//isDefault: true
+      let companyData = await ratecard.find({companyId: req.query.companyId});
      // console.log("bbb : "+companyData);
       if (companyData) {
         return res.json({

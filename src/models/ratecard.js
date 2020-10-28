@@ -9,20 +9,20 @@ const ratecardSchema = new mongoose.Schema({
     trim: true,
     unique: true,
   },
-  isDefault: {
-    type: Boolean,
-    default: false
-  },
+  // isDefault: {
+  //   type: Boolean,
+  //   default: false
+  // },
   rateCardServices: {
     type: JSON,
     required: true,
     trim: true,
   },
-  rateCardType: {
-    type: String,
-    enum: ['Offline', 'Online'],
-    required: true,
-  },
+  // rateCardType: {
+  //   type: String,
+  //   enum: ['Offline', 'Online'],
+  //   required: true,
+  // },
   companyId: { // TODO ObjectId to replace with String
     //type: String
     type: ObjectId,
@@ -41,4 +41,4 @@ const ratecardSchema = new mongoose.Schema({
   }
 });
 
-module.exports = mongoose.model('ratecards', ratecardSchema);
+module.exports = mongoose.model('ratecard', ratecardSchema);
