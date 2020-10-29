@@ -35,7 +35,7 @@ exports.insertRateCard = async (req, res) => {
         companyId: req.body.companyId, // TODO based on login node js should get the companyid
         rateCardServices: req.body.rateCardServices,// JSON
         storeId: req.body.storeId,
-        //rateCardType: req.body.rateCardType, // Online , Offline
+        rateCardType: req.body.rateCardType, // Online , Offline, Others, empty
         rateCardStatus: req.body.rateCardStatus,
       });
       let insertRatecard = await newRatecard.save();
@@ -124,7 +124,7 @@ exports.insertRateCard = async (req, res) => {
           });
         }
       }
-      if (typeof req.query.storeId !== 'undefined' && req.query.storeId !== '') {
+      if (typeof req.query.storeId !== 'undefined' && req.query.storeId !== '' && typeof req.query.companyId === 'undefined' && req.query.companyId === '') {
         let storeData = await ratecard.find({
           //storeId: { $regex: req.query.storeId, $options: 'i' },
           storeId: req.query.storeId,
@@ -143,25 +143,51 @@ exports.insertRateCard = async (req, res) => {
       }
       // TODO companyId must be fetched based on login 
       //console.log("aaa "+req.query.companyId);
-      //if (typeof req.query.companyId !== 'undefined' && req.query.companyId !== '') {
-      //}
-      //console.log("xxxxx");//isDefault: true
-      let companyData = await ratecard.find({companyId: req.query.companyId});
-     // console.log("bbb : "+companyData);
-      if (companyData) {
-        return res.json({
-          error: null,
-          data: companyData,
+      if (typeof req.query.companyId !== 'undefined' && req.query.companyId !== '' && typeof req.query.storeId === 'undefined' && req.query.storeId === '') {
+        let companyData = await ratecard.find({
+          $and:[
+            {
+              companyId: req.query.companyId,
+            },
+            {
+              storeId: null
+            }
+          ]
         });
-      } 
-      else {
-        return res.status(400).json({
-          error: 'Ratecards does not exist with company',
-        });
+        if (companyData) {
+          return res.json({
+            error: null,
+            data: companyData,
+          });
+        } else {
+          return res.status(400).json({
+            error: 'Ratecards does not exist with company',
+          });
+        }
       }
-      // return res.status(400).json({
-      //   error: 'Something went wrong. Please try again - get ratecards',
-      // });
+      if (typeof req.query.storeId !== 'undefined' && req.query.storeId !== '' && typeof req.query.companyId !== 'undefined' && req.query.companyId !== '') {
+       let storeData = await ratecard.find({
+          $and:[
+            {
+              companyId: req.query.companyId,
+            },
+            {
+              storeId: req.query.storeId
+            }
+          ]
+        });
+        // TODO limit staff
+        if (storeData) {
+          return res.json({
+            error: null,
+            data: storeData,
+          });
+        } else {
+          return res.status(400).json({
+            error: 'Ratecards does not exist with store and company',
+          });
+        }
+      }
     } catch (error) {
       res.status(500).json({
         error: error.message,

@@ -29,6 +29,7 @@ exports.insertStore = async (req, res) => {
       });
     }
     
+    
     // insert into store table
     const newstore = new store({
       storeName: req.body.storeName,
@@ -36,12 +37,9 @@ exports.insertStore = async (req, res) => {
       companyId: req.body.companyId,
       cityId: req.body.cityId,
       storeAddress: req.body.storeAddress,
-      ratecardOnline: req.body.ratecardOnline,
-      ratecardOffline: req.body.ratecardOffline,
-      ratecardOthers: req.body.ratecardOthers,
       isVirtual: req.body.isVirtual,
       showInStoreLocator : req.body.showInStoreLocator,
-      parentStore : req.body.parentStore,
+      //parentStore : req.body.parentStore,
       //storePincode: req.body.storePincode,
       //storeLocation: geoLocation,
       //storePolygon: storePolygon,
@@ -55,6 +53,24 @@ exports.insertStore = async (req, res) => {
       storeStaffBoys: req.body.storeStaffBoys,
       storeStatus: req.body.storeStatus,
     });
+    if(req.body.parentStore) {
+      newstore.parentStore = req.body.parentStore
+    }
+    if(req.body.ratecardOnline) {
+      newstore.ratecardOnline = req.body.ratecardOnline
+    }
+    if(req.body.ratecardOffline) {
+      newstore.ratecardOffline = req.body.ratecardOffline
+    }
+    if(req.body.ratecardOthers) {
+      // check if ratecard others is array or not
+      if(!Array.isArray(req.body.ratecardOthers)) {
+        return res.status(400).json({
+          error: 'Please enter valid other ratecards',
+        });
+      }
+      newstore.ratecardOthers = req.body.ratecardOthers
+    }
     if(req.body.storeCoordinates) {
       const storePolygon = { type: 'Polygon', coordinates: req.body.storeCoordinates };
       newstore.storePolygon = storePolygon

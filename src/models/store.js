@@ -50,14 +50,12 @@ const storeSchema = new mongoose.Schema(
       trim: true,
     },
     ratecardOnline: {
-      type: String
-      // type: ObjectId,
-      // ref: 'ratecard'
+      type: ObjectId,
+      ref: 'ratecard'
     },
     ratecardOffline: {
-      type: String
-      // type: ObjectId,
-      // ref: 'ratecard'
+      type: ObjectId,
+      ref: 'ratecard'
     },
     ratecardOthers: {
       type: Array,
@@ -72,7 +70,8 @@ const storeSchema = new mongoose.Schema(
       default: false
     },
     parentStore : { // TODO if virtual store insert partent store id in this field
-      type: String,
+      type: ObjectId,
+      ref: "store"
     },
     storePolygon: storePolygonSchema,
     storeMobile: {
@@ -105,44 +104,11 @@ const storeSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-    // storeOwnerName: {
-    //   type: String,
-    //   required: true,
-    //   trim: true,
-    // },
-    // storeOwnerMobile: {
-    //   type: String,
-    //   required: true,
-    //   trim: true,
-    // },
-    // storeOwnerEmail: {
-    //   type: String,
-    //   required: true,
-    //   trim: true,
-    // },
-    // storeOwnerProofType: {
-    //   type: String, // pancard, aadhar
-    //   trim: true,
-    // },
-    // storeOwnerProofNo: {
-    //   type: String, // pancard no , aadhar no
-    //   trim: true,
-    // },
-    // storeOwnerBankAccount: {
-    //   // sbi, ICICI
-    //   type: String,
-    //   trim: true,
-    // },
-    // storeOwnerBankAccountNo: {
-    //   // account number
-    //   type: String,
-    //   trim: true,
-    // },
     storeStatus: {
       type: String,
       enum: ['Active', 'Inactive', 'Incomplete'],
       //required: true,
-      default: 'Active',
+      default: 'Incomplete',
     },
     storeOwners: {
       type: Array,

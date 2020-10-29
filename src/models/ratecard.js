@@ -31,7 +31,8 @@ const ratecardSchema = new mongoose.Schema({
   },
   storeId: {
     type: ObjectId,
-    ref: "store"
+    ref: "store",
+    default: null
   },
   rateCardStatus: {
     type: String,
