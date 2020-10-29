@@ -51,11 +51,11 @@ const storeSchema = new mongoose.Schema(
     },
     ratecardOnline: {
       type: ObjectId,
-      reg: 'ratecard'
+      ref: 'ratecard'
     },
     ratecardOffline: {
       type: ObjectId,
-      reg: 'ratecard'
+      ref: 'ratecard'
     },
     ratecardOthers: {
       type: Array,
@@ -69,7 +69,7 @@ const storeSchema = new mongoose.Schema(
       type: Boolean,
       default: false
     },
-    parentStore : {
+    parentStore : { // if virtual store insert partent store id in this field
       type: String,
     },
     storePolygon: storePolygonSchema,
