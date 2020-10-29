@@ -50,12 +50,14 @@ const storeSchema = new mongoose.Schema(
       trim: true,
     },
     ratecardOnline: {
-      type: ObjectId,
-      ref: 'ratecard'
+      type: String
+      // type: ObjectId,
+      // ref: 'ratecard'
     },
     ratecardOffline: {
-      type: ObjectId,
-      ref: 'ratecard'
+      type: String
+      // type: ObjectId,
+      // ref: 'ratecard'
     },
     ratecardOthers: {
       type: Array,
