@@ -104,6 +104,7 @@ exports.insertRateCard = async (req, res) => {
 
   exports.getRateCard = async (req, res) => {
     try {
+      //console.log("aaaaaa");
       if (typeof req.query === 'undefined') {
         return res.status(400).json({
           error:
@@ -111,6 +112,7 @@ exports.insertRateCard = async (req, res) => {
         });
       }
       if (typeof req.query.id !== 'undefined' && req.query.id !== '') {
+        //console.log("bbbbb");
         // get staff details
         let companyData = await ratecard.findById(req.query.id);
         if (companyData) {
@@ -124,7 +126,11 @@ exports.insertRateCard = async (req, res) => {
           });
         }
       }
-      if (typeof req.query.storeId !== 'undefined' && req.query.storeId !== '' && typeof req.query.companyId === 'undefined' && req.query.companyId === '') {
+      //console.log("cccccc");
+      //console.log("comapany : "+req.query.companyId);
+      //console.log("store : "+req.query.storeId);
+      if ((typeof req.query.storeId !== 'undefined' && req.query.storeId !== '') && (typeof req.query.companyId === 'undefined' || req.query.companyId === '')) {
+        //console.log("iffffff");
         let storeData = await ratecard.find({
           //storeId: { $regex: req.query.storeId, $options: 'i' },
           storeId: req.query.storeId,
@@ -143,7 +149,8 @@ exports.insertRateCard = async (req, res) => {
       }
       // TODO companyId must be fetched based on login 
       //console.log("aaa "+req.query.companyId);
-      if (typeof req.query.companyId !== 'undefined' && req.query.companyId !== '' && typeof req.query.storeId === 'undefined' && req.query.storeId === '') {
+      if ((typeof req.query.companyId !== 'undefined' && req.query.companyId !== '') && (typeof req.query.storeId === 'undefined' || req.query.storeId === '')) {
+        //console.log("elseee   iffffff");
         let companyData = await ratecard.find({
           $and:[
             {
@@ -165,8 +172,9 @@ exports.insertRateCard = async (req, res) => {
           });
         }
       }
-      if (typeof req.query.storeId !== 'undefined' && req.query.storeId !== '' && typeof req.query.companyId !== 'undefined' && req.query.companyId !== '') {
-       let storeData = await ratecard.find({
+      if ((typeof req.query.storeId !== 'undefined' && req.query.storeId !== '') && (typeof req.query.companyId !== 'undefined' && req.query.companyId !== '')) {
+        //console.log("elseeeee");
+        let storeData = await ratecard.find({
           $and:[
             {
               companyId: req.query.companyId,
@@ -188,6 +196,7 @@ exports.insertRateCard = async (req, res) => {
           });
         }
       }
+      //console.log("end of api");
     } catch (error) {
       res.status(500).json({
         error: error.message,
