@@ -71,7 +71,7 @@ const storeSchema = new mongoose.Schema(
       type: Boolean,
       default: false
     },
-    parentStore : { // if virtual store insert partent store id in this field
+    parentStore : { // TODO if virtual store insert partent store id in this field
       type: String,
     },
     storePolygon: storePolygonSchema,

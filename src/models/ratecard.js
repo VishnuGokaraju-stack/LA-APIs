@@ -18,11 +18,11 @@ const ratecardSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
-  // rateCardType: {
-  //   type: String,
-  //   enum: ['Offline', 'Online'],
-  //   required: true,
-  // },
+  rateCardType: {
+    type: String,
+    enum: ['Offline', 'Online', 'Others', ''],
+    required: true,
+  },
   companyId: { // TODO ObjectId to replace with String
     //type: String
     type: ObjectId,
