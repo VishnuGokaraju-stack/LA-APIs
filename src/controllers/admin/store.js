@@ -143,6 +143,26 @@ exports.updateStore = async (req, res) => {
       //delete req.body.latitude;
       //delete req.body.longitude;
       //delete req.body.storeCoordinates;
+    } 
+    if(!req.body.parentStore) {
+      delete req.body.parentStore
+    }
+    if(!req.body.ratecardOnline) {
+      delete req.body.ratecardOnline
+    }
+    if(!req.body.ratecardOffline) {
+      delete req.body.ratecardOffline
+    }
+    if(req.body.ratecardOthers) {
+      // check if ratecard others is array or not
+      if(!Array.isArray(req.body.ratecardOthers)) {
+        return res.status(400).json({
+          error: 'Please enter valid other ratecards',
+        });
+      }
+    }
+    else {
+      delete req.body.ratecardOthers
     }
     let updateStore = await store.findByIdAndUpdate(
       { _id: req.storeData._id },

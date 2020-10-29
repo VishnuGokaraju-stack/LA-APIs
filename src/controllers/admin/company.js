@@ -37,6 +37,21 @@ exports.insertCompany = async (req, res) => {
       companyOwnerMobile: req.body.companyOwnerMobile,
       companyOwnerMobileAlternate: req.body.companyOwnerMobileAlternate,
     });
+    if(req.body.ratecardOnline) {
+      newCompany.ratecardOnline = req.body.ratecardOnline
+    }
+    if(req.body.ratecardOffline) {
+      newCompany.ratecardOffline = req.body.ratecardOffline
+    }
+    if(req.body.ratecardOthers) {
+      // check if ratecard others is array or not
+      if(!Array.isArray(req.body.ratecardOthers)) {
+        return res.status(400).json({
+          error: 'Please enter valid other ratecards',
+        });
+      }
+      newCompany.ratecardOthers = req.body.ratecardOthers
+    }
     newCompany.save((error, company) => {
       if (error) {
         return res.status(400).json({

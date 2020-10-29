@@ -175,7 +175,7 @@ exports.insertRateCard = async (req, res) => {
       if ((typeof req.query.storeId !== 'undefined' && req.query.storeId !== '') && (typeof req.query.companyId !== 'undefined' && req.query.companyId !== '')) {
         //console.log("elseeeee");
         let storeData = await ratecard.find({
-          $and:[
+          $or:[
             {
               companyId: req.query.companyId,
             },

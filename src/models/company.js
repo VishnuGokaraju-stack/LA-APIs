@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { ObjectId } = mongoose.Schema;
 
 const companySchema = new mongoose.Schema(
   {
@@ -28,11 +29,22 @@ const companySchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+    ratecardOnline: {
+      type: ObjectId,
+      ref: 'ratecard'
+    },
+    ratecardOffline: {
+      type: ObjectId,
+      ref: 'ratecard'
+    },
+    ratecardOthers: {
+      type: Array,
+      trim: true
+    },
     companyStatus: {
-      type: Number, // 0 - inactive, 1 - active
-      min: 0,
-      max: 1,
-      default: 0,
+      type: String,
+      enum: ['Active', 'Inactive'],
+      default: 'Active',
     },
   },
   { timestamps: true }
