@@ -18,28 +18,29 @@ const ratecardSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
-  rateCardType: {
-    type: String,
-    enum: ['Offline', 'Online', 'Others', ''],
-    required: true,
-  },
-  companyId: { // TODO ObjectId to replace with String
+  // rateCardType: {
+  //   type: String,
+  //   enum: ['Offline', 'Online', 'Others', ''],
+  //   required: true,
+  // },
+  companyId: {
+    // TODO ObjectId to replace with String
     //type: String
     type: ObjectId,
     ref: 'company',
     required: true,
   },
-  storeId: {
-    type: ObjectId,
-    ref: "store",
-    default: null
-  },
+  // storeId: {
+  //   type: ObjectId,
+  //   ref: 'store',
+  //   default: null,
+  // },
   rateCardStatus: {
     type: String,
     enum: ['Active', 'Inactive'],
     required: true,
     default: 'Active',
-  }
+  },
 });
 
 module.exports = mongoose.model('ratecard', ratecardSchema);

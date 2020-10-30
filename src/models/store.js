@@ -29,7 +29,7 @@ const storeSchema = new mongoose.Schema(
   {
     storeName: {
       type: String,
-      required: [true, "Please enter a valid store name"],
+      required: [true, 'Please enter a valid store name'],
       trim: true,
       unique: true,
     },
@@ -37,7 +37,8 @@ const storeSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
-    companyId: { // fetch from auth token companyId taken from DB
+    companyId: {
+      // fetch from auth token companyId taken from DB
       type: ObjectId,
       ref: 'company',
     },
@@ -51,32 +52,29 @@ const storeSchema = new mongoose.Schema(
     },
     ratecardOnline: {
       type: ObjectId,
-      ref: 'ratecard'
+      ref: 'ratecard',
     },
     ratecardOffline: {
-      type: ObjectId,
-      ref: 'ratecard'
-    },
-    ratecardOthers: {
       type: Array,
-      trim: true
+      trim: true,
     },
     isVirtual: {
-      type: Boolean,
-      default: false
+      type: Boolean, // true, false
+      default: false,
     },
-    showInStoreLocator : {
+    showInStoreLocator: {
       type: Boolean,
-      default: false
+      default: false,
     },
-    parentStore : { // TODO if virtual store insert partent store id in this field
+    parentStore: {
+      // TODO if virtual store insert partent store id in this field
       type: ObjectId,
-      ref: "store"
+      ref: 'store',
     },
     storePolygon: storePolygonSchema,
     storeMobile: {
       type: String,
-      required: [true, "Please enter store mobile number"],
+      required: [true, 'Please enter store mobile number'],
       trim: true,
       unique: true,
     },

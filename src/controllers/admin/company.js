@@ -1,11 +1,11 @@
-const company = require("../../models/company");
+const company = require('../../models/company');
 
 exports.getCompanyById = async (req, res, next, id) => {
   try {
     await company.findById(id).exec((error, company) => {
       if (error || !company) {
         return res.status(400).json({
-          error: "Company not exist",
+          error: 'Company not exist',
         });
       }
       req.companyData = company;
@@ -25,7 +25,7 @@ exports.insertCompany = async (req, res) => {
     let validateCheck = await company.findOne({ companyName });
     if (validateCheck) {
       return res.status(400).json({
-        error: "Company already exists",
+        error: 'Company already exists',
       });
     }
     // insert into company table
@@ -37,31 +37,31 @@ exports.insertCompany = async (req, res) => {
       companyOwnerMobile: req.body.companyOwnerMobile,
       companyOwnerMobileAlternate: req.body.companyOwnerMobileAlternate,
     });
-    if(req.body.ratecardOnline) {
-      newCompany.ratecardOnline = req.body.ratecardOnline
-    }
-    if(req.body.ratecardOffline) {
-      newCompany.ratecardOffline = req.body.ratecardOffline
-    }
-    if(req.body.ratecardOthers) {
-      // check if ratecard others is array or not
-      if(!Array.isArray(req.body.ratecardOthers)) {
-        return res.status(400).json({
-          error: 'Please enter valid other ratecards',
-        });
-      }
-      newCompany.ratecardOthers = req.body.ratecardOthers
-    }
+    // if(req.body.ratecardOnline) {
+    //   newCompany.ratecardOnline = req.body.ratecardOnline
+    // }
+    // if(req.body.ratecardOffline) {
+    //   newCompany.ratecardOffline = req.body.ratecardOffline
+    // }
+    // if(req.body.ratecardOthers) {
+    //   // check if ratecard others is array or not
+    //   if(!Array.isArray(req.body.ratecardOthers)) {
+    //     return res.status(400).json({
+    //       error: 'Please enter valid other ratecards',
+    //     });
+    //   }
+    //   newCompany.ratecardOthers = req.body.ratecardOthers
+    // }
     newCompany.save((error, company) => {
       if (error) {
         return res.status(400).json({
-          error: "Not able to insert user in DB - company",
+          error: 'Not able to insert user in DB - company',
         });
       }
       res.json({
         error: null,
         data: {
-          message: "Company added successfully",
+          message: 'Company added successfully',
         },
       });
     });
@@ -77,7 +77,7 @@ exports.getAllCompanies = async (req, res) => {
     await company.find().exec((error, company) => {
       if (error || !company) {
         return res.status(400).json({
-          error: "Companies not found",
+          error: 'Companies not found',
         });
       }
       res.json({
@@ -121,7 +121,7 @@ exports.updateCompany = async (req, res) => {
       });
     } else {
       return res.status(400).json({
-        error: "Company not updated. Please try again",
+        error: 'Company not updated. Please try again',
       });
     }
   } catch (error) {

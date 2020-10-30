@@ -28,8 +28,7 @@ exports.insertStore = async (req, res) => {
         error: 'Store already exists',
       });
     }
-    
-    
+
     // insert into store table
     const newstore = new store({
       storeName: req.body.storeName,
@@ -38,7 +37,7 @@ exports.insertStore = async (req, res) => {
       cityId: req.body.cityId,
       storeAddress: req.body.storeAddress,
       isVirtual: req.body.isVirtual,
-      showInStoreLocator : req.body.showInStoreLocator,
+      showInStoreLocator: req.body.showInStoreLocator,
       //parentStore : req.body.parentStore,
       //storePincode: req.body.storePincode,
       //storeLocation: geoLocation,
@@ -53,27 +52,27 @@ exports.insertStore = async (req, res) => {
       storeStaffBoys: req.body.storeStaffBoys,
       storeStatus: req.body.storeStatus,
     });
-    if(req.body.parentStore) {
-      newstore.parentStore = req.body.parentStore
+    if (req.body.parentStore) {
+      newstore.parentStore = req.body.parentStore;
     }
-    if(req.body.ratecardOnline) {
-      newstore.ratecardOnline = req.body.ratecardOnline
+    if (req.body.ratecardOnline) {
+      newstore.ratecardOnline = req.body.ratecardOnline;
     }
-    if(req.body.ratecardOffline) {
-      newstore.ratecardOffline = req.body.ratecardOffline
-    }
-    if(req.body.ratecardOthers) {
+    if (req.body.ratecardOffline) {
       // check if ratecard others is array or not
-      if(!Array.isArray(req.body.ratecardOthers)) {
+      if (!Array.isArray(req.body.ratecardOffline)) {
         return res.status(400).json({
-          error: 'Please enter valid other ratecards',
+          error: 'Please enter valid offline ratecards',
         });
       }
-      newstore.ratecardOthers = req.body.ratecardOthers
+      newstore.ratecardOffline = req.body.ratecardOffline;
     }
-    if(req.body.storeCoordinates) {
-      const storePolygon = { type: 'Polygon', coordinates: req.body.storeCoordinates };
-      newstore.storePolygon = storePolygon
+    if (req.body.storeCoordinates) {
+      const storePolygon = {
+        type: 'Polygon',
+        coordinates: req.body.storeCoordinates,
+      };
+      newstore.storePolygon = storePolygon;
     }
     newstore.save((error, store) => {
       if (error) {
@@ -85,7 +84,7 @@ exports.insertStore = async (req, res) => {
         error: null,
         data: {
           message: 'Store added successfully',
-          _id: store._id
+          _id: store._id,
         },
       });
     });
@@ -143,26 +142,25 @@ exports.updateStore = async (req, res) => {
       //delete req.body.latitude;
       //delete req.body.longitude;
       //delete req.body.storeCoordinates;
-    } 
-    if(!req.body.parentStore) {
-      delete req.body.parentStore
     }
-    if(!req.body.ratecardOnline) {
-      delete req.body.ratecardOnline
+    if (!req.body.parentStore) {
+      delete req.body.parentStore;
     }
-    if(!req.body.ratecardOffline) {
-      delete req.body.ratecardOffline
+    if (!req.body.ratecardOnline) {
+      delete req.body.ratecardOnline;
     }
-    if(req.body.ratecardOthers) {
+    // if (!req.body.ratecardOffline) {
+    //   delete req.body.ratecardOffline;
+    // }
+    if (req.body.ratecardOffline) {
       // check if ratecard others is array or not
-      if(!Array.isArray(req.body.ratecardOthers)) {
+      if (!Array.isArray(req.body.ratecardOffline)) {
         return res.status(400).json({
-          error: 'Please enter valid other ratecards',
+          error: 'Please enter valid offline ratecards',
         });
       }
-    }
-    else {
-      delete req.body.ratecardOthers
+    } else {
+      delete req.body.ratecardOffline;
     }
     let updateStore = await store.findByIdAndUpdate(
       { _id: req.storeData._id },

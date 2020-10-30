@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const { ObjectId } = mongoose.Schema;
 
 const companySchema = new mongoose.Schema(
@@ -29,18 +29,6 @@ const companySchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
-    ratecardOnline: {
-      type: ObjectId,
-      ref: 'ratecard'
-    },
-    ratecardOffline: {
-      type: ObjectId,
-      ref: 'ratecard'
-    },
-    ratecardOthers: {
-      type: Array,
-      trim: true
-    },
     companyStatus: {
       type: String,
       enum: ['Active', 'Inactive'],
@@ -50,4 +38,4 @@ const companySchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("company", companySchema);
+module.exports = mongoose.model('company', companySchema);
