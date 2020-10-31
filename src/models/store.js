@@ -109,7 +109,7 @@ const storeSchema = new mongoose.Schema(
       default: 'Incomplete',
     },
     storeOwners: {
-      type: Array,
+      type: String,
       trim: true,
     },
     storeDeliveryBoys: {
