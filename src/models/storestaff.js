@@ -1,7 +1,11 @@
 const mongoose = require('mongoose');
-//const { ObjectId } = mongoose.Schema;
+const { ObjectId } = mongoose.Schema;
 
 const storestaffSchema = new mongoose.Schema({
+  companyId: {
+    type: ObjectId,
+    ref: 'company',
+  },
   staffFirstName: {
     type: String,
     required: true,
@@ -25,11 +29,11 @@ const storestaffSchema = new mongoose.Schema({
     type: String,
     trim: true,
   },
-  encryptPassword: {
-    type: String,
-    required: true,
-    trim: true,
-  },
+  // encryptPassword: {
+  //   type: String,
+  //   required: true,
+  //   trim: true,
+  // },
   staffProof: {
     // pancard, aadhar
     type: JSON,

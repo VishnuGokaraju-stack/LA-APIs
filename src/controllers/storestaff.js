@@ -27,15 +27,15 @@ exports.insertStoreStaff = async (req, res) => {
     }
     // encrypt password
     const salt = await bcrypt.genSalt(10);
-    const encry_password = await bcrypt.hash(req.body.staffPassword, salt);
+    //const encry_password = await bcrypt.hash(req.body.staffPassword, salt);
     const newStaff = new storestaff({
-      storeId: req.body.storeId,
+      companyId: '5f636b4d8dbb2429c05ecf42',
       staffFirstName: req.body.staffFirstName,
       staffLastName: req.body.staffLastName,
       staffEmailId: req.body.staffEmailId,
       staffMobile: req.body.staffMobile,
       staffAlternateMobile: req.body.staffAlternateMobile,
-      encryptPassword: encry_password,
+      //encryptPassword: encry_password,
       staffProof: req.body.staffProof, // JSON
       staffBankDetails: req.body.staffBankDetails, // JSON
       staffEmployeeType: req.body.staffEmployeeType, //  Array
@@ -139,18 +139,17 @@ exports.getStoreStaff = async (req, res) => {
     }
 
     let staffData = await storestaff.find();
-      if (staffData) {
-        return res.json({
-          error: null,
-          data: staffData,
-        });
-      } else {
-        return res.status(400).json({
-          error: 'Staff not exist',
-        });
-      }
+    if (staffData) {
+      return res.json({
+        error: null,
+        data: staffData,
+      });
+    } else {
+      return res.status(400).json({
+        error: 'Staff not exist',
+      });
+    }
 
-    
     // if (typeof req.query.store !== 'undefined' && req.query.store !== '') {
     //   // get staff details
     //   let staffData = await storestaff.find({ storeId: req.query.store });
