@@ -46,12 +46,12 @@ app.use('/admin/stafftypes', staffTypesRoutes);
 
 // admin + api routes
 const cityRoutes = require('./src/routes/city');
-const storeStaffRoutes = require('./src/routes/storestaff');
+const staffRoutes = require('./src/routes/staff');
 const customerSignupRoutes = require('./src/routes/customersignup');
 const rateCardRoutes = require('./src/routes/ratecard');
 app.use('/admin/customer/signup', customerSignupRoutes);
 app.use('/admin/city', cityRoutes);
-app.use('/admin/staff', storeStaffRoutes);
+app.use('/admin/staff', staffRoutes);
 app.use('/admin/ratecard', rateCardRoutes);
 // api Routes
 

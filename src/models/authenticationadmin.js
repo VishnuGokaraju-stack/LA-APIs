@@ -1,9 +1,10 @@
-var mongoose = require("mongoose");
+var mongoose = require('mongoose');
 const { ObjectId } = mongoose.Schema;
 
 var adminLoginSchema = new mongoose.Schema(
   {
     username: {
+      // mobile  number is username
       type: String,
       required: true,
       maxlength: 10,
@@ -24,7 +25,7 @@ var adminLoginSchema = new mongoose.Schema(
     },
     isCompanyOwner: {
       type: Boolean,
-      default: false
+      default: false,
     },
     // logintype: {
     //   type: String,
@@ -39,4 +40,4 @@ var adminLoginSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-module.exports = mongoose.model("adminlogin", adminLoginSchema);
+module.exports = mongoose.model('adminlogin', adminLoginSchema);
