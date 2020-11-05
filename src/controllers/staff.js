@@ -18,7 +18,6 @@ exports.insertStaff = async (req, res) => {
     // check if email already exists
     let emailCheck = await staff.findOne({
       staffEmailId: staffEmailId,
-      storeId: storeId,
     });
     if (emailCheck) {
       return res.status(400).json({
@@ -27,10 +26,10 @@ exports.insertStaff = async (req, res) => {
     }
 
     // encrypt password
-    const salt = await bcrypt.genSalt(10);
+    //const salt = await bcrypt.genSalt(10);
     //const encry_password = await bcrypt.hash(req.body.staffPassword, salt);
     const newStaff = new staff({
-      companyId: '5f636b4d8dbb2429c05ecf42',
+      //companyId: '5f636b4d8dbb2429c05ecf42',
       staffFirstName: req.body.staffFirstName,
       staffLastName: req.body.staffLastName,
       staffEmailId: req.body.staffEmailId,
@@ -56,8 +55,8 @@ exports.insertStaff = async (req, res) => {
       }
     }
     // TODO companyid should be dynamic
-    newStaff.companyId = '5f636b4d8dbb2429c05ecf42';
-    newStaff.createdBy = '5f636b4d8dbb2429c05ecf42';
+    newStaff.companyId = '5fa402d62f74d591844eca24';
+    newStaff.createdBy = '5fa402d62f74d591844eca24';
 
     let insertStaff = await newStaff.save();
     if (insertStaff) {
@@ -179,7 +178,7 @@ exports.getStaff = async (req, res) => {
         let staffData = await staff.find({
           $and: [
             {
-              companyId: '5f636b4d8dbb2429c05ecf42',
+              companyId: '5fa402d62f74d591844eca24',
             },
             {
               isEmployeeStoreOwner: true,
