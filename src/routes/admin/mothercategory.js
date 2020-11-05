@@ -1,31 +1,31 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
 const {
   validateInsertMC,
   MCValidationResult,
-} = require("../../validations/mothercategory");
-const { verifyToken } = require("../../middlewares/admin/checkadminauth");
+} = require('../../validations/mothercategory');
+const { verifyToken } = require('../../middlewares/admin/checkadminauth');
 const {
   insertMC,
   getAllMC,
   getMCById,
   getMC,
   updateMC,
-} = require("../../controllers/admin/mothercategory");
+} = require('../../controllers/admin/mothercategory');
 
-router.param("id", getMCById);
+router.param('id', getMCById);
 
 // insert new mothercategory
-router.post("/", verifyToken, validateInsertMC, MCValidationResult, insertMC);
+router.post('/', validateInsertMC, MCValidationResult, insertMC);
 
 // get all mothercategories
-router.get("/", verifyToken, getAllMC);
+router.get('/', getAllMC);
 
 // get single mothercategories
-router.get("/:id", verifyToken, getMC);
+router.get('/:id', getMC);
 
 // update mothercategory
-router.put("/:id", verifyToken, updateMC);
+router.put('/:id', updateMC);
 
 // delete mothercategory
 //router.delete("/:id", deleteMC);
