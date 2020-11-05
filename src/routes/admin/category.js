@@ -1,7 +1,7 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
 
-const { verifyToken } = require("../../middlewares/admin/checkadminauth");
+const { verifyToken } = require('../../middlewares/admin/checkadminauth');
 
 const {
   getCatById,
@@ -9,21 +9,21 @@ const {
   getAllCat,
   getCat,
   updateCat,
-} = require("../../controllers/admin/category");
+} = require('../../controllers/admin/category');
 
-router.param("id", getCatById);
+router.param('id', getCatById);
 
 // insert new category
-router.post("/", verifyToken, insertCat);
+router.post('/', insertCat);
 
 // get all categories
-router.get("/", verifyToken, getAllCat);
+router.get('/', getAllCat);
 
 // get single categories
-router.get("/:id", verifyToken, getCat);
+router.get('/:id', getCat);
 
 // update category
-router.put("/:id", verifyToken, updateCat);
+router.put('/:id', updateCat);
 
 // delete category
 //router.delete("/:id", deleteCat);

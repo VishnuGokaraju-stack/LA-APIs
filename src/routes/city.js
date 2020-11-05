@@ -1,10 +1,10 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
 const {
   validateInsertCity,
   cityValidationResult,
-} = require("../validations/city");
-const { verifyToken } = require("../middlewares/admin/checkadminauth");
+} = require('../validations/city');
+const { verifyToken } = require('../middlewares/admin/checkadminauth');
 
 const {
   getCityById,
@@ -12,13 +12,13 @@ const {
   getAllCities,
   getCity,
   updateCity,
-} = require("../controllers/city");
+} = require('../controllers/city');
 
-router.param("id", getCityById);
+router.param('id', getCityById);
 
 // insert new city
 router.post(
-  "/",
+  '/',
   verifyToken,
   validateInsertCity,
   cityValidationResult,
@@ -26,13 +26,13 @@ router.post(
 );
 
 // get all cities
-router.get("/", verifyToken, getAllCities);
+router.get('/', getAllCities);
 
 // get single cities
-router.get("/:id", verifyToken, getCity);
+router.get('/:id', getCity);
 
 // update city
-router.put("/:id", verifyToken, updateCity);
+router.put('/:id', updateCity);
 
 // delete city
 //router.delete("/:id", deleteCat);

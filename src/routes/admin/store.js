@@ -1,8 +1,11 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
 
-const { verifyToken } = require("../../middlewares/admin/checkadminauth");
-const { validateInsertStore, storeValidationResult } = require("../../validations/store");
+const { verifyToken } = require('../../middlewares/admin/checkadminauth');
+const {
+  validateInsertStore,
+  storeValidationResult,
+} = require('../../validations/store');
 
 const {
   getStoreById,
@@ -10,21 +13,21 @@ const {
   getAllStores,
   getStore,
   updateStore,
-} = require("../../controllers/admin/store");
+} = require('../../controllers/admin/store');
 
-router.param("id", getStoreById);
+router.param('id', getStoreById);
 
 // insert new category
-router.post("/", verifyToken, validateInsertStore, storeValidationResult, insertStore);
+router.post('/', validateInsertStore, storeValidationResult, insertStore);
 
 // get all categories
-router.get("/", verifyToken, getAllStores);
+router.get('/', getAllStores);
 
 // get single categories
-router.get("/:id", verifyToken, getStore);
+router.get('/:id', getStore);
 
 // update category
-router.put("/:id", verifyToken, updateStore);
+router.put('/:id', updateStore);
 
 // delete category
 //router.delete("/:id", deleteCat);

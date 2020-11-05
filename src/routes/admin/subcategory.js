@@ -1,6 +1,6 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const { verifyToken } = require("../../middlewares/admin/checkadminauth");
+const { verifyToken } = require('../../middlewares/admin/checkadminauth');
 
 const {
   getSubcatById,
@@ -8,21 +8,21 @@ const {
   getAllSubcat,
   getSubcat,
   updateSubcat,
-} = require("../../controllers/admin/subcategory");
+} = require('../../controllers/admin/subcategory');
 
-router.param("id", getSubcatById);
+router.param('id', getSubcatById);
 
 // insert new category
-router.post("/", verifyToken, insertSubcat);
+router.post('/', insertSubcat);
 
 // get all categories
-router.get("/", verifyToken, getAllSubcat);
+router.get('/', getAllSubcat);
 
 // get single categories
-router.get("/:id", verifyToken, getSubcat);
+router.get('/:id', getSubcat);
 
 // update category
-router.put("/:id", verifyToken, updateSubcat);
+router.put('/:id', updateSubcat);
 
 // delete sub category
 //router.delete("/:id", deleteSubcat);

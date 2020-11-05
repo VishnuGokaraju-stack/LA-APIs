@@ -15,16 +15,16 @@ const {
 // } = require('../validations/storestaff');
 
 // insert staff
-router.post('/', verifyToken, insertStaff);
+router.post('/', insertStaff);
 
 // get all staffs
-//router.get('/', verifyToken, getAllStaff);
+//router.get('/', getAllStaff);
 
 // get single staff
-router.get('/', verifyToken, getStaff); // query params - id, name, mobile, store
+router.get('/', getStaff); // query params - id, name, mobile, store
 
 // update staff
-router.put('/', verifyToken, updateStaff);
+router.put('/', updateStaff);
 
 // delete staff
 //router.delete("/:id", deleteCat);

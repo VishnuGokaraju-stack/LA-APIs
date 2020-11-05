@@ -1,28 +1,28 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
 
-const { verifyToken } = require("../../middlewares/admin/checkadminauth");
+const { verifyToken } = require('../../middlewares/admin/checkadminauth');
 const {
   getServiceById,
   insertService,
   getAllService,
   getService,
   updateService,
-} = require("../../controllers/admin/service");
+} = require('../../controllers/admin/service');
 
-router.param("id", getServiceById);
+router.param('id', getServiceById);
 
 // insert new service
-router.post("/", verifyToken, insertService);
+router.post('/', insertService);
 
 // get all services
-router.get("/", verifyToken, getAllService);
+router.get('/', getAllService);
 
 // get single service
-router.get("/:id", verifyToken, getService);
+router.get('/:id', getService);
 
 // update service
-router.put("/:id", verifyToken, updateService);
+router.put('/:id', updateService);
 
 // delete service
 //router.delete("/:id", deleteService);

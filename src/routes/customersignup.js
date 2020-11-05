@@ -14,15 +14,15 @@ const {
 router.param('id', getCustomerById);
 
 // insert new customer
-router.post('/', verifyToken, insertCustomer);
+router.post('/', insertCustomer);
 
 // get all customer
-//router.get('/', verifyToken, getAllCustomers);
+//router.get('/', getAllCustomers);
 
 // get single customer
-router.get('/', verifyToken, getCustomer);
+router.get('/', getCustomer);
 
 // update customer
-router.put('/:id', verifyToken, updateCustomer);
+router.put('/:id', updateCustomer);
 
 module.exports = router;
