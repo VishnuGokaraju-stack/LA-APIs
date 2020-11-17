@@ -78,21 +78,19 @@ exports.insertSubcat = async (req, res) => {
 
 exports.getAllSubcat = async (req, res) => {
   try {
-    await subCategory
-      .find({ companyId: req.user.companyId })
-      .exec((error, subcat) => {
-        if (error || !subcat) {
-          return res.status(400).json({
-            error: 'Subcategories not found',
-          });
-        }
-        res.json({
-          error: null,
-          data: {
-            subcat,
-          },
+    await subCategory.find().exec((error, subcat) => {
+      if (error || !subcat) {
+        return res.status(400).json({
+          error: 'Subcategories not found',
         });
+      }
+      res.json({
+        error: null,
+        data: {
+          subcat,
+        },
       });
+    });
   } catch (error) {
     res.status(500).json({
       error: error.message,
