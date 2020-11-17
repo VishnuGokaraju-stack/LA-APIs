@@ -1,4 +1,4 @@
-var express = require("express");
+var express = require('express');
 var router = express.Router();
 // const {
 //   validateSignin,
@@ -6,13 +6,13 @@ var router = express.Router();
 //   dataValidationResult,
 // } = require("../validations/authenticationadmin");
 const {
-  signup,
+  //signup,
   signin,
   signout,
-} = require("../controllers/authenticationadmin");
+} = require('../controllers/authenticationadmin');
 
 // signup route
-router.post("/signup", signup);
+//router.post("/signup", signup);
 
 // signin route
 // router.post(
@@ -29,9 +29,9 @@ router.post("/signup", signup);
 //   ],
 //   signin
 // );
-router.post("/signin", signin);
+router.post('/signin', signin);
 
 // signout route
-router.get("/signout", signout);
+router.get('/signout', signout);
 
 module.exports = router;

@@ -1,5 +1,6 @@
 const company = require('../../models/company');
 const staff = require('../../models/staff');
+const bcrypt = require('bcryptjs');
 
 exports.getCompanyById = async (req, res, next, id) => {
   try {
@@ -38,19 +39,66 @@ exports.insertCompany = async (req, res) => {
       companyOwnerMobile: req.body.companyOwnerMobile,
       companyOwnerMobileAlternate: req.body.companyOwnerMobileAlternate,
     });
-    newCompany.save((error, company) => {
-      if (error) {
+    let insertCompany = await newCompany.save();
+    console.log(insertCompany);
+    if (insertCompany) {
+      console.log('iffff');
+      let newCompanyId = insertCompany._id;
+      console.log(newCompanyId);
+      // hash the password
+      const salt = await bcrypt.genSalt(10);
+      const encryptPassword = await bcrypt.hash(
+        req.body.companyOwnerMobile,
+        salt
+      );
+      // insert company owner details in staff table
+      const newStaff = await new staff({
+        companyId: newCompanyId,
+        staffFirstName: req.body.companyOwnerName,
+        staffLastName: '',
+        //staffEmailId: req.body.staffEmailId,
+        staffMobile: req.body.companyOwnerMobile,
+        staffAlternateMobile: req.body.companyOwnerMobileAlternate,
+        password: encryptPassword,
+        //staffProof: req.body.staffProof, // JSON
+        //staffBankDetails: req.body.staffBankDetails, // JSON
+        staffEmployeeType: req.body.staffEmployeeType, //  Array
+        staffStatus: req.body.staffStatus,
+        isEmployeeStoreOwner: false,
+        isCompanyOwner: true,
+      });
+      let insertStaff = newStaff.save();
+      if (insertStaff) {
+        res.status(200).json({
+          error: null,
+          data: {
+            message: 'Company added successfully',
+          },
+        });
+      } else {
         return res.status(400).json({
-          error: 'Not able to insert user in DB - company',
+          error: 'Something went wrong. Please try again - add company owner',
         });
       }
-      res.json({
-        error: null,
-        data: {
-          message: 'Company added successfully',
-        },
+    } else {
+      return res.status(400).json({
+        error: 'Not able to insert user in DB - company',
       });
-    });
+    }
+    // newCompany.save((error, company) => {
+    //   if (error) {
+    //     return res.status(400).json({
+    //       error: 'Not able to insert user in DB - company',
+    //     });
+    //   }
+
+    // res.json({
+    //   error: null,
+    //   data: {
+    //     message: 'Company added successfully',
+    //   },
+    // });
+    //});
   } catch (error) {
     res.status(500).json({
       error: error.message,

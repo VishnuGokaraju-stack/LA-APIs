@@ -10,10 +10,10 @@ const {
 // validation
 
 // insert ratecard
-router.post('/', insertRateCard);
+router.post('/', verifyToken, insertRateCard);
 // get ratecard
-router.get('/', getRateCard); // query params - id, name, mobile, store
+router.get('/', verifyToken, getRateCard); // query params - id, name, mobile, store
 // update ratecard
-router.put('/', updateRateCard);
+router.put('/', verifyToken, updateRateCard);
 
 module.exports = router;

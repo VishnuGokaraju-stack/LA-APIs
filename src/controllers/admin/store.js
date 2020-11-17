@@ -20,6 +20,11 @@ exports.getStoreById = async (req, res, next, id) => {
 
 exports.insertStore = async (req, res) => {
   try {
+    if (!req.user) {
+      return res.status(401).json({
+        error: 'Not authorized to access !',
+      });
+    }
     const { storeName } = req.body;
     // check if same store already exists
     let validateCheck = await store.findOne({ storeName });
@@ -33,7 +38,7 @@ exports.insertStore = async (req, res) => {
     const newstore = new store({
       storeName: req.body.storeName,
       storeCode: req.body.storeCode,
-      companyId: req.body.companyId,
+      companyId: req.user.companyId,
       cityId: req.body.cityId,
       storeAddress: req.body.storeAddress,
       isVirtual: req.body.isVirtual,
@@ -51,6 +56,7 @@ exports.insertStore = async (req, res) => {
       storeDeliveryBoys: req.body.storeDeliveryBoys,
       storeStaffBoys: req.body.storeStaffBoys,
       storeStatus: req.body.storeStatus,
+      createdBy: req.user._id,
     });
     if (req.body.parentStore) {
       newstore.parentStore = req.body.parentStore;
@@ -132,6 +138,12 @@ exports.getStore = async (req, res) => {
 
 exports.updateStore = async (req, res) => {
   try {
+    if (!req.user) {
+      return res.status(401).json({
+        error: 'Not authorized to access !',
+      });
+    }
+    req.body.updatedBy = req.user._id;
     if (req.body.storeCoordinates) {
       const { storeCoordinates } = req.body;
       //const geoLocation = { type: 'Point', coordinates: [longitude, latitude] };

@@ -19,6 +19,11 @@ const ratecard = require('../models/ratecard');
 //   };
 exports.insertRateCard = async (req, res) => {
   try {
+    if (!req.user) {
+      return res.status(401).json({
+        error: 'Not authorized to access !',
+      });
+    }
     const { rateCardName, companyId } = req.body;
     // check if rateCardName already exists for company
     let ratecardCheck = await ratecard.findOne({
@@ -32,11 +37,12 @@ exports.insertRateCard = async (req, res) => {
     }
     const newRatecard = new ratecard({
       rateCardName: req.body.rateCardName,
-      companyId: req.body.companyId, // TODO based on login node js should get the companyid
+      companyId: req.user.companyId,
       rateCardServices: req.body.rateCardServices, // JSON
       storeId: req.body.storeId,
       //rateCardType: req.body.rateCardType, // Online , Offline, Others, empty
       rateCardStatus: req.body.rateCardStatus,
+      createdBy: req.user._id,
     });
     let insertRatecard = await newRatecard.save();
     if (insertRatecard) {
@@ -60,6 +66,11 @@ exports.insertRateCard = async (req, res) => {
 
 exports.updateRateCard = async (req, res) => {
   try {
+    if (!req.user) {
+      return res.status(401).json({
+        error: 'Not authorized to access !',
+      });
+    }
     // TODO - check if duplicate rateCardName based on companyid exists
     // if(req.body.rateCardName) {
     //   const { rateCardName, companyId } = req.body;
@@ -77,7 +88,7 @@ exports.updateRateCard = async (req, res) => {
 
     // TODO - if ratecard is making inactive, check if ratecard is assigned to a store or not.
     // Send error message that ratecard is assigned to store
-
+    req.body.updatedBy = req.user._id;
     let updateRateCard = await ratecard.findByIdAndUpdate(
       { _id: req.query.id },
       { $set: req.body },

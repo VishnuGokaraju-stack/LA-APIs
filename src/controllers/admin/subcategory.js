@@ -1,11 +1,11 @@
-const subCategory = require("../../models/subcategory");
+const subCategory = require('../../models/subcategory');
 
 exports.getSubcatById = async (req, res, next, id) => {
   try {
     await subCategory.findById(id).exec((error, subcat) => {
       if (error || !subcat) {
         return res.status(400).json({
-          error: "Something went wrong. Please try again",
+          error: 'Something went wrong. Please try again',
         });
       }
       req.subcatData = subcat;
@@ -20,6 +20,11 @@ exports.getSubcatById = async (req, res, next, id) => {
 
 exports.insertSubcat = async (req, res) => {
   try {
+    if (!req.user) {
+      return res.status(401).json({
+        error: 'Not authorized to access !',
+      });
+    }
     const { subcatName } = req.body;
     // check if same subcategory already exists
     const duplicateCheck = await subCategory.findOne({ subcatName });
@@ -37,7 +42,7 @@ exports.insertSubcat = async (req, res) => {
     // });
     if (duplicateCheck) {
       return res.status(400).json({
-        error: "Subcategory already exists",
+        error: 'Subcategory already exists',
       });
     }
     // insert into subcategory table
@@ -48,17 +53,19 @@ exports.insertSubcat = async (req, res) => {
       subcatSmallDesc: req.body.subcatSmallDesc,
       subcatDesc: req.body.subcatDesc,
       subcatImage: req.body.subcatImage,
+      companyId: req.user.companyId,
+      createdBy: req.user._id,
     });
     newSubcat.save((error, subcat) => {
       if (error) {
         return res.status(400).json({
-          error: "Not able to insert user in DB - subcat",
+          error: 'Not able to insert user in DB - subcat',
         });
       }
       res.status(201).json({
         error: null,
         data: {
-          message: "Subcategory added successfully",
+          message: 'Subcategory added successfully',
         },
       });
     });
@@ -74,7 +81,7 @@ exports.getAllSubcat = async (req, res) => {
     await subCategory.find().exec((error, subcat) => {
       if (error || !subcat) {
         return res.status(400).json({
-          error: "Subcategories not found",
+          error: 'Subcategories not found',
         });
       }
       res.json({
@@ -106,6 +113,12 @@ exports.getSubcat = async (req, res) => {
 
 exports.updateSubcat = async (req, res) => {
   try {
+    if (!req.user) {
+      return res.status(401).json({
+        error: 'Not authorized to access !',
+      });
+    }
+    req.body.updatedBy = req.user._id;
     let updateSubCat = await subCategory.findByIdAndUpdate(
       { _id: req.subcatData._id },
       { $set: req.body },

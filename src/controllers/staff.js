@@ -4,6 +4,11 @@ const uniqid = require('uniqid');
 
 exports.insertStaff = async (req, res) => {
   try {
+    if (!req.user) {
+      return res.status(401).json({
+        error: 'Not authorized to access !',
+      });
+    }
     const { staffMobile, staffEmailId, storeId } = req.body;
     // check if mobile number already exists
     let mobileCheck = await staff.findOne({
@@ -29,7 +34,7 @@ exports.insertStaff = async (req, res) => {
     //const salt = await bcrypt.genSalt(10);
     //const encry_password = await bcrypt.hash(req.body.staffPassword, salt);
     const newStaff = new staff({
-      //companyId: '5f636b4d8dbb2429c05ecf42',
+      companyId: req.user.companyId,
       staffFirstName: req.body.staffFirstName,
       staffLastName: req.body.staffLastName,
       staffEmailId: req.body.staffEmailId,
@@ -40,6 +45,7 @@ exports.insertStaff = async (req, res) => {
       staffBankDetails: req.body.staffBankDetails, // JSON
       staffEmployeeType: req.body.staffEmployeeType, //  Array
       staffStatus: req.body.staffStatus,
+      createdBy: req.user._id,
     });
 
     // check if staffEmployeeType is empty or not.
@@ -47,16 +53,13 @@ exports.insertStaff = async (req, res) => {
     if (req.body.staffEmployeeType) {
       if (Array.isArray(req.body.staffEmployeeType)) {
         const findStoreOwner = req.body.staffEmployeeType.findIndex(
-          (element) => element === 'Store owner'
+          (element) => element === 'Store Owner'
         );
         if (findStoreOwner >= 0) {
           newStaff.isEmployeeStoreOwner = true;
         }
       }
     }
-    // TODO companyid should be dynamic
-    newStaff.companyId = '5fa402d62f74d591844eca24';
-    newStaff.createdBy = '5fa402d62f74d591844eca24';
 
     let insertStaff = await newStaff.save();
     if (insertStaff) {
@@ -235,6 +238,12 @@ exports.getStaff = async (req, res) => {
 
 exports.updateStaff = async (req, res) => {
   try {
+    if (!req.user) {
+      return res.status(401).json({
+        error: 'Not authorized to access !',
+      });
+    }
+    req.body.updatedBy = req.user._id;
     // const { mobileNumber, email } = req.body;
     // TODO - check if duplicate mobile exists
 

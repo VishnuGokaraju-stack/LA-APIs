@@ -18,16 +18,22 @@ const {
 router.param('id', getStoreById);
 
 // insert new category
-router.post('/', validateInsertStore, storeValidationResult, insertStore);
+router.post(
+  '/',
+  verifyToken,
+  validateInsertStore,
+  storeValidationResult,
+  insertStore
+);
 
 // get all categories
-router.get('/', getAllStores);
+router.get('/', verifyToken, getAllStores);
 
 // get single categories
-router.get('/:id', getStore);
+router.get('/:id', verifyToken, getStore);
 
 // update category
-router.put('/:id', updateStore);
+router.put('/:id', verifyToken, updateStore);
 
 // delete category
 //router.delete("/:id", deleteCat);

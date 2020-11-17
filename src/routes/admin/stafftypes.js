@@ -6,6 +6,6 @@ const {
   insertStaffType,
 } = require('../../controllers/admin/stafftypes');
 
-router.get('/', getAllStaffTypes);
-router.post('/', insertStaffType);
+router.get('/', verifyToken, getAllStaffTypes);
+router.post('/', verifyToken, insertStaffType);
 module.exports = router;

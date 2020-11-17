@@ -12,18 +12,18 @@ const {
 } = require('../../controllers/admin/category');
 
 router.param('id', getCatById);
-
+//router.use();
 // insert new category
-router.post('/', insertCat);
+router.post('/', verifyToken, insertCat);
 
 // get all categories
-router.get('/', getAllCat);
+router.get('/', verifyToken, getAllCat);
 
 // get single categories
-router.get('/:id', getCat);
+router.get('/:id', verifyToken, getCat);
 
 // update category
-router.put('/:id', updateCat);
+router.put('/:id', verifyToken, updateCat);
 
 // delete category
 //router.delete("/:id", deleteCat);

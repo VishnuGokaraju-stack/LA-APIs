@@ -84,6 +84,22 @@ const customerSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+    companyId: {
+      type: ObjectId,
+      ref: 'company',
+    },
+    storeId: {
+      type: ObjectId,
+      ref: 'store',
+    },
+    createdBy: {
+      type: ObjectId,
+      ref: 'staff',
+    },
+    updatedBy: {
+      type: ObjectId,
+      ref: 'staff',
+    },
   },
   { timestamps: true }
 );

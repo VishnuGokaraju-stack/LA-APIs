@@ -26,13 +26,13 @@ router.post(
 );
 
 // get all cities
-router.get('/', getAllCities);
+router.get('/', verifyToken, getAllCities);
 
 // get single cities
-router.get('/:id', getCity);
+router.get('/:id', verifyToken, getCity);
 
 // update city
-router.put('/:id', updateCity);
+router.put('/:id', verifyToken, updateCity);
 
 // delete city
 //router.delete("/:id", deleteCat);

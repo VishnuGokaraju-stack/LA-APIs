@@ -13,16 +13,16 @@ const {
 router.param('id', getSubcatById);
 
 // insert new category
-router.post('/', insertSubcat);
+router.post('/', verifyToken, insertSubcat);
 
 // get all categories
-router.get('/', getAllSubcat);
+router.get('/', verifyToken, getAllSubcat);
 
 // get single categories
-router.get('/:id', getSubcat);
+router.get('/:id', verifyToken, getSubcat);
 
 // update category
-router.put('/:id', updateSubcat);
+router.put('/:id', verifyToken, updateSubcat);
 
 // delete sub category
 //router.delete("/:id", deleteSubcat);

@@ -18,12 +18,16 @@ const staffSchema = new mongoose.Schema(
     },
     staffEmailId: {
       type: String,
-      required: true,
+      //required: true,
       trim: true,
     },
     staffMobile: {
       type: String,
       required: true,
+      trim: true,
+    },
+    password: {
+      type: String,
       trim: true,
     },
     staffAlternateMobile: {
@@ -62,7 +66,10 @@ const staffSchema = new mongoose.Schema(
       default: false,
     },
     createdBy: {
-      // company owner id, store owner id
+      type: ObjectId,
+      ref: 'staff',
+    },
+    updatedBy: {
       type: ObjectId,
       ref: 'staff',
     },

@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const {ObjectId} = mongoose.Schema;
+const mongoose = require('mongoose');
+const { ObjectId } = mongoose.Schema;
 
 const mothercategorySchema = new mongoose.Schema(
   {
@@ -53,8 +53,16 @@ const mothercategorySchema = new mongoose.Schema(
       max: 1,
       default: 0,
     },
+    createdBy: {
+      type: ObjectId,
+      ref: 'staff',
+    },
+    updatedBy: {
+      type: ObjectId,
+      ref: 'staff',
+    },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("motherCategory", mothercategorySchema);
+module.exports = mongoose.model('motherCategory', mothercategorySchema);

@@ -38,7 +38,6 @@ const storeSchema = new mongoose.Schema(
       trim: true,
     },
     companyId: {
-      // fetch from auth token companyId taken from DB
       type: ObjectId,
       ref: 'company',
     },
@@ -119,6 +118,14 @@ const storeSchema = new mongoose.Schema(
     storeStaffBoys: {
       type: Array,
       trim: true,
+    },
+    createdBy: {
+      type: ObjectId,
+      ref: 'staff',
+    },
+    updatedBy: {
+      type: ObjectId,
+      ref: 'staff',
     },
   },
   { timestamps: true }

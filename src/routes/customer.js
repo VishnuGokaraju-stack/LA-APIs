@@ -9,20 +9,20 @@ const {
   //getAllCustomers,
   getCustomer,
   updateCustomer,
-} = require('../controllers/customersignup');
+} = require('../controllers/customer');
 
 router.param('id', getCustomerById);
 
 // insert new customer
-router.post('/', insertCustomer);
+router.post('/', verifyToken, insertCustomer);
 
 // get all customer
-//router.get('/', getAllCustomers);
+//router.get('/',verifyToken, getAllCustomers);
 
 // get single customer
-router.get('/', getCustomer);
+router.get('/', verifyToken, getCustomer);
 
 // update customer
-router.put('/:id', updateCustomer);
+router.put('/:id', verifyToken, updateCustomer);
 
 module.exports = router;

@@ -13,16 +13,16 @@ const {
 router.param('id', getServiceById);
 
 // insert new service
-router.post('/', insertService);
+router.post('/', verifyToken, insertService);
 
 // get all services
-router.get('/', getAllService);
+router.get('/', verifyToken, getAllService);
 
 // get single service
-router.get('/:id', getService);
+router.get('/:id', verifyToken, getService);
 
 // update service
-router.put('/:id', updateService);
+router.put('/:id', verifyToken, updateService);
 
 // delete service
 //router.delete("/:id", deleteService);

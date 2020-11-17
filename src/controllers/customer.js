@@ -22,6 +22,11 @@ exports.getCustomerById = async (req, res, next, id) => {
 
 exports.insertCustomer = async (req, res) => {
   try {
+    if (!req.user) {
+      return res.status(401).json({
+        error: 'Not authorized to access !',
+      });
+    }
     const { mobileNumber, email, referarCode } = req.body;
     // check if same mobile already exists
     let mobileCheck = await customer.findOne({ mobileNumber });
@@ -54,6 +59,8 @@ exports.insertCustomer = async (req, res) => {
       dob: req.body.dob,
       referralCode: uniqueReferralCode,
       status: req.body.status,
+      companyId: req.user.companyId,
+      createdBy: req.user._id,
       // TODO
       //registeredFrom: req.body.registeredFrom, // admin, ios, android, msite, website
     });
@@ -178,6 +185,12 @@ exports.getCustomer = async (req, res) => {
 
 exports.updateCustomer = async (req, res) => {
   try {
+    if (!req.user) {
+      return res.status(401).json({
+        error: 'Not authorized to access !',
+      });
+    }
+    req.body.updatedBy = req.user._id;
     const { mobileNumber, email, referarCode } = req.body;
     // if referarCode is not empty check if customer exists or not
     if (referarCode && referarCode != '') {

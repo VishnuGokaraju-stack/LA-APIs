@@ -47,9 +47,9 @@ app.use('/admin/stafftypes', staffTypesRoutes);
 // admin + api routes
 const cityRoutes = require('./src/routes/city');
 const staffRoutes = require('./src/routes/staff');
-const customerSignupRoutes = require('./src/routes/customersignup');
+const customerRoutes = require('./src/routes/customer');
 const rateCardRoutes = require('./src/routes/ratecard');
-app.use('/admin/customer/signup', customerSignupRoutes);
+app.use('/admin/customer', customerRoutes);
 app.use('/admin/city', cityRoutes);
 app.use('/admin/staff', staffRoutes);
 app.use('/admin/ratecard', rateCardRoutes);

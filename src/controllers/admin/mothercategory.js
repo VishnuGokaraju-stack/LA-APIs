@@ -1,11 +1,11 @@
-const motherCategory = require("../../models/mothercategory");
+const motherCategory = require('../../models/mothercategory');
 
 exports.getMCById = async (req, res, next, id) => {
   try {
     await motherCategory.findById(id).exec((error, mc) => {
       if (error || !mc) {
         return res.status(400).json({
-          error: "Mothercategory does not exist",
+          error: 'Mothercategory does not exist',
         });
       }
       req.mcData = mc;
@@ -20,12 +20,17 @@ exports.getMCById = async (req, res, next, id) => {
 
 exports.insertMC = async (req, res) => {
   try {
+    if (!req.user) {
+      return res.status(401).json({
+        error: 'Not authorized to access !',
+      });
+    }
     const { mcName } = req.body;
     // check if same mothercategory already exists
     let duplicateCheck = await motherCategory.findOne({ mcName });
     if (duplicateCheck) {
       return res.status(400).json({
-        error: "Mothercategory already exists",
+        error: 'Mothercategory already exists',
       });
     }
     // await motherCategory.findOne({ mcName }, (error, mc) => {
@@ -55,18 +60,20 @@ exports.insertMC = async (req, res) => {
       mcExpressDeliveryDuration: req.body.mcExpressDeliveryDuration,
       mcExpressDeliveryDurationText: req.body.mcExpressDeliveryDurationText,
       mcImage: req.body.mcImage,
+      companyId: req.user.companyId,
+      createdBy: req.user._id,
     });
     //console.log(newMC);
     newMC.save((error, mc) => {
       if (error) {
         return res.status(400).json({
-          error: "Not able to insert in DB - MC",
+          error: 'Not able to insert in DB - MC',
         });
       }
       res.status(201).json({
         error: null,
         data: {
-          message: "Mothercategory added successfully",
+          message: 'Mothercategory added successfully',
         },
       });
     });
@@ -82,7 +89,7 @@ exports.getAllMC = async (req, res) => {
     await motherCategory.find().exec((error, mc) => {
       if (error || !mc) {
         return res.status(400).json({
-          error: "Mothercategories not found",
+          error: 'Mothercategories not found',
         });
       }
       res.json({
@@ -114,6 +121,12 @@ exports.getMC = async (req, res) => {
 
 exports.updateMC = async (req, res) => {
   try {
+    if (!req.user) {
+      return res.status(401).json({
+        error: 'Not authorized to access !',
+      });
+    }
+    req.body.updatedBy = req.user._id;
     if (req.body._id) {
       delete req.body._id;
     }
@@ -140,7 +153,7 @@ exports.updateMC = async (req, res) => {
       });
     } else {
       return res.status(400).json({
-        error: "Mothercategory not updated. Please try again",
+        error: 'Mothercategory not updated. Please try again',
       });
     }
   } catch (error) {
