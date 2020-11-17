@@ -86,19 +86,21 @@ exports.insertMC = async (req, res) => {
 
 exports.getAllMC = async (req, res) => {
   try {
-    await motherCategory.find().exec((error, mc) => {
-      if (error || !mc) {
-        return res.status(400).json({
-          error: 'Mothercategories not found',
+    await motherCategory
+      .find({ companyId: req.user.companyId })
+      .exec((error, mc) => {
+        if (error || !mc) {
+          return res.status(400).json({
+            error: 'Mothercategories not found',
+          });
+        }
+        res.json({
+          error: null,
+          data: {
+            mc,
+          },
         });
-      }
-      res.json({
-        error: null,
-        data: {
-          mc,
-        },
       });
-    });
   } catch (error) {
     res.status(500).json({
       error: error.message,
