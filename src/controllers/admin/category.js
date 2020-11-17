@@ -85,19 +85,21 @@ exports.getAllCat = async (req, res) => {
   try {
     //console.log(req.user);
     //console.log(req.token);
-    await category.find().exec((error, cat) => {
-      if (error || !category) {
-        return res.status(400).json({
-          error: 'Categories not found',
+    await category
+      .find({ companyId: req.user.companyId })
+      .exec((error, cat) => {
+        if (error || !category) {
+          return res.status(400).json({
+            error: 'Categories not found',
+          });
+        }
+        res.json({
+          error: null,
+          data: {
+            cat,
+          },
         });
-      }
-      res.json({
-        error: null,
-        data: {
-          cat,
-        },
       });
-    });
   } catch (error) {
     res.status(500).json({
       error: error.message,
