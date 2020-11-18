@@ -31,8 +31,8 @@ exports.insertStaff = async (req, res) => {
     }
 
     // encrypt password
-    //const salt = await bcrypt.genSalt(10);
-    //const encry_password = await bcrypt.hash(req.body.staffPassword, salt);
+    const salt = await bcrypt.genSalt(10);
+    const encry_password = await bcrypt.hash(req.body.staffPassword, salt);
     const newStaff = new staff({
       companyId: req.user.companyId,
       staffFirstName: req.body.staffFirstName,
@@ -40,7 +40,7 @@ exports.insertStaff = async (req, res) => {
       staffEmailId: req.body.staffEmailId,
       staffMobile: req.body.staffMobile,
       staffAlternateMobile: req.body.staffAlternateMobile,
-      //encryptPassword: encry_password,
+      password: encry_password,
       staffProof: req.body.staffProof, // JSON
       staffBankDetails: req.body.staffBankDetails, // JSON
       staffEmployeeType: req.body.staffEmployeeType, //  Array

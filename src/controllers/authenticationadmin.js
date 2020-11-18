@@ -40,8 +40,10 @@ const bcrypt = require('bcryptjs');
 
 // signin
 exports.signin = async (req, res) => {
+  console.log(req.body);
   const { username, password } = req.body;
   const user = await staff.findOne({ staffMobile: username });
+  console.log(user);
   if (!user) {
     return res.status(400).json({
       error: 'Username not exists',
