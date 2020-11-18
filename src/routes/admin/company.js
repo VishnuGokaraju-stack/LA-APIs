@@ -14,16 +14,16 @@ const {
 router.param('id', getCompanyById);
 
 // insert new category
-router.post('/', insertCompany);
+router.post('/', verifyToken, insertCompany);
 
 // get all categories
-router.get('/', getAllCompanies);
+router.get('/', verifyToken, getAllCompanies);
 
 // get single categories
-router.get('/:id', getCompany);
+router.get('/:id', verifyToken, getCompany);
 
 // update category
-router.put('/:id', updateCompany);
+router.put('/:id', verifyToken, updateCompany);
 
 // delete category
 //router.delete("/:id", deleteCat);
