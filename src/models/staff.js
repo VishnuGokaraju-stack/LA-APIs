@@ -73,6 +73,9 @@ const staffSchema = new mongoose.Schema(
       type: ObjectId,
       ref: 'staff',
     },
+    workdays: {
+      type: Array,
+    },
   },
   { timestamps: true }
 );
