@@ -24,11 +24,11 @@ exports.insertRateCard = async (req, res) => {
         error: 'Not authorized to access !',
       });
     }
-    const { rateCardName, companyId } = req.body;
+    const { rateCardName } = req.body;
     // check if rateCardName already exists for company
     let ratecardCheck = await ratecard.findOne({
       rateCardName: rateCardName,
-      companyId: companyId,
+      companyId: req.user.companyId,
     });
     if (ratecardCheck) {
       return res.status(400).json({
