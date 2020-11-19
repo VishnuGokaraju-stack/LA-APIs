@@ -103,7 +103,7 @@ exports.insertStore = async (req, res) => {
 
 exports.getAllStores = async (req, res) => {
   try {
-    await store.find().exec((error, store) => {
+    await store.find({ companyId: req.user.companyId }).exec((error, store) => {
       if (error || !store) {
         return res.status(400).json({
           error: 'Stores not found',
