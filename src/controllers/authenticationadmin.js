@@ -40,10 +40,10 @@ const bcrypt = require('bcryptjs');
 
 // signin
 exports.signin = async (req, res) => {
-  console.log(req.body);
+  //console.log(req.body);
   const { username, password } = req.body;
   const user = await staff.findOne({ staffMobile: username });
-  console.log(user);
+  //console.log(user);
   if (!user) {
     return res.status(400).json({
       error: 'Username not exists',
@@ -63,12 +63,14 @@ exports.signin = async (req, res) => {
   // put token in cookie
   res.cookie('token', token, { expire: new Date() + 9999 });
   // send response to front end
-  const { logintype } = user;
+  const { staffEmailId, staffFirstName, staffLastName } = user;
   return res.header('Authorization').json({
     error: null,
     data: {
       token,
-      logintype,
+      emailId: staffEmailId,
+      firstName: staffFirstName,
+      lastName: staffLastName,
     },
   });
   //});
