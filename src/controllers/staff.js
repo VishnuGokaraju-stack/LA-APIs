@@ -182,7 +182,7 @@ exports.getStaff = async (req, res) => {
         let staffData = await staff.find({
           $and: [
             {
-              companyId: '5fa402d62f74d591844eca24',
+              companyId: req.user.companyId,
             },
             {
               isEmployeeStoreOwner: true,

@@ -27,8 +27,14 @@ exports.insertRateCard = async (req, res) => {
     const { rateCardName } = req.body;
     // check if rateCardName already exists for company
     let ratecardCheck = await ratecard.findOne({
-      rateCardName: rateCardName,
-      companyId: req.user.companyId,
+      $and: [
+        {
+          companyId: req.user.companyId,
+        },
+        {
+          rateCardName: rateCardName,
+        },
+      ],
     });
     if (ratecardCheck) {
       return res.status(400).json({
