@@ -88,10 +88,10 @@ const customerSchema = new mongoose.Schema(
       type: ObjectId,
       ref: 'company',
     },
-    storeId: {
-      type: ObjectId,
-      ref: 'store',
-    },
+    // storeId: {
+    //   type: ObjectId,
+    //   ref: 'store',
+    // },
     createdBy: {
       type: ObjectId,
       ref: 'staff',
