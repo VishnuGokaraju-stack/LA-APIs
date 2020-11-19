@@ -63,7 +63,7 @@ exports.signin = async (req, res) => {
   // put token in cookie
   res.cookie('token', token, { expire: new Date() + 9999 });
   // send response to front end
-  const { staffEmailId, staffFirstName, staffLastName } = user;
+  const { staffEmailId, staffFirstName, staffLastName, profileImage } = user;
   return res.header('Authorization').json({
     error: null,
     data: {
@@ -71,6 +71,7 @@ exports.signin = async (req, res) => {
       emailId: staffEmailId,
       firstName: staffFirstName,
       lastName: staffLastName,
+      profileImage,
     },
   });
   //});
