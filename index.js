@@ -35,6 +35,7 @@ const serviceRoutes = require('./src/routes/admin/service');
 const companyRoutes = require('./src/routes/admin/company');
 const storeRoutes = require('./src/routes/admin/store');
 const staffTypesRoutes = require('./src/routes/admin/stafftypes');
+const itemRoutes = require('./src/routes/admin/item');
 app.use('/admin', adminAuthenticationRoutes);
 app.use('/admin/mc', mothercategoryRoutes);
 app.use('/admin/cat', categoryRoutes);
@@ -43,6 +44,7 @@ app.use('/admin/service', serviceRoutes);
 app.use('/admin/company', companyRoutes);
 app.use('/admin/store', storeRoutes);
 app.use('/admin/stafftypes', staffTypesRoutes);
+app.use('/admin/item', itemRoutes);
 
 // admin + api routes
 const cityRoutes = require('./src/routes/city');
