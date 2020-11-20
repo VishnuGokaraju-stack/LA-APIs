@@ -51,10 +51,12 @@ const cityRoutes = require('./src/routes/city');
 const staffRoutes = require('./src/routes/staff');
 const customerRoutes = require('./src/routes/customer');
 const rateCardRoutes = require('./src/routes/ratecard');
+//const membershipRoutes = require('./src/routes/membership');
 app.use('/admin/customer', customerRoutes);
 app.use('/admin/city', cityRoutes);
 app.use('/admin/staff', staffRoutes);
 app.use('/admin/ratecard', rateCardRoutes);
+//app.use('/membership', membershipRoutes);
 // api Routes
 
 // if not routes found show error

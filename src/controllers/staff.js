@@ -201,7 +201,7 @@ exports.getStaff = async (req, res) => {
         }
       }
     }
-    let staffData = await staff.find();
+    let staffData = await staff.find({ companyId: req.user.companyId });
     if (staffData) {
       return res.json({
         error: null,
