@@ -1,17 +1,17 @@
-// const express = require('express');
-// const router = express.Router();
+const express = require('express');
+const router = express.Router();
 
-// const { verifyToken } = require('../../middlewares/admin/checkadminauth');
-// const {
-//   insertMembership,
-//   getmembership,
-//   updateMembership,
-// } = require('../controllers/membership');
+const { verifyToken } = require('../middlewares/admin/checkadminauth');
+const {
+  insertMembership,
+  getmembership,
+  updateMembership,
+} = require('../controllers/membership');
 
-// router.post('/', verifyToken, insertMembership);
+router.post('/', verifyToken, insertMembership);
 
-// router.get('/', verifyToken, getmembership);
+router.get('/', verifyToken, getmembership);
 
-// router.put('/:id', verifyToken, updateMembership);
+router.put('/', verifyToken, updateMembership);
 
-// module.exports = router;
+module.exports = router;
