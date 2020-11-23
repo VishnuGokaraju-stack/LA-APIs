@@ -6,10 +6,12 @@ const categorySchema = new mongoose.Schema(
     companyId: {
       type: ObjectId,
       ref: 'company',
+      index: true,
     },
     mcId: {
       type: ObjectId,
       ref: 'motherCategory',
+      index: true,
     },
     catName: {
       type: String,

@@ -100,6 +100,11 @@ const customerSchema = new mongoose.Schema(
       type: ObjectId,
       ref: 'staff',
     },
+    cashWallet: {
+      type: Number,
+      trim: true,
+      default: 0,
+    },
   },
   { timestamps: true }
 );

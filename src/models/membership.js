@@ -6,6 +6,7 @@ const membershipSchema = new mongoose.Schema(
     companyId: {
       type: ObjectId,
       ref: 'company',
+      index: true,
     },
     planName: {
       type: String,

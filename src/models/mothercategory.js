@@ -6,6 +6,7 @@ const mothercategorySchema = new mongoose.Schema(
     companyId: {
       type: ObjectId,
       ref: 'company',
+      index: true,
     },
     mcName: {
       type: String,

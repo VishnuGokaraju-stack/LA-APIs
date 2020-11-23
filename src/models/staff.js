@@ -6,6 +6,7 @@ const staffSchema = new mongoose.Schema(
     companyId: {
       type: ObjectId,
       ref: 'company',
+      index: true,
     },
     staffFirstName: {
       type: String,

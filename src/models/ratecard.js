@@ -28,6 +28,7 @@ const ratecardSchema = new mongoose.Schema(
       type: ObjectId,
       ref: 'company',
       required: true,
+      index: true,
     },
     // storeId: {
     //   type: ObjectId,

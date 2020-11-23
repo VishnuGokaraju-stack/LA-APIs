@@ -6,14 +6,17 @@ const subcategorySchema = new mongoose.Schema(
     companyId: {
       type: ObjectId,
       ref: 'company',
+      index: true,
     },
     mcId: {
       type: ObjectId,
       ref: 'motherCategory',
+      index: true,
     },
     catId: {
       type: ObjectId,
       ref: 'category',
+      index: true,
     },
     subcatName: {
       type: String,

@@ -10,6 +10,7 @@ const itemSchema = new mongoose.Schema(
     companyId: {
       type: ObjectId,
       ref: 'company',
+      index: true,
     },
     createdBy: {
       type: ObjectId,

@@ -40,6 +40,7 @@ const storeSchema = new mongoose.Schema(
     companyId: {
       type: ObjectId,
       ref: 'company',
+      index: true,
     },
     cityId: {
       type: ObjectId,
