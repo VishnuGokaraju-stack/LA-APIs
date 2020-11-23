@@ -1,5 +1,6 @@
 const customer = require('../models/customer');
 const walletlog = require('../models/walletlog');
+const commonValidation = require('../middlewares/commonvalidation');
 
 exports.updateWallet = async (req, res) => {
   try {
@@ -13,32 +14,40 @@ exports.updateWallet = async (req, res) => {
         error: 'Please enter a valid input',
       });
     }
+
+    const validateObjectId = await commonValidation.isObjectId(req.query.id);
+    if (!validateObjectId) {
+      return res.status(500).json({
+        error: 'Please enter a valid input - isobjectid',
+      });
+    }
+    //console.log('validateObjectId : ' + validateObjectId);
     const { amount, transactionType } = req.body;
     // check if customer exists or not
-    // let customerData = await customer.findById(req.query.id);
-    // if (!customerData) {
-    //   return res.status(400).json({
-    //     error: 'Customer not exist',
-    //   });
-    // }
-    // // update wallet + or - in customer table
-    // let cashWallet = customerData.cashWallet;
-    // let newCashWallet = 0;
-    // if (transactionType === 'credit') {
-    //   newCashWallet = cashWallet + amount;
-    // } else {
-    //   if (cashWallet === 0) {
-    //     return res.status(400).json({
-    //       error: 'Cash wallet for the customer is zero',
-    //     });
-    //   }
-    //   if (cashWallet < amount) {
-    //     return res.status(400).json({
-    //       error: 'Cash wallet is less than amount. Please enter correct amount',
-    //     });
-    //   }
-    //   newCashWallet = cashWallet - amount;
-    // }
+    let customerData = await customer.findById(req.query.id);
+    if (!customerData) {
+      return res.status(400).json({
+        error: 'Customer not exist',
+      });
+    }
+    // update wallet + or - in customer table
+    let cashWallet = customerData.cashWallet;
+    let newCashWallet = 0;
+    if (transactionType === 'credit') {
+      newCashWallet = cashWallet + amount;
+    } else {
+      if (cashWallet === 0) {
+        return res.status(400).json({
+          error: 'Cash wallet for the customer is zero',
+        });
+      }
+      if (cashWallet < amount) {
+        return res.status(400).json({
+          error: 'Cash wallet is less than amount. Please enter correct amount',
+        });
+      }
+      newCashWallet = cashWallet - amount;
+    }
     // update cashwallet in customer table
     let updateData = { cashWallet: 500 };
     let updateCustomerWallet = await customer.findByIdAndUpdate(
@@ -46,7 +55,7 @@ exports.updateWallet = async (req, res) => {
       { $set: updateData },
       { new: true, useFindAndModify: false }
     );
-    console.log('aaa : ' + updateCustomerWallet);
+    //console.log('aaa : ' + updateCustomerWallet);
     if (updateCustomerWallet) {
       // insert wallet log table
       const newWalletLog = new walletlog({
