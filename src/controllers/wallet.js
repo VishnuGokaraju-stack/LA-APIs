@@ -49,7 +49,7 @@ exports.updateWallet = async (req, res) => {
       newCashWallet = cashWallet - amount;
     }
     // update cashwallet in customer table
-    let updateData = { cashWallet: 500 };
+    let updateData = { cashWallet: newCashWallet };
     let updateCustomerWallet = await customer.findByIdAndUpdate(
       { _id: req.query.id },
       { $set: updateData },
@@ -66,7 +66,8 @@ exports.updateWallet = async (req, res) => {
         walletType: 'cashWallet',
         walletDescription: req.body.walletDescription,
         createdBy: req.user._id,
-        createdType: 'staff', // TODO
+        createdType: req.user.userType, // staff, customer
+        currentCashWallet: newCashWallet,
       });
       if (
         typeof req.body.membershipId !== 'undefined' &&

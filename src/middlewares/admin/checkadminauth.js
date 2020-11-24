@@ -27,6 +27,7 @@ exports.verifyToken = async (req, res, next) => {
       }
       user.password = 0;
       req.user = user;
+      req.userType = 'staff'; // staff, customer
       req.token = token;
       next(); // to continue the flow
     } catch (error) {

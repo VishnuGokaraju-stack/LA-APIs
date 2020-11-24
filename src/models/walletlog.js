@@ -25,7 +25,7 @@ const walletLogSchema = new mongoose.Schema(
     },
     transactionName: {
       type: String,
-      enum: ['cashback', 'promotional', 'cash', 'referral'],
+      enum: ['cashback', 'promotional', 'cash', 'referral', 'membership'],
       default: 'cash',
     },
     walletType: {
