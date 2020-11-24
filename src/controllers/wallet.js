@@ -98,3 +98,39 @@ exports.updateWallet = async (req, res) => {
     });
   }
 };
+
+exports.getWallet = async (req, res) => {
+  try {
+    if (
+      typeof req.query.customerId !== 'undefined' &&
+      req.query.customerId !== ''
+    ) {
+      const validateObjectId = await commonValidation.isObjectId(
+        req.query.customerId
+      );
+      if (!validateObjectId) {
+        return res.status(500).json({
+          error: 'Please enter a valid input - isobjectid',
+        });
+      }
+      let walletLogData = await walletlog.find({
+        customerId: req.query.customerId,
+      });
+      if (walletLogData) {
+        return res.json({
+          error: null,
+          data: walletLogData,
+        });
+      } else {
+        return res.status(400).json({
+          error: 'Wallet logs not exists.',
+        });
+      }
+    } else {
+    }
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};

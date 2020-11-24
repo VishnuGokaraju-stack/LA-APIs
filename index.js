@@ -53,6 +53,7 @@ const customerRoutes = require('./src/routes/customer');
 const rateCardRoutes = require('./src/routes/ratecard');
 const membershipRoutes = require('./src/routes/membership');
 const walletRoutes = require('./src/routes/wallet');
+
 app.use('/admin/customer', customerRoutes);
 app.use('/admin/city', cityRoutes);
 app.use('/admin/staff', staffRoutes);

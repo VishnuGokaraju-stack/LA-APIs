@@ -11,6 +11,12 @@ const walletLogSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    currentCashWallet: {
+      // dynamic
+      type: Number,
+      required: true,
+      default: 0,
+    },
     transactionType: {
       type: String,
       required: true,
