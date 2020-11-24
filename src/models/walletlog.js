@@ -6,6 +6,7 @@ const walletLogSchema = new mongoose.Schema(
     customerId: {
       type: ObjectId,
       ref: 'customer',
+      index: true,
     },
     amount: {
       type: Number,
