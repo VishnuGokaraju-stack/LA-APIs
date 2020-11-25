@@ -5,7 +5,8 @@ exports.getSubcatById = async (req, res, next, id) => {
     await subCategory.findById(id).exec((error, subcat) => {
       if (error || !subcat) {
         return res.status(400).json({
-          error: 'Something went wrong. Please try again',
+          error: true,
+          message: 'Something went wrong. Please try again',
         });
       }
       req.subcatData = subcat;
@@ -13,7 +14,8 @@ exports.getSubcatById = async (req, res, next, id) => {
     });
   } catch (error) {
     return res.status(500).json({
-      error: error.message,
+      error: true,
+      message: error.message,
     });
   }
 };
@@ -22,7 +24,8 @@ exports.insertSubcat = async (req, res) => {
   try {
     if (!req.user) {
       return res.status(401).json({
-        error: 'Not authorized to access !',
+        error: true,
+        message: 'Not authorized to access !',
       });
     }
     const { subcatName } = req.body;
@@ -42,7 +45,8 @@ exports.insertSubcat = async (req, res) => {
     // });
     if (duplicateCheck) {
       return res.status(400).json({
-        error: 'Subcategory already exists',
+        error: true,
+        message: 'Subcategory already exists',
       });
     }
     // insert into subcategory table
@@ -60,19 +64,19 @@ exports.insertSubcat = async (req, res) => {
     newSubcat.save((error, subcat) => {
       if (error) {
         return res.status(400).json({
-          error: 'Not able to insert user in DB - subcat',
+          error: true,
+          message: 'Not able to insert user in DB - subcat',
         });
       }
       res.status(201).json({
-        error: null,
-        data: {
-          message: 'Subcategory added successfully',
-        },
+        error: false,
+        message: 'Subcategory added successfully',
       });
     });
   } catch (error) {
     res.status(500).json({
-      error: error.message,
+      error: true,
+      message: error.message,
     });
   }
 };
@@ -82,11 +86,12 @@ exports.getAllSubcat = async (req, res) => {
     await subCategory.find().exec((error, subcat) => {
       if (error || !subcat) {
         return res.status(400).json({
-          error: 'Subcategories not found',
+          error: true,
+          message: 'Subcategories not found',
         });
       }
       res.json({
-        error: null,
+        error: false,
         data: {
           subcat,
         },
@@ -94,7 +99,8 @@ exports.getAllSubcat = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({
-      error: error.message,
+      error: true,
+      message: error.message,
     });
   }
 };
@@ -102,12 +108,13 @@ exports.getAllSubcat = async (req, res) => {
 exports.getSubcat = async (req, res) => {
   try {
     return res.json({
-      error: null,
+      error: false,
       data: req.subcatData,
     });
   } catch (error) {
     res.status(500).json({
-      error: error.message,
+      error: true,
+      message: error.message,
     });
   }
 };
@@ -116,7 +123,8 @@ exports.updateSubcat = async (req, res) => {
   try {
     if (!req.user) {
       return res.status(401).json({
-        error: 'Not authorized to access !',
+        error: true,
+        message: 'Not authorized to access !',
       });
     }
     req.body.updatedBy = req.user._id;
@@ -139,13 +147,14 @@ exports.updateSubcat = async (req, res) => {
     );
     if (updateSubCat) {
       res.status(201).json({
-        error: null,
+        error: false,
         data: updateSubCat,
       });
     }
   } catch (error) {
     return res.status(500).json({
-      error: error.message,
+      error: true,
+      message: error.message,
     });
   }
 };

@@ -4,7 +4,8 @@ exports.insertMembership = async (req, res) => {
   try {
     if (!req.user) {
       return res.status(401).json({
-        error: 'Not authorized to access !',
+        error: true,
+        message: 'Not authorized to access !',
       });
     }
     // check if item already exists for companyid
@@ -22,7 +23,8 @@ exports.insertMembership = async (req, res) => {
     //console.log(validateCheck.length);
     if (validateCheck && validateCheck.length > 0) {
       return res.status(400).json({
-        error: 'Membership with same name already exists',
+        error: true,
+        message: 'Membership with same name already exists',
       });
     }
     // insert into item table
@@ -41,19 +43,19 @@ exports.insertMembership = async (req, res) => {
     newPlan.save((error, item) => {
       if (error) {
         return res.status(400).json({
-          error: 'Not able to insert membership in DB',
+          error: true,
+          message: 'Not able to insert membership in DB',
         });
       }
       res.json({
-        error: null,
-        data: {
-          message: 'Membership plan added successfully',
-        },
+        error: false,
+        message: 'Membership plan added successfully',
       });
     });
   } catch (error) {
     res.status(500).json({
-      error: error.message,
+      error: true,
+      message: error.message,
     });
   }
 };
@@ -62,12 +64,14 @@ exports.updateMembership = async (req, res) => {
   try {
     if (!req.user) {
       return res.status(401).json({
-        error: 'Not authorized to access !',
+        error: true,
+        message: 'Not authorized to access !',
       });
     }
     if (typeof req.query.id === 'undefined' && req.query.id === '') {
       return res.status(400).json({
-        error: 'Please enter valid query input',
+        error: true,
+        message: 'Please enter valid query input',
       });
     }
     req.body.updatedBy = req.user._id;
@@ -79,17 +83,19 @@ exports.updateMembership = async (req, res) => {
     );
     if (updatemembership) {
       res.status(200).json({
-        error: null,
+        error: false,
         data: updatemembership,
       });
     } else {
       return res.status(400).json({
-        error: 'Membership plan not updated. Please try again',
+        error: true,
+        message: 'Membership plan not updated. Please try again',
       });
     }
   } catch (error) {
     return res.status(500).json({
-      error: error.message,
+      error: true,
+      message: error.message,
     });
   }
 };
@@ -100,12 +106,13 @@ exports.getmembership = async (req, res) => {
       let membershipData = await membership.findById(req.query.id);
       if (membershipData) {
         return res.json({
-          error: null,
+          error: false,
           data: membershipData,
         });
       } else {
         return res.status(400).json({
-          error: 'Membership plan not exists. Please select another plan',
+          error: true,
+          message: 'Membership plan not exists. Please select another plan',
         });
       }
     }
@@ -114,17 +121,19 @@ exports.getmembership = async (req, res) => {
     });
     if (membershipData) {
       return res.json({
-        error: null,
+        error: false,
         data: membershipData,
       });
     } else {
       return res.status(400).json({
-        error: 'Membership plans does not exist for company',
+        error: true,
+        message: 'Membership plans does not exist for company',
       });
     }
   } catch (error) {
     res.status(500).json({
-      error: error.message,
+      error: true,
+      message: error.message,
     });
   }
 };

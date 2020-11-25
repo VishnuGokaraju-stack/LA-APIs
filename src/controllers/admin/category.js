@@ -5,7 +5,8 @@ exports.getCatById = async (req, res, next, id) => {
     await category.findById(id).exec((error, cat) => {
       if (error || !cat) {
         return res.status(400).json({
-          error: 'Something went wrong. Please try again',
+          error: true,
+          message: 'Something went wrong. Please try again',
         });
       }
       req.catData = cat;
@@ -13,7 +14,8 @@ exports.getCatById = async (req, res, next, id) => {
     });
   } catch (error) {
     return res.status(500).json({
-      error: error.message,
+      error: true,
+      message: error.message,
     });
   }
 };
@@ -22,7 +24,8 @@ exports.insertCat = async (req, res) => {
   try {
     if (!req.user) {
       return res.status(401).json({
-        error: 'Not authorized to access !',
+        error: true,
+        message: 'Not authorized to access !',
       });
     }
     const { catName } = req.body;
@@ -30,7 +33,8 @@ exports.insertCat = async (req, res) => {
     let validateCheck = await category.findOne({ catName });
     if (validateCheck) {
       return res.status(400).json({
-        error: 'Category already exists',
+        error: true,
+        message: 'Category already exists',
       });
     }
     // await category.findOne({ catName }, (error, cat) => {
@@ -65,37 +69,38 @@ exports.insertCat = async (req, res) => {
     newCat.save((error, cat) => {
       if (error) {
         return res.status(400).json({
-          error: 'Not able to insert user in DB - cat',
+          error: true,
+          message: 'Not able to insert user in DB - cat',
         });
       }
       res.json({
-        error: null,
-        data: {
-          message: 'Category added successfully',
-        },
+        error: false,
+        message: 'Category added successfully',
+        // data: {
+        // },
       });
     });
   } catch (error) {
     res.status(500).json({
-      error: error.message,
+      error: true,
+      message: error.message,
     });
   }
 };
 
 exports.getAllCat = async (req, res) => {
   try {
-    //console.log(req.user);
-    //console.log(req.token);
     await category
       .find({ companyId: req.user.companyId })
       .exec((error, cat) => {
         if (error || !category) {
           return res.status(400).json({
-            error: 'Categories not found',
+            error: true,
+            message: 'Categories not found',
           });
         }
         res.json({
-          error: null,
+          error: false,
           data: {
             cat,
           },
@@ -103,7 +108,8 @@ exports.getAllCat = async (req, res) => {
       });
   } catch (error) {
     res.status(500).json({
-      error: error.message,
+      error: true,
+      message: error.message,
     });
   }
 };
@@ -111,12 +117,13 @@ exports.getAllCat = async (req, res) => {
 exports.getCat = async (req, res) => {
   try {
     return res.json({
-      error: null,
+      error: false,
       data: req.catData,
     });
   } catch (error) {
     res.status(500).json({
-      error: error.message,
+      error: true,
+      message: error.message,
     });
   }
 };
@@ -125,7 +132,8 @@ exports.updateCat = async (req, res) => {
   try {
     if (!req.user) {
       return res.status(401).json({
-        error: 'Not authorized to access !',
+        error: true,
+        message: 'Not authorized to access !',
       });
     }
     if (req.body._id) {
@@ -150,18 +158,20 @@ exports.updateCat = async (req, res) => {
       // }
     );
     if (updateCat) {
-      res.status(201).json({
-        error: null,
+      res.status(200).json({
+        error: false,
         data: updateCat,
       });
     } else {
       return res.status(400).json({
-        error: 'Category not updated. Please try again',
+        error: true,
+        message: 'Category not updated. Please try again',
       });
     }
   } catch (error) {
     return res.status(500).json({
-      error: error.message,
+      error: true,
+      message: error.message,
     });
   }
 };

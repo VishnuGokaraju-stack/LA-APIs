@@ -5,7 +5,8 @@ exports.getMCById = async (req, res, next, id) => {
     await motherCategory.findById(id).exec((error, mc) => {
       if (error || !mc) {
         return res.status(400).json({
-          error: 'Mothercategory does not exist',
+          error: true,
+          message: 'Mothercategory does not exist',
         });
       }
       req.mcData = mc;
@@ -13,7 +14,8 @@ exports.getMCById = async (req, res, next, id) => {
     });
   } catch (error) {
     return res.status(500).json({
-      error: error.message,
+      error: true,
+      message: error.message,
     });
   }
 };
@@ -22,7 +24,8 @@ exports.insertMC = async (req, res) => {
   try {
     if (!req.user) {
       return res.status(401).json({
-        error: 'Not authorized to access !',
+        error: true,
+        message: 'Not authorized to access !',
       });
     }
     const { mcName } = req.body;
@@ -30,7 +33,8 @@ exports.insertMC = async (req, res) => {
     let duplicateCheck = await motherCategory.findOne({ mcName });
     if (duplicateCheck) {
       return res.status(400).json({
-        error: 'Mothercategory already exists',
+        error: true,
+        message: 'Mothercategory already exists',
       });
     }
     // await motherCategory.findOne({ mcName }, (error, mc) => {
@@ -68,19 +72,19 @@ exports.insertMC = async (req, res) => {
     newMC.save((error, mc) => {
       if (error) {
         return res.status(400).json({
-          error: 'Not able to insert in DB - MC',
+          error: true,
+          message: 'Not able to insert in DB - MC',
         });
       }
       res.status(201).json({
-        error: null,
-        data: {
-          message: 'Mothercategory added successfully',
-        },
+        error: false,
+        message: 'Mothercategory added successfully',
       });
     });
   } catch (error) {
     res.status(500).json({
-      error: error.message,
+      error: true,
+      message: error.message,
     });
   }
 };
@@ -92,11 +96,12 @@ exports.getAllMC = async (req, res) => {
       .exec((error, mc) => {
         if (error || !mc) {
           return res.status(400).json({
-            error: 'Mothercategories not found',
+            error: true,
+            message: 'Mothercategories not found',
           });
         }
         res.json({
-          error: null,
+          error: false,
           data: {
             mc,
           },
@@ -104,7 +109,8 @@ exports.getAllMC = async (req, res) => {
       });
   } catch (error) {
     res.status(500).json({
-      error: error.message,
+      error: true,
+      message: error.message,
     });
   }
 };
@@ -112,12 +118,13 @@ exports.getAllMC = async (req, res) => {
 exports.getMC = async (req, res) => {
   try {
     return res.json({
-      error: null,
+      error: false,
       data: req.mcData,
     });
   } catch (error) {
     res.status(500).json({
-      error: error.message,
+      error: true,
+      message: error.message,
     });
   }
 };
@@ -126,7 +133,8 @@ exports.updateMC = async (req, res) => {
   try {
     if (!req.user) {
       return res.status(401).json({
-        error: 'Not authorized to access !',
+        error: true,
+        message: 'Not authorized to access !',
       });
     }
     req.body.updatedBy = req.user._id;
@@ -152,17 +160,19 @@ exports.updateMC = async (req, res) => {
     );
     if (updateMC) {
       res.status(201).json({
-        error: null,
+        error: false,
         data: updateMC,
       });
     } else {
       return res.status(400).json({
-        error: 'Mothercategory not updated. Please try again',
+        error: true,
+        message: 'Mothercategory not updated. Please try again',
       });
     }
   } catch (error) {
     return res.status(500).json({
-      error: error.message,
+      error: true,
+      message: error.message,
     });
   }
 };

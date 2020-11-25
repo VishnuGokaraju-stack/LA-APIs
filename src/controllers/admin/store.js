@@ -5,7 +5,8 @@ exports.getStoreById = async (req, res, next, id) => {
     await store.findById(id).exec((error, store) => {
       if (error || !store) {
         return res.status(400).json({
-          error: 'Store not exist',
+          error: true,
+          message: 'Store not exist',
         });
       }
       req.storeData = store;
@@ -13,7 +14,8 @@ exports.getStoreById = async (req, res, next, id) => {
     });
   } catch (error) {
     return res.status(500).json({
-      error: error.message,
+      error: true,
+      message: error.message,
     });
   }
 };
@@ -22,7 +24,8 @@ exports.insertStore = async (req, res) => {
   try {
     if (!req.user) {
       return res.status(401).json({
-        error: 'Not authorized to access !',
+        error: true,
+        message: 'Not authorized to access !',
       });
     }
     const { storeName } = req.body;
@@ -30,7 +33,8 @@ exports.insertStore = async (req, res) => {
     let validateCheck = await store.findOne({ storeName });
     if (validateCheck) {
       return res.status(400).json({
-        error: 'Store already exists',
+        error: true,
+        message: 'Store already exists',
       });
     }
 
@@ -69,7 +73,8 @@ exports.insertStore = async (req, res) => {
       // check if ratecard others is array or not
       if (!Array.isArray(req.body.ratecardOffline)) {
         return res.status(400).json({
-          error: 'Please enter valid offline ratecards',
+          error: true,
+          message: 'Please enter valid offline ratecards',
         });
       }
       newstore.ratecardOffline = req.body.ratecardOffline;
@@ -84,20 +89,22 @@ exports.insertStore = async (req, res) => {
     newstore.save((error, store) => {
       if (error) {
         return res.status(400).json({
-          error: error,
+          error: true,
+          message: error,
         });
       }
       res.json({
-        error: null,
+        error: false,
+        message: 'Store added successfully',
         data: {
-          message: 'Store added successfully',
           _id: store._id,
         },
       });
     });
   } catch (error) {
     res.status(500).json({
-      error: error.message,
+      error: true,
+      message: error.message,
     });
   }
 };
@@ -107,11 +114,12 @@ exports.getAllStores = async (req, res) => {
     await store.find({ companyId: req.user.companyId }).exec((error, store) => {
       if (error || !store) {
         return res.status(400).json({
-          error: 'Stores not found',
+          error: true,
+          message: 'Stores not found',
         });
       }
       res.json({
-        error: null,
+        error: false,
         data: {
           store,
         },
@@ -119,7 +127,8 @@ exports.getAllStores = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({
-      error: error.message,
+      error: true,
+      message: error.message,
     });
   }
 };
@@ -127,12 +136,13 @@ exports.getAllStores = async (req, res) => {
 exports.getStore = async (req, res) => {
   try {
     return res.json({
-      error: null,
+      error: false,
       data: req.storeData,
     });
   } catch (error) {
     res.status(500).json({
-      error: error.message,
+      error: true,
+      message: error.message,
     });
   }
 };
@@ -141,7 +151,8 @@ exports.updateStore = async (req, res) => {
   try {
     if (!req.user) {
       return res.status(401).json({
-        error: 'Not authorized to access !',
+        error: true,
+        message: 'Not authorized to access !',
       });
     }
     req.body.updatedBy = req.user._id;
@@ -170,7 +181,8 @@ exports.updateStore = async (req, res) => {
       // check if ratecard others is array or not
       if (!Array.isArray(req.body.ratecardOffline)) {
         return res.status(400).json({
-          error: 'Please enter valid offline ratecards',
+          error: true,
+          message: 'Please enter valid offline ratecards',
         });
       }
     } else {
@@ -183,18 +195,20 @@ exports.updateStore = async (req, res) => {
     );
     if (updateStore) {
       res.status(201).json({
-        error: null,
+        error: false,
         data: updateStore,
-        //message: 'Store updated successfully',
+        message: 'Store updated successfully',
       });
     } else {
       return res.status(400).json({
-        error: 'Store not updated. Please try again',
+        error: true,
+        message: 'Store not updated. Please try again',
       });
     }
   } catch (error) {
     return res.status(500).json({
-      error: error.message,
+      error: true,
+      message: error.message,
     });
   }
 };

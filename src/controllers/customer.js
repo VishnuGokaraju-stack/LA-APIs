@@ -32,17 +32,16 @@ exports.insertCustomer = async (req, res) => {
     let mobileCheck = await customer.findOne({ mobileNumber });
     if (mobileCheck) {
       return res.status(400).json({
-        error: 'Mobile already exists',
-        data: {
-          message: 'Mobile already exists',
-        },
+        error: true,
+        message: 'Mobile already exists',
       });
     }
     // check if same email already exists
     let emailCheck = await customer.findOne({ email });
     if (emailCheck) {
       return res.status(400).json({
-        error: 'Email already exists',
+        error: true,
+        message: 'Email already exists',
       });
     }
     const salt = await bcrypt.genSalt(10);
@@ -86,10 +85,10 @@ exports.insertCustomer = async (req, res) => {
     let insertCustomer = await newCustomer.save();
     if (insertCustomer) {
       res.status(200).json({
-        error: null,
-        data: {
-          message: 'Customer added successfully',
-        },
+        error: false,
+        message: 'Customer added successfully',
+        // data: {
+        // },
       });
     } else {
       return res.status(400).json({

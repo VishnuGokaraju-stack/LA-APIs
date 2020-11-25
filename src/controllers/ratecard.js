@@ -21,7 +21,8 @@ exports.insertRateCard = async (req, res) => {
   try {
     if (!req.user) {
       return res.status(401).json({
-        error: 'Not authorized to access !',
+        error: true,
+        message: 'Not authorized to access !',
       });
     }
     const { rateCardName } = req.body;
@@ -38,7 +39,8 @@ exports.insertRateCard = async (req, res) => {
     });
     if (ratecardCheck) {
       return res.status(400).json({
-        error: 'Ratecard already exists',
+        error: true,
+        message: 'Ratecard already exists',
       });
     }
     const newRatecard = new ratecard({
@@ -54,19 +56,19 @@ exports.insertRateCard = async (req, res) => {
     let insertRatecard = await newRatecard.save();
     if (insertRatecard) {
       res.status(200).json({
-        error: null,
-        data: {
-          message: 'Ratecard added successfully',
-        },
+        error: false,
+        message: 'Ratecard added successfully',
       });
     } else {
       return res.status(400).json({
-        error: 'Something went wrong. Please try again - add rate card',
+        error: true,
+        message: 'Something went wrong. Please try again - add rate card',
       });
     }
   } catch (error) {
     res.status(500).json({
-      error: error.message,
+      error: true,
+      message: error.message,
     });
   }
 };
@@ -75,7 +77,8 @@ exports.updateRateCard = async (req, res) => {
   try {
     if (!req.user) {
       return res.status(401).json({
-        error: 'Not authorized to access !',
+        error: true,
+        message: 'Not authorized to access !',
       });
     }
     // TODO - check if duplicate rateCardName based on companyid exists
@@ -104,17 +107,19 @@ exports.updateRateCard = async (req, res) => {
     );
     if (updateRateCard) {
       res.status(200).json({
-        error: null,
+        error: false,
         data: updateRateCard,
       });
     } else {
       return res.status(400).json({
-        error: 'Ratecard not updated. Please try again',
+        error: true,
+        message: 'Ratecard not updated. Please try again',
       });
     }
   } catch (error) {
     return res.status(500).json({
-      error: error.message,
+      error: true,
+      message: error.message,
     });
   }
 };
@@ -134,12 +139,13 @@ exports.getRateCard = async (req, res) => {
       let companyData = await ratecard.findById(req.query.id);
       if (companyData) {
         return res.json({
-          error: null,
+          error: false,
           data: companyData,
         });
       } else {
         return res.status(400).json({
-          error: 'Ratecard not exist',
+          error: true,
+          message: 'Ratecard not exist',
         });
       }
     }
@@ -177,12 +183,13 @@ exports.getRateCard = async (req, res) => {
     });
     if (companyData) {
       return res.json({
-        error: null,
+        error: false,
         data: companyData,
       });
     } else {
       return res.status(400).json({
-        error: 'Ratecards does not exist with company',
+        error: true,
+        message: 'Ratecards does not exist with company',
       });
     }
     //}
@@ -218,7 +225,8 @@ exports.getRateCard = async (req, res) => {
     //console.log("end of api");
   } catch (error) {
     res.status(500).json({
-      error: error.message,
+      error: true,
+      message: error.message,
     });
   }
 };

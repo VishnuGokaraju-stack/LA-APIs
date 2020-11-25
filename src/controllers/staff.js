@@ -6,7 +6,8 @@ exports.insertStaff = async (req, res) => {
   try {
     if (!req.user) {
       return res.status(401).json({
-        error: 'Not authorized to access !',
+        error: true,
+        message: 'Not authorized to access !',
       });
     }
     const { staffMobile, staffEmailId, storeId } = req.body;
@@ -17,7 +18,8 @@ exports.insertStaff = async (req, res) => {
     });
     if (mobileCheck) {
       return res.status(400).json({
-        error: 'Mobile number already exists',
+        error: true,
+        message: 'Mobile number already exists',
       });
     }
     // check if email already exists
@@ -26,7 +28,8 @@ exports.insertStaff = async (req, res) => {
     });
     if (emailCheck) {
       return res.status(400).json({
-        error: 'Email already exists',
+        error: true,
+        message: 'Email already exists',
       });
     }
 
@@ -66,19 +69,19 @@ exports.insertStaff = async (req, res) => {
     let insertStaff = await newStaff.save();
     if (insertStaff) {
       res.status(200).json({
-        error: null,
-        data: {
-          message: 'Staff added successfully',
-        },
+        error: false,
+        message: 'Staff added successfully',
       });
     } else {
       return res.status(400).json({
-        error: 'Something went wrong. Please try again - add staff boy',
+        error: true,
+        message: 'Something went wrong. Please try again - add staff boy',
       });
     }
   } catch (error) {
     res.status(500).json({
-      error: error.message,
+      error: true,
+      message: error.message,
     });
   }
 };
@@ -109,7 +112,8 @@ exports.getStaff = async (req, res) => {
   try {
     if (typeof req.query === 'undefined') {
       return res.status(400).json({
-        error:
+        error: true,
+        message:
           'Please enter a valid input to fetch staff. Please check the parameters',
       });
     }
@@ -125,7 +129,8 @@ exports.getStaff = async (req, res) => {
         });
       } else {
         return res.status(400).json({
-          error: 'Staff does not exist with mobile number',
+          error: true,
+          message: 'Staff does not exist with mobile number',
         });
       }
     }
@@ -136,12 +141,13 @@ exports.getStaff = async (req, res) => {
       // TODO limit staff
       if (staffData) {
         return res.json({
-          error: null,
+          error: false,
           data: staffData,
         });
       } else {
         return res.status(400).json({
-          error: 'Staff does not exist with mobile number',
+          error: true,
+          message: 'Staff does not exist with mobile number',
         });
       }
     }
@@ -150,12 +156,13 @@ exports.getStaff = async (req, res) => {
       let staffData = await staff.findById(req.query.id);
       if (staffData) {
         return res.json({
-          error: null,
+          error: false,
           data: staffData,
         });
       } else {
         return res.status(400).json({
-          error: 'Staff not exist',
+          error: true,
+          message: 'Staff not exist',
         });
       }
     }
@@ -168,12 +175,13 @@ exports.getStaff = async (req, res) => {
       let staffData = await staff.find({ createdBy: req.query.storeOwnerId });
       if (staffData) {
         return res.json({
-          error: null,
+          error: false,
           data: staffData,
         });
       } else {
         return res.status(400).json({
-          error: 'Staff not exist',
+          error: true,
+          message: 'Staff not exist',
         });
       }
     }
@@ -192,12 +200,13 @@ exports.getStaff = async (req, res) => {
         });
         if (staffData) {
           return res.json({
-            error: null,
+            error: false,
             data: staffData,
           });
         } else {
           return res.status(400).json({
-            error: 'Staff not exist',
+            error: true,
+            message: 'Staff not exist',
           });
         }
       }
@@ -205,12 +214,13 @@ exports.getStaff = async (req, res) => {
     let staffData = await staff.find({ companyId: req.user.companyId });
     if (staffData) {
       return res.json({
-        error: null,
+        error: false,
         data: staffData,
       });
     } else {
       return res.status(400).json({
-        error: 'Staff not exist',
+        error: true,
+        message: 'Staff not exist',
       });
     }
 
@@ -229,11 +239,13 @@ exports.getStaff = async (req, res) => {
     //   }
     // }
     return res.status(400).json({
-      error: 'Something went wrong. Please try again - get staff',
+      error: true,
+      message: 'Something went wrong. Please try again - get staff',
     });
   } catch (error) {
     res.status(500).json({
-      error: error.message,
+      error: true,
+      message: error.message,
     });
   }
 };
@@ -242,7 +254,8 @@ exports.updateStaff = async (req, res) => {
   try {
     if (!req.user) {
       return res.status(401).json({
-        error: 'Not authorized to access !',
+        error: true,
+        message: 'Not authorized to access !',
       });
     }
     req.body.updatedBy = req.user._id;
@@ -259,17 +272,19 @@ exports.updateStaff = async (req, res) => {
     );
     if (updateStaff) {
       res.status(200).json({
-        error: null,
+        error: false,
         data: updateStaff,
       });
     } else {
       return res.status(400).json({
-        error: 'Staff not updated. Please try again',
+        error: true,
+        message: 'Staff not updated. Please try again',
       });
     }
   } catch (error) {
     return res.status(500).json({
-      error: error.message,
+      error: true,
+      message: error.message,
     });
   }
 };

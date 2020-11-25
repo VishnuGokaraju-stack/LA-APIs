@@ -6,19 +6,22 @@ exports.updateWallet = async (req, res) => {
   try {
     if (!req.user) {
       return res.status(401).json({
-        error: 'Not authorized to access !',
+        error: true,
+        message: 'Not authorized to access !',
       });
     }
     if (typeof req.query.id === 'undefined' && req.query.id === '') {
       return res.status(500).json({
-        error: 'Please enter a valid input',
+        error: true,
+        message: 'Please enter a valid input',
       });
     }
 
     const validateObjectId = await commonValidation.isObjectId(req.query.id);
     if (!validateObjectId) {
       return res.status(500).json({
-        error: 'Please enter a valid input - isobjectid',
+        error: true,
+        message: 'Please enter a valid input - isobjectid',
       });
     }
     //console.log('validateObjectId : ' + validateObjectId);
@@ -27,7 +30,8 @@ exports.updateWallet = async (req, res) => {
     let customerData = await customer.findById(req.query.id);
     if (!customerData) {
       return res.status(400).json({
-        error: 'Customer not exist',
+        error: true,
+        message: 'Customer not exist',
       });
     }
     // update wallet + or - in customer table
@@ -38,12 +42,15 @@ exports.updateWallet = async (req, res) => {
     } else {
       if (cashWallet === 0) {
         return res.status(400).json({
-          error: 'Cash wallet for the customer is zero',
+          error: true,
+          message: 'Cash wallet for the customer is zero',
         });
       }
       if (cashWallet < amount) {
         return res.status(400).json({
-          error: 'Cash wallet is less than amount. Please enter correct amount',
+          error: true,
+          message:
+            'Cash wallet is less than amount. Please enter correct amount',
         });
       }
       newCashWallet = cashWallet - amount;
@@ -80,24 +87,27 @@ exports.updateWallet = async (req, res) => {
       let insertWalletLog = await newWalletLog.save();
       if (!insertWalletLog) {
         return res.status(400).json({
-          error: 'Something went wrong. Please try again - add rate card',
+          error: true,
+          message: 'Something went wrong. Please try again - add rate card',
         });
       }
       let outputData = {
         cashWallet: updateCustomerWallet.cashWallet,
       };
       res.status(200).json({
-        error: null,
+        error: false,
         data: outputData,
       });
     } else {
       return res.status(400).json({
-        error: 'Customer wallet not updated. Please try again',
+        error: true,
+        message: 'Customer wallet not updated. Please try again',
       });
     }
   } catch (error) {
     return res.status(500).json({
-      error: error.message,
+      error: true,
+      message: error.message,
     });
   }
 };
@@ -113,7 +123,8 @@ exports.getWallet = async (req, res) => {
       );
       if (!validateObjectId) {
         return res.status(500).json({
-          error: 'Please enter a valid input - isobjectid',
+          error: true,
+          message: 'Please enter a valid input - isobjectid',
         });
       }
       let walletLogData = await walletlog.find({
@@ -121,19 +132,21 @@ exports.getWallet = async (req, res) => {
       });
       if (walletLogData) {
         return res.json({
-          error: null,
+          error: false,
           data: walletLogData,
         });
       } else {
         return res.status(400).json({
-          error: 'Wallet logs not exists.',
+          error: true,
+          message: 'Wallet logs not exists.',
         });
       }
     } else {
     }
   } catch (error) {
     res.status(500).json({
-      error: error.message,
+      error: true,
+      message: error.message,
     });
   }
 };

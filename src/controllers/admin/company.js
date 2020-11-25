@@ -7,7 +7,8 @@ exports.getCompanyById = async (req, res, next, id) => {
     await company.findById(id).exec((error, company) => {
       if (error || !company) {
         return res.status(400).json({
-          error: 'Company not exist',
+          error: true,
+          message: 'Company not exist',
         });
       }
       req.companyData = company;
@@ -15,7 +16,8 @@ exports.getCompanyById = async (req, res, next, id) => {
     });
   } catch (error) {
     return res.status(500).json({
-      error: error.message,
+      error: true,
+      message: error.message,
     });
   }
 };
@@ -27,7 +29,8 @@ exports.insertCompany = async (req, res) => {
     let validateCheck = await company.findOne({ companyName });
     if (validateCheck) {
       return res.status(400).json({
-        error: 'Company already exists',
+        error: true,
+        message: 'Company already exists',
       });
     }
     // insert into company table
@@ -72,19 +75,19 @@ exports.insertCompany = async (req, res) => {
       let insertStaff = newStaff.save();
       if (insertStaff) {
         res.status(200).json({
-          error: null,
-          data: {
-            message: 'Company added successfully',
-          },
+          error: false,
+          message: 'Company added successfully',
         });
       } else {
         return res.status(400).json({
-          error: 'Something went wrong. Please try again - add company owner',
+          error: true,
+          message: 'Something went wrong. Please try again - add company owner',
         });
       }
     } else {
       return res.status(400).json({
-        error: 'Not able to insert user in DB - company',
+        error: true,
+        message: 'Not able to insert user in DB - company',
       });
     }
     // newCompany.save((error, company) => {
@@ -103,7 +106,8 @@ exports.insertCompany = async (req, res) => {
     //});
   } catch (error) {
     res.status(500).json({
-      error: error.message,
+      error: true,
+      message: error.message,
     });
   }
 };
@@ -113,11 +117,12 @@ exports.getAllCompanies = async (req, res) => {
     await company.find().exec((error, company) => {
       if (error || !company) {
         return res.status(400).json({
-          error: 'Companies not found',
+          error: true,
+          message: 'Companies not found',
         });
       }
       res.json({
-        error: null,
+        error: true,
         data: {
           company,
         },
@@ -125,7 +130,8 @@ exports.getAllCompanies = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({
-      error: error.message,
+      error: true,
+      message: error.message,
     });
   }
 };
@@ -133,12 +139,13 @@ exports.getAllCompanies = async (req, res) => {
 exports.getCompany = async (req, res) => {
   try {
     return res.json({
-      error: null,
+      error: false,
       data: req.companyData,
     });
   } catch (error) {
     res.status(500).json({
-      error: error.message,
+      error: true,
+      message: error.message,
     });
   }
 };
@@ -154,17 +161,19 @@ exports.updateCompany = async (req, res) => {
     );
     if (updateCompany) {
       res.status(201).json({
-        error: null,
+        error: false,
         data: updateCompany,
       });
     } else {
       return res.status(400).json({
-        error: 'Company not updated. Please try again',
+        error: true,
+        message: 'Company not updated. Please try again',
       });
     }
   } catch (error) {
     return res.status(500).json({
-      error: error.message,
+      error: true,
+      message: error.message,
     });
   }
 };

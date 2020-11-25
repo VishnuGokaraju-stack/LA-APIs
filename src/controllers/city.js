@@ -4,7 +4,8 @@ exports.getCityById = async (req, res, next, id) => {
     await city.findById(id).exec((error, city) => {
       if (error || !city) {
         return res.status(400).json({
-          error: 'City not exist',
+          error: true,
+          message: 'City not exist',
         });
       }
       req.cityData = city;
@@ -12,7 +13,8 @@ exports.getCityById = async (req, res, next, id) => {
     });
   } catch (error) {
     return res.status(500).json({
-      error: error.message,
+      error: true,
+      message: error.message,
     });
   }
 };
@@ -25,7 +27,8 @@ exports.insertCity = async (req, res) => {
     //console.log("bbb : " + validateCheck);
     if (validateCheck) {
       return res.status(400).json({
-        error: 'City already exists',
+        error: true,
+        message: 'City already exists',
       });
     }
     // insert into city table
@@ -38,19 +41,19 @@ exports.insertCity = async (req, res) => {
     newcity.save((error, city) => {
       if (error) {
         return res.status(400).json({
-          error: 'Not able to insert user in DB - city',
+          error: true,
+          message: 'Not able to insert user in DB - city',
         });
       }
       res.json({
-        error: null,
-        data: {
-          message: 'City added successfully',
-        },
+        error: false,
+        message: 'City added successfully',
       });
     });
   } catch (error) {
     res.status(500).json({
-      error: error.message,
+      error: true,
+      message: error.message,
     });
   }
 };
@@ -60,11 +63,12 @@ exports.getAllCities = async (req, res) => {
     await city.find().exec((error, city) => {
       if (error || !city) {
         return res.status(400).json({
-          error: 'Cities not found',
+          error: true,
+          message: 'Cities not found',
         });
       }
       res.json({
-        error: null,
+        error: false,
         data: {
           city,
         },
@@ -72,7 +76,8 @@ exports.getAllCities = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({
-      error: error.message,
+      error: true,
+      message: error.message,
     });
   }
 };
@@ -80,12 +85,13 @@ exports.getAllCities = async (req, res) => {
 exports.getCity = async (req, res) => {
   try {
     return res.json({
-      error: null,
+      error: false,
       data: req.cityData,
     });
   } catch (error) {
     res.status(500).json({
-      error: error.message,
+      error: true,
+      message: error.message,
     });
   }
 };
@@ -101,17 +107,19 @@ exports.updateCity = async (req, res) => {
     );
     if (updateCity) {
       res.status(201).json({
-        error: null,
+        error: false,
         data: updateCity,
       });
     } else {
       return res.status(400).json({
-        error: 'City not updated. Please try again',
+        error: true,
+        message: 'City not updated. Please try again',
       });
     }
   } catch (error) {
     return res.status(500).json({
-      error: error.message,
+      error: true,
+      message: error.message,
     });
   }
 };
