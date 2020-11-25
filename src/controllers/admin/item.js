@@ -23,6 +23,7 @@ exports.insertItem = async (req, res) => {
       itemList: req.body.itemList,
       companyId: req.user.companyId,
       createdBy: req.user._id,
+      createdType: req.user.userType, // staff, customer
     });
     //console.log(newCat);
     newItem.save((error, item) => {
@@ -82,6 +83,7 @@ exports.updateItem = async (req, res) => {
       });
     }
     req.body.updatedBy = req.user._id;
+    req.body.updatedType = req.user.userType; // staff, customer
     let updateItemList = await item.findOneAndUpdate(
       { companyId: req.user.companyId },
       { $set: req.body },

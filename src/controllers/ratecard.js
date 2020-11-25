@@ -49,6 +49,7 @@ exports.insertRateCard = async (req, res) => {
       //rateCardType: req.body.rateCardType, // Online , Offline, Others, empty
       rateCardStatus: req.body.rateCardStatus,
       createdBy: req.user._id,
+      createdType: req.user.userType, // staff, customer
     });
     let insertRatecard = await newRatecard.save();
     if (insertRatecard) {
@@ -95,6 +96,7 @@ exports.updateRateCard = async (req, res) => {
     // TODO - if ratecard is making inactive, check if ratecard is assigned to a store or not.
     // Send error message that ratecard is assigned to store
     req.body.updatedBy = req.user._id;
+    req.body.updatedType = req.user.userType; // staff, customer
     let updateRateCard = await ratecard.findByIdAndUpdate(
       { _id: req.query.id },
       { $set: req.body },

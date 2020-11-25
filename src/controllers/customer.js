@@ -61,6 +61,7 @@ exports.insertCustomer = async (req, res) => {
       status: req.body.status,
       companyId: req.user.companyId,
       createdBy: req.user._id,
+      createdType: req.user.userType, // staff, customer
       // TODO
       //registeredFrom: req.body.registeredFrom, // admin, ios, android, msite, website
     });
@@ -191,6 +192,7 @@ exports.updateCustomer = async (req, res) => {
       });
     }
     req.body.updatedBy = req.user._id;
+    req.body.updatedType = req.user.userType; // staff, customer
     const { mobileNumber, email, referarCode } = req.body;
     // if referarCode is not empty check if customer exists or not
     if (referarCode && referarCode != '') {

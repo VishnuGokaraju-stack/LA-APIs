@@ -62,6 +62,7 @@ exports.insertMC = async (req, res) => {
       mcImage: req.body.mcImage,
       companyId: req.user.companyId,
       createdBy: req.user._id,
+      createdType: req.user.userType, // staff, customer
     });
     //console.log(newMC);
     newMC.save((error, mc) => {
@@ -129,6 +130,7 @@ exports.updateMC = async (req, res) => {
       });
     }
     req.body.updatedBy = req.user._id;
+    req.body.updatedType = req.user.userType; // staff, customer
     if (req.body._id) {
       delete req.body._id;
     }

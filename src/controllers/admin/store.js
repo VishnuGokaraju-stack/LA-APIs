@@ -57,6 +57,7 @@ exports.insertStore = async (req, res) => {
       storeStaffBoys: req.body.storeStaffBoys,
       storeStatus: req.body.storeStatus,
       createdBy: req.user._id,
+      createdType: req.user.userType, // staff, customer
     });
     if (req.body.parentStore) {
       newstore.parentStore = req.body.parentStore;
@@ -144,6 +145,7 @@ exports.updateStore = async (req, res) => {
       });
     }
     req.body.updatedBy = req.user._id;
+    req.body.updatedType = req.user.userType; // staff, customer
     if (req.body.storeCoordinates) {
       const { storeCoordinates } = req.body;
       //const geoLocation = { type: 'Point', coordinates: [longitude, latitude] };

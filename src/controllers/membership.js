@@ -35,6 +35,7 @@ exports.insertMembership = async (req, res) => {
       planStartDate: req.body.planStartDate,
       planEndDate: req.body.planEndDate,
       createdBy: req.user._id,
+      createdType: req.user.userType, // staff, customer
       status: req.body.status,
     });
     newPlan.save((error, item) => {
@@ -70,6 +71,7 @@ exports.updateMembership = async (req, res) => {
       });
     }
     req.body.updatedBy = req.user._id;
+    req.body.updatedType = req.user.userType; // staff, customer
     let updatemembership = await membership.findByIdAndUpdate(
       { _id: req.query.id },
       { $set: req.body },

@@ -55,6 +55,7 @@ exports.insertSubcat = async (req, res) => {
       subcatImage: req.body.subcatImage,
       companyId: req.user.companyId,
       createdBy: req.user._id,
+      createdType: req.user.userType, // staff, customer
     });
     newSubcat.save((error, subcat) => {
       if (error) {
@@ -119,6 +120,7 @@ exports.updateSubcat = async (req, res) => {
       });
     }
     req.body.updatedBy = req.user._id;
+    req.body.updatedType = req.user.userType; // staff, customer
     let updateSubCat = await subCategory.findByIdAndUpdate(
       { _id: req.subcatData._id },
       { $set: req.body },

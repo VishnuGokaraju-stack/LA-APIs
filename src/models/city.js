@@ -1,4 +1,5 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
+const { ObjectId } = mongoose.Schema;
 
 const citySchema = new mongoose.Schema(
   {
@@ -18,8 +19,24 @@ const citySchema = new mongoose.Schema(
       max: 1,
       default: 0,
     },
+    createdBy: {
+      type: ObjectId,
+      ref: 'staff',
+    },
+    createdType: {
+      type: String,
+      enum: ['staff', 'customer'],
+    },
+    updatedBy: {
+      type: ObjectId,
+      ref: 'staff',
+    },
+    updatedType: {
+      type: String,
+      enum: ['staff', 'customer'],
+    },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("city", citySchema);
+module.exports = mongoose.model('city', citySchema);

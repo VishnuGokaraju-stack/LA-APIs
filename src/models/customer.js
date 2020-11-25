@@ -96,9 +96,17 @@ const customerSchema = new mongoose.Schema(
       type: ObjectId,
       ref: 'staff',
     },
+    createdType: {
+      type: String,
+      enum: ['staff', 'customer'],
+    },
     updatedBy: {
       type: ObjectId,
       ref: 'staff',
+    },
+    updatedType: {
+      type: String,
+      enum: ['staff', 'customer'],
     },
     cashWallet: {
       type: Number,

@@ -38,13 +38,15 @@ exports.insertCompany = async (req, res) => {
       companyOwnerName: req.body.companyOwnerName,
       companyOwnerMobile: req.body.companyOwnerMobile,
       companyOwnerMobileAlternate: req.body.companyOwnerMobileAlternate,
+      createdBy: req.user._id,
+      createdType: req.user.userType, // staff, customer
     });
     let insertCompany = await newCompany.save();
-    console.log(insertCompany);
+    //console.log(insertCompany);
     if (insertCompany) {
-      console.log('iffff');
+      //console.log('iffff');
       let newCompanyId = insertCompany._id;
-      console.log(newCompanyId);
+      //console.log(newCompanyId);
       // hash the password
       const salt = await bcrypt.genSalt(10);
       const encryptPassword = await bcrypt.hash(
@@ -143,6 +145,8 @@ exports.getCompany = async (req, res) => {
 
 exports.updateCompany = async (req, res) => {
   try {
+    req.body.updatedBy = req.user._id;
+    req.body.updatedType = req.user.userType; // staff, customer
     let updateCompany = await company.findByIdAndUpdate(
       { _id: req.companyData._id },
       { $set: req.body },

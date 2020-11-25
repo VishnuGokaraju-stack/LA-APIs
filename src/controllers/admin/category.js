@@ -59,6 +59,7 @@ exports.insertCat = async (req, res) => {
       catImage: req.body.catImage,
       companyId: req.user.companyId,
       createdBy: req.user._id,
+      createdType: req.user.userType, // staff, customer
     });
     //console.log(newCat);
     newCat.save((error, cat) => {
@@ -131,6 +132,7 @@ exports.updateCat = async (req, res) => {
       delete req.body._id;
     }
     req.body.updatedBy = req.user._id;
+    req.body.updatedType = req.user.userType; // staff, customer
     let updateCat = await category.findByIdAndUpdate(
       { _id: req.catData._id },
       { $set: req.body },

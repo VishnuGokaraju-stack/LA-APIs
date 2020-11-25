@@ -46,6 +46,7 @@ exports.insertStaff = async (req, res) => {
       staffEmployeeType: req.body.staffEmployeeType, //  Array
       staffStatus: req.body.staffStatus,
       createdBy: req.user._id,
+      createdType: req.user.userType, // staff, customer
       workdays: req.body.workdays,
     });
 
@@ -245,6 +246,7 @@ exports.updateStaff = async (req, res) => {
       });
     }
     req.body.updatedBy = req.user._id;
+    req.body.updatedType = req.user.userType; // staff, customer
     // const { mobileNumber, email } = req.body;
     // TODO - check if duplicate mobile exists
 

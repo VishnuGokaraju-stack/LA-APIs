@@ -47,6 +47,14 @@ const walletLogSchema = new mongoose.Schema(
       type: String,
       enum: ['staff', 'customer'],
     },
+    updatedBy: {
+      type: ObjectId,
+      ref: 'staff',
+    },
+    updatedType: {
+      type: String,
+      enum: ['staff', 'customer'],
+    },
     // TODO
     //orderId: {},
     membershipId: {

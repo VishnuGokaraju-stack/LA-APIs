@@ -67,6 +67,8 @@ exports.updateWallet = async (req, res) => {
         walletDescription: req.body.walletDescription,
         createdBy: req.user._id,
         createdType: req.user.userType, // staff, customer
+        updatedBy: req.user._id,
+        updatedType: req.user.userType, // staff, customer
         currentCashWallet: newCashWallet,
       });
       if (
