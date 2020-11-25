@@ -33,6 +33,9 @@ exports.insertCustomer = async (req, res) => {
     if (mobileCheck) {
       return res.status(400).json({
         error: 'Mobile already exists',
+        data: {
+          message: 'Mobile already exists',
+        },
       });
     }
     // check if same email already exists
