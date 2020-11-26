@@ -37,6 +37,7 @@ exports.insertStore = async (req, res) => {
         message: 'Store already exists',
       });
     }
+    // TODO storecode
 
     // insert into store table
     const newstore = new store({

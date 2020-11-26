@@ -30,7 +30,10 @@ exports.insertMC = async (req, res) => {
     }
     const { mcName } = req.body;
     // check if same mothercategory already exists
-    let duplicateCheck = await motherCategory.findOne({ mcName });
+    let duplicateCheck = await motherCategory.findOne({
+      mcName: mcName,
+      companyId: req.user.companyId,
+    });
     if (duplicateCheck) {
       return res.status(400).json({
         error: true,

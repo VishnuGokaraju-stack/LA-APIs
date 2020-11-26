@@ -1,6 +1,11 @@
 const express = require('express');
 const router = express.Router();
 
+const {
+  validateInsertCat,
+  CatValidationResult,
+} = require('../../validations/category');
+
 const { verifyToken } = require('../../middlewares/admin/checkadminauth');
 
 const {

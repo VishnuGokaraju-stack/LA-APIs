@@ -1,6 +1,6 @@
 const { check, validationResult } = require('express-validator');
 
-exports.MCValidationResult = async (req, res, next) => {
+exports.CatValidationResult = async (req, res, next) => {
   const errors = await validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(422).json({
@@ -11,7 +11,7 @@ exports.MCValidationResult = async (req, res, next) => {
   next();
 };
 
-exports.validateInsertMC = [
+exports.validateInsertCat = [
   check('mcName')
     .not()
     .isEmpty()

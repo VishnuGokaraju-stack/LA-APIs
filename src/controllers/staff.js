@@ -14,7 +14,8 @@ exports.insertStaff = async (req, res) => {
     // check if mobile number already exists
     let mobileCheck = await staff.findOne({
       staffMobile: staffMobile,
-      storeId: storeId,
+      //storeId: storeId,
+      // TODO companyId
     });
     if (mobileCheck) {
       return res.status(400).json({

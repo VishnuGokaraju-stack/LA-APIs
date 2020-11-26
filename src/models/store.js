@@ -136,6 +136,11 @@ const storeSchema = new mongoose.Schema(
       type: String,
       enum: ['staff', 'customer'],
     },
+    perCompletion: {
+      type: Number,
+      enum: [0, 1, 2, 3, 4],
+      default: 0,
+    },
   },
   { timestamps: true }
 );
