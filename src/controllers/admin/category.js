@@ -1,4 +1,5 @@
 const category = require('../../models/category');
+const commonValidation = require('../../middlewares/commonvalidation');
 
 exports.getCatById = async (req, res, next, id) => {
   try {
@@ -6,7 +7,7 @@ exports.getCatById = async (req, res, next, id) => {
       if (error || !cat) {
         return res.status(400).json({
           error: true,
-          message: 'Something went wrong. Please try again',
+          message: 'Category does not exist.',
         });
       }
       req.catData = cat;
@@ -30,25 +31,25 @@ exports.insertCat = async (req, res) => {
     }
     const { catName } = req.body;
     // check if same category already exists
-    let validateCheck = await category.findOne({ catName });
-    if (validateCheck) {
-      return res.status(400).json({
-        error: true,
-        message: 'Category already exists',
-      });
+    let getCategories = await category.find(
+      {
+        companyId: req.user.companyId,
+      },
+      { catName: true, _id: false }
+    );
+    if (getCategories) {
+      // check if same category name exists in the company
+      const hasValue = await commonValidation.valueExistsInJSON(
+        getCategories,
+        catName
+      );
+      if (hasValue.length > 0) {
+        return res.status(400).json({
+          error: true,
+          message: 'Category already exists',
+        });
+      }
     }
-    // await category.findOne({ catName }, (error, cat) => {
-    //   if (error) {
-    //     return res.status(400).json({
-    //       error: "Something went wrong. Please try again",
-    //     });
-    //   }
-    //   if (cat) {
-    //     return res.status(400).json({
-    //       error: "Category already exists",
-    //     });
-    //   }
-    // });
     // insert into category table
     const newCat = new category({
       catName: req.body.catName,
@@ -65,7 +66,6 @@ exports.insertCat = async (req, res) => {
       createdBy: req.user._id,
       createdType: req.user.userType, // staff, customer
     });
-    //console.log(newCat);
     newCat.save((error, cat) => {
       if (error) {
         return res.status(400).json({
@@ -76,8 +76,6 @@ exports.insertCat = async (req, res) => {
       res.json({
         error: false,
         message: 'Category added successfully',
-        // data: {
-        // },
       });
     });
   } catch (error) {

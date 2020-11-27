@@ -1,4 +1,5 @@
 const motherCategory = require('../../models/mothercategory');
+const commonValidation = require('../../middlewares/commonvalidation');
 
 exports.getMCById = async (req, res, next, id) => {
   try {
@@ -29,31 +30,26 @@ exports.insertMC = async (req, res) => {
       });
     }
     const { mcName } = req.body;
-    // check if same mothercategory already exists
-    let duplicateCheck = await motherCategory.findOne({
-      mcName: mcName,
-      companyId: req.user.companyId,
-    });
-    if (duplicateCheck) {
-      return res.status(400).json({
-        error: true,
-        message: 'Mothercategory already exists',
-      });
+    // check if same mothercategory already exists for the company
+    let getCategories = await motherCategory.find(
+      {
+        companyId: req.user.companyId,
+      },
+      { catName: true, _id: false }
+    );
+    if (getCategories) {
+      // check if same category name exists in the company
+      const hasValue = await commonValidation.valueExistsInJSON(
+        getCategories,
+        mcName
+      );
+      if (hasValue.length > 0) {
+        return res.status(400).json({
+          error: true,
+          message: 'Mothercategory already exists',
+        });
+      }
     }
-    // await motherCategory.findOne({ mcName }, (error, mc) => {
-    //   console.log("mc : " + mc);
-    //   console.log("error : " + error);
-    //   if (error) {
-    //     return res.status(400).json({
-    //       error: "Something went wrong. Please try again",
-    //     });
-    //   }
-    //   if (mc) {
-    //     return res.status(400).json({
-    //       error: "Mothercategory already exists",
-    //     });
-    //   }
-    // });
     // insert into mothercategory table
     const newMC = new motherCategory({
       mcName: req.body.mcName,

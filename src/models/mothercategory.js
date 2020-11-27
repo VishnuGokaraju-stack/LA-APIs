@@ -12,7 +12,6 @@ const mothercategorySchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
-      unique: true,
     },
     mcSmallDesc: {
       type: String,

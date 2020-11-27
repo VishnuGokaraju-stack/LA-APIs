@@ -20,7 +20,6 @@ exports.updateWallet = async (req, res) => {
         message: 'Please enter a valid input',
       });
     }
-
     const validateObjectId = await commonValidation.isObjectId(
       req.query.customerId
     );
@@ -44,6 +43,7 @@ exports.updateWallet = async (req, res) => {
     let transactionName = '';
     let amountToCredit = 0;
     // if addWalletType ==  membership
+    let membershipPlanAmount = 0;
     if (addWalletType === 'membership') {
       if (
         typeof req.body.membershipId === 'undefined' &&
@@ -64,6 +64,7 @@ exports.updateWallet = async (req, res) => {
       } else {
         amountToCredit = membershipData.planCreditAmount;
         transactionName = 'membership';
+        membershipPlanAmount = membershipData.planAmount;
       }
     } else if (addWalletType === 'wallet') {
       // if addWalletType ==  money
@@ -111,7 +112,7 @@ exports.updateWallet = async (req, res) => {
         req.body.membershipId !== ''
       ) {
         newWalletLog.membershipId = req.body.membershipId;
-        newWalletLog.membershipPlanAmount = membershipData.planAmount;
+        newWalletLog.membershipPlanAmount = membershipPlanAmount;
       }
       if (
         typeof req.body.walletDescription !== 'undefined' &&
