@@ -12,7 +12,13 @@ const walletLogSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    currentCashWallet: {
+    beforeTransactionCashWallet: {
+      // dynamic
+      type: Number,
+      required: true,
+      default: 0,
+    },
+    afterTransactionCashWallet: {
       // dynamic
       type: Number,
       required: true,
@@ -25,8 +31,8 @@ const walletLogSchema = new mongoose.Schema(
     },
     transactionName: {
       type: String,
-      enum: ['cashback', 'promotional', 'cash', 'referral', 'membership'],
-      default: 'cash',
+      enum: ['cashback', 'promotional', 'referral', 'membership', 'wallet'],
+      default: 'wallet',
     },
     walletType: {
       // cash wallet, promotional wallet, referral wallet
@@ -60,6 +66,14 @@ const walletLogSchema = new mongoose.Schema(
     membershipId: {
       type: ObjectId,
       ref: 'membership',
+    },
+    paymentTransaction: {
+      type: String,
+      enum: ['Card', 'Paytm', 'UPI', 'Cash'],
+    },
+    paymentReferenceId: {
+      type: String,
+      trim: true,
     },
   },
   { timestamps: true }
