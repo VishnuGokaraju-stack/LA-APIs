@@ -67,9 +67,12 @@ const walletLogSchema = new mongoose.Schema(
       type: ObjectId,
       ref: 'membership',
     },
+    membershipPlanAmount: {
+      type: Number,
+    },
     paymentTransaction: {
       type: String,
-      enum: ['Card', 'Paytm', 'UPI', 'Cash'],
+      enum: ['card', 'paytm', 'upi', 'cash'],
     },
     paymentReferenceId: {
       type: String,

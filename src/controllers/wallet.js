@@ -83,7 +83,7 @@ exports.updateWallet = async (req, res) => {
     }
     // update wallet + or - in customer table
     let cashWallet = customerData.cashWallet;
-    let newCashWallet = cashWallet + amountToCredit;
+    let newCashWallet = parseInt(cashWallet) + parseInt(amountToCredit);
     // update cashwallet in customer table
     let updateData = { cashWallet: newCashWallet };
     let updateCustomerWallet = await customer.findByIdAndUpdate(
@@ -111,6 +111,7 @@ exports.updateWallet = async (req, res) => {
         req.body.membershipId !== ''
       ) {
         newWalletLog.membershipId = req.body.membershipId;
+        newWalletLog.membershipPlanAmount = membershipData.planAmount;
       }
       if (
         typeof req.body.walletDescription !== 'undefined' &&
