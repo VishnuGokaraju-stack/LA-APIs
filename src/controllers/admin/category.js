@@ -50,7 +50,7 @@ exports.insertCat = async (req, res) => {
         getCategories,
         catName
       );
-      if (hasValue.length > 0) {
+      if (typeof hasValue !== 'undefined') {
         return res.status(400).json({
           error: true,
           message: 'Category already exists',
@@ -165,7 +165,7 @@ exports.updateCat = async (req, res) => {
         catName,
         req.query.id
       );
-      if (hasValue.length > 0) {
+      if (typeof hasValue !== 'undefined') {
         return res.status(400).json({
           error: true,
           message: 'Mothercategory already exists',

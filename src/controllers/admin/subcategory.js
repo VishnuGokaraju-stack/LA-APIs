@@ -53,7 +53,7 @@ exports.insertSubcat = async (req, res) => {
         getCategories,
         subcatName
       );
-      if (hasValue.length > 0) {
+      if (typeof hasValue !== 'undefined') {
         return res.status(400).json({
           error: true,
           message: 'Sub category already exists',
@@ -165,7 +165,7 @@ exports.updateSubcat = async (req, res) => {
         subcatName,
         req.query.id
       );
-      if (hasValue.length > 0) {
+      if (typeof hasValue !== 'undefined') {
         return res.status(400).json({
           error: true,
           message: 'Sub category already exists',

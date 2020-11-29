@@ -8,12 +8,18 @@ exports.insertItem = async (req, res) => {
         message: 'Not authorized to access !',
       });
     }
-    //console.log(req.user.companyId);
+    // check if same item name exists
+    const hasValue = await commonValidation.insertItemvalueExistsInJSON(
+      req.body.itemList
+    );
+    if (typeof hasValue !== 'undefined') {
+      return res.status(400).json({
+        error: true,
+        message: 'Category already exists',
+      });
+    }
     // check if item already exists for companyid
     let validateCheck = await item.find({ companyId: req.user.companyId });
-    //console.log(validateCheck);
-
-    //console.log(validateCheck.length);
     if (validateCheck && validateCheck.length > 0) {
       return res.status(400).json({
         error: true,

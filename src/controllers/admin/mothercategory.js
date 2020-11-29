@@ -43,7 +43,7 @@ exports.insertMC = async (req, res) => {
         getCategories,
         mcName
       );
-      if (hasValue.length > 0) {
+      if (typeof hasValue !== 'undefined') {
         return res.status(400).json({
           error: true,
           message: 'Mothercategory already exists',

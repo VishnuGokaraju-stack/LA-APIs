@@ -42,7 +42,7 @@ exports.insertRateCard = async (req, res) => {
         getRateCards,
         rateCardName
       );
-      if (hasValue.length > 0) {
+      if (typeof hasValue !== 'undefined') {
         return res.status(400).json({
           error: true,
           message: 'Ratecard already exists',
