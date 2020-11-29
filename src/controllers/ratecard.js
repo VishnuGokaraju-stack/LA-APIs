@@ -1,4 +1,7 @@
 const ratecard = require('../models/ratecard');
+const store = require('../models/store');
+const commonValidation = require('../middlewares/commonvalidation');
+const ratecardMiddleware = require('../middlewares/ratecardMiddleware');
 
 // exports.getRatecardById = async (req, res, next, id) => {
 //     try {
@@ -27,21 +30,24 @@ exports.insertRateCard = async (req, res) => {
     }
     const { rateCardName } = req.body;
     // check if rateCardName already exists for company
-    let ratecardCheck = await ratecard.findOne({
-      $and: [
-        {
-          companyId: req.user.companyId,
-        },
-        {
-          rateCardName: rateCardName,
-        },
-      ],
-    });
-    if (ratecardCheck) {
-      return res.status(400).json({
-        error: true,
-        message: 'Ratecard already exists',
-      });
+    let getRateCards = await ratecard.find(
+      {
+        companyId: req.user.companyId,
+      },
+      { rateCardName: 1, _id: 0 }
+    );
+    if (getRateCards) {
+      // check if same ratecard name exists in the company
+      const hasValue = await commonValidation.insertRatecardvalueExistsInJSON(
+        getRateCards,
+        rateCardName
+      );
+      if (hasValue.length > 0) {
+        return res.status(400).json({
+          error: true,
+          message: 'Ratecard already exists',
+        });
+      }
     }
     const newRatecard = new ratecard({
       rateCardName: req.body.rateCardName,
@@ -81,23 +87,58 @@ exports.updateRateCard = async (req, res) => {
         message: 'Not authorized to access !',
       });
     }
-    // TODO - check if duplicate rateCardName based on companyid exists
-    // if(req.body.rateCardName) {
-    //   const { rateCardName, companyId } = req.body;
-    //   // check if rateCardName already exists for company
-    //   let ratecardCheck = await ratecard.findOne({
-    //     rateCardName: rateCardName,
-    //     companyId: companyId,
-    //   });
-    //   if (ratecardCheck) {
-    //     return res.status(400).json({
-    //       error: 'Ratecard already exists',
-    //     });
-    //   }
-    // }
-
-    // TODO - if ratecard is making inactive, check if ratecard is assigned to a store or not.
-    // Send error message that ratecard is assigned to store
+    if (typeof req.body._id !== 'undefined' && req.body._id !== '') {
+      delete req.body._id;
+    }
+    const { rateCardName } = req.body;
+    // check if rateCardName already exists for company
+    let getRateCards = await ratecard.find(
+      {
+        companyId: req.user.companyId,
+      },
+      { rateCardName: 1, _id: 1 }
+    );
+    if (getRateCards) {
+      // check if same ratecard name exists in the company
+      const hasValue = await commonValidation.updateRatecardupdateValueExistsInJson(
+        getRateCards,
+        rateCardName,
+        req.query.id
+      );
+      if (hasValue.length > 0) {
+        return res.status(400).json({
+          error: true,
+          message: 'Ratecard already exists',
+        });
+      }
+    }
+    // if ratecard is making inactive, check if ratecard is assigned to a store or not.
+    if (
+      typeof req.body.rateCardStatus !== 'undefined' &&
+      req.body.rateCardStatus !== '' &&
+      req.body.rateCardStatus === 'Inactive'
+    ) {
+      let getStoreRatecards = await store.find(
+        {
+          companyId: req.user.companyId,
+        },
+        { ratecardOnline: 1, ratecardOffline: 1, _id: 0, storeName: 1 }
+      );
+      // Send error message that ratecard is assigned to store
+      const hasAssignedToStore = await ratecardMiddleware.checkRatecardAssignedToStore(
+        getStoreRatecards,
+        req.query.id
+      );
+      if (typeof hasAssignedToStore !== 'undefined') {
+        return res.status(400).json({
+          error: true,
+          message:
+            'Ratecard is assigned to store ' +
+            hasAssignedToStore.storeName +
+            '. Please check',
+        });
+      }
+    }
     req.body.updatedBy = req.user._id;
     req.body.updatedType = req.user.userType; // staff, customer
     let updateRateCard = await ratecard.findByIdAndUpdate(

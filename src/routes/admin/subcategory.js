@@ -22,7 +22,7 @@ router.get('/', verifyToken, getAllSubcat);
 router.get('/:id', verifyToken, getSubcat);
 
 // update category
-router.put('/:id', verifyToken, updateSubcat);
+router.put('/', verifyToken, updateSubcat);
 
 // delete sub category
 //router.delete("/:id", deleteSubcat);

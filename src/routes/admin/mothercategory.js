@@ -25,7 +25,7 @@ router.get('/', verifyToken, getAllMC);
 router.get('/:id', verifyToken, getMC);
 
 // update mothercategory
-router.put('/:id', verifyToken, updateMC);
+router.put('/', verifyToken, updateMC);
 
 // delete mothercategory
 //router.delete("/:id", deleteMC);

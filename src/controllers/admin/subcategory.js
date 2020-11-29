@@ -1,4 +1,5 @@
 const subCategory = require('../../models/subcategory');
+const commonValidation = require('../../middlewares/commonvalidation');
 
 exports.getSubcatById = async (req, res, next, id) => {
   try {
@@ -30,24 +31,34 @@ exports.insertSubcat = async (req, res) => {
     }
     const { subcatName } = req.body;
     // check if same subcategory already exists
-    const duplicateCheck = await subCategory.findOne({ subcatName });
-    // await subCategory.findOne({ subcatName }, (error, subcat) => {
-    //   if (error) {
-    //     return res.status(400).json({
-    //       error: "Something went wrong. Please try again",
-    //     });
-    //   }
-    //   if (subcat) {
-    //     return res.status(400).json({
-    //       error: "Subcategory already exists",
-    //     });
-    //   }
-    // });
-    if (duplicateCheck) {
-      return res.status(400).json({
-        error: true,
-        message: 'Subcategory already exists',
-      });
+    let getCategories = await category.find(
+      {
+        $and: [
+          {
+            companyId: req.user.companyId,
+          },
+          {
+            mcId: req.body.mcId,
+          },
+          {
+            catId: req.body.catId,
+          },
+        ],
+      },
+      { subcatName: 1, _id: 0 }
+    );
+    if (getCategories) {
+      // check if same sub category name exists in the company
+      const hasValue = await commonValidation.insertSubcatvalueExistsInJSON(
+        getCategories,
+        subcatName
+      );
+      if (hasValue.length > 0) {
+        return res.status(400).json({
+          error: true,
+          message: 'Sub category already exists',
+        });
+      }
     }
     // insert into subcategory table
     const newSubcat = new subCategory({
@@ -127,23 +138,46 @@ exports.updateSubcat = async (req, res) => {
         message: 'Not authorized to access !',
       });
     }
+    if (typeof req.body._id !== 'undefined' && req.body._id !== '') {
+      delete req.body._id;
+    }
+    // check if same subcategory already exists
+    let getCategories = await category.find(
+      {
+        $and: [
+          {
+            companyId: req.user.companyId,
+          },
+          {
+            mcId: req.body.mcId,
+          },
+          {
+            catId: req.body.catId,
+          },
+        ],
+      },
+      { subcatName: 1, _id: 1 }
+    );
+    if (getCategories) {
+      // check if same sub category name exists in the company
+      const hasValue = await commonValidation.updateSubcatupdateValueExistsInJson(
+        getCategories,
+        subcatName,
+        req.query.id
+      );
+      if (hasValue.length > 0) {
+        return res.status(400).json({
+          error: true,
+          message: 'Sub category already exists',
+        });
+      }
+    }
     req.body.updatedBy = req.user._id;
     req.body.updatedType = req.user.userType; // staff, customer
     let updateSubCat = await subCategory.findByIdAndUpdate(
-      { _id: req.subcatData._id },
+      { _id: req.query.id },
       { $set: req.body },
       { new: true, useFindAndModify: true }
-      // (error, subcat) => {
-      //   if (error) {
-      //     return res.status(400).json({
-      //       error: "Subcategory not updated. Please try again",
-      //     });
-      //   }
-      //   res.json({
-      //     error: null,
-      //     data: subcat,
-      //   });
-      // }
     );
     if (updateSubCat) {
       res.status(201).json({

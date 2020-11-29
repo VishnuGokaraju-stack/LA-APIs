@@ -35,11 +35,11 @@ exports.insertMC = async (req, res) => {
       {
         companyId: req.user.companyId,
       },
-      { catName: true, _id: false }
+      { mcName: 1, _id: 0 }
     );
     if (getCategories) {
       // check if same category name exists in the company
-      const hasValue = await commonValidation.valueExistsInJSON(
+      const hasValue = await commonValidation.insertMCvalueExistsInJSON(
         getCategories,
         mcName
       );
@@ -136,26 +136,41 @@ exports.updateMC = async (req, res) => {
         message: 'Not authorized to access !',
       });
     }
+    // check if same mother category name exists in company
+    const { mcName } = req.body;
+    // check if same mothercategory already exists for the company
+    let getCategories = await motherCategory.find(
+      {
+        companyId: req.user.companyId,
+      },
+      {
+        mcName: 1,
+        _id: 1,
+      }
+    );
+    if (getCategories) {
+      // check if same category name exists in the company
+      const hasValue = await commonValidation.updateMCupdateValueExistsInJson(
+        getCategories,
+        mcName,
+        req.query.id
+      );
+      if (typeof hasValue !== 'undefined') {
+        return res.status(400).json({
+          error: true,
+          message: 'Mothercategory already exists',
+        });
+      }
+    }
     req.body.updatedBy = req.user._id;
     req.body.updatedType = req.user.userType; // staff, customer
-    if (req.body._id) {
+    if (typeof req.body._id !== 'undefined' && req.body._id !== '') {
       delete req.body._id;
     }
     let updateMC = await motherCategory.findByIdAndUpdate(
-      { _id: req.mcData._id },
+      { _id: req.query.id },
       { $set: req.body },
       { new: true, useFindAndModify: false }
-      // (error, mc) => {
-      //   if (error) {
-      //     return res.status(400).json({
-      //       error: "Mothercategory not updated. Please try again",
-      //     });
-      //   }
-      //   res.json({
-      //     error: null,
-      //     data: mc,
-      //   });
-      // }
     );
     if (updateMC) {
       res.status(201).json({

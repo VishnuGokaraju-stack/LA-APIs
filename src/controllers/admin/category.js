@@ -33,13 +33,20 @@ exports.insertCat = async (req, res) => {
     // check if same category already exists
     let getCategories = await category.find(
       {
-        companyId: req.user.companyId,
+        $and: [
+          {
+            companyId: req.user.companyId,
+          },
+          {
+            mcId: req.body.mcId,
+          },
+        ],
       },
-      { catName: true, _id: false }
+      { catName: 1, _id: 0 }
     );
     if (getCategories) {
       // check if same category name exists in the company
-      const hasValue = await commonValidation.valueExistsInJSON(
+      const hasValue = await commonValidation.insertCatvalueExistsInJSON(
         getCategories,
         catName
       );
@@ -134,26 +141,43 @@ exports.updateCat = async (req, res) => {
         message: 'Not authorized to access !',
       });
     }
-    if (req.body._id) {
+    if (typeof req.body._id !== 'undefined' && req.body._id !== '') {
       delete req.body._id;
+    }
+    // check if same category already exists
+    let getCategories = await category.find(
+      {
+        $and: [
+          {
+            companyId: req.user.companyId,
+          },
+          {
+            mcId: req.body.mcId,
+          },
+        ],
+      },
+      { catName: 1, _id: 1 }
+    );
+    if (getCategories) {
+      // check if same category name exists in the company
+      const hasValue = await commonValidation.updateCatupdateValueExistsInJson(
+        getCategories,
+        catName,
+        req.query.id
+      );
+      if (hasValue.length > 0) {
+        return res.status(400).json({
+          error: true,
+          message: 'Mothercategory already exists',
+        });
+      }
     }
     req.body.updatedBy = req.user._id;
     req.body.updatedType = req.user.userType; // staff, customer
     let updateCat = await category.findByIdAndUpdate(
-      { _id: req.catData._id },
+      { _id: req.query.id },
       { $set: req.body },
       { new: true, useFindAndModify: false }
-      // (error, cat) => {
-      //   if (error) {
-      //     return res.status(400).json({
-      //       error: "Category not updated. Please try again",
-      //     });
-      //   }
-      //   res.json({
-      //     error: null,
-      //     data: cat,
-      //   });
-      // }
     );
     if (updateCat) {
       res.status(200).json({

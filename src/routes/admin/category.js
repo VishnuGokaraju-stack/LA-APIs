@@ -28,7 +28,7 @@ router.get('/', verifyToken, getAllCat);
 router.get('/:id', verifyToken, getCat);
 
 // update category
-router.put('/:id', verifyToken, updateCat);
+router.put('/', verifyToken, updateCat);
 
 // delete category
 //router.delete("/:id", deleteCat);

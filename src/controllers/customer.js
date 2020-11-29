@@ -87,8 +87,9 @@ exports.insertCustomer = async (req, res) => {
       res.status(200).json({
         error: false,
         message: 'Customer added successfully',
-        // data: {
-        // },
+        data: {
+          _id: insertCustomer._id,
+        },
       });
     } else {
       return res.status(400).json({
