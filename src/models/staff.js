@@ -88,6 +88,12 @@ const staffSchema = new mongoose.Schema(
     profileImage: {
       type: String,
     },
+    inTime: {
+      type: String,
+    },
+    outTime: {
+      type: String,
+    },
   },
   { timestamps: true }
 );

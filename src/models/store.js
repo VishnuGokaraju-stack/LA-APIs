@@ -141,6 +141,12 @@ const storeSchema = new mongoose.Schema(
       enum: [0, 1, 2, 3, 4],
       default: 0,
     },
+    inTime: {
+      type: String,
+    },
+    outTime: {
+      type: String,
+    },
   },
   { timestamps: true }
 );

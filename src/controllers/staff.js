@@ -52,6 +52,8 @@ exports.insertStaff = async (req, res) => {
       createdBy: req.user._id,
       createdType: req.user.userType, // staff, customer
       workdays: req.body.workdays,
+      inTime: req.body.inTime,
+      outTime: req.body.outTime,
     });
 
     // check if staffEmployeeType is empty or not.

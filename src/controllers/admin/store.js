@@ -63,6 +63,8 @@ exports.insertStore = async (req, res) => {
       storeStatus: req.body.storeStatus,
       createdBy: req.user._id,
       createdType: req.user.userType, // staff, customer
+      inTime: req.body.inTime,
+      outTime: req.body.outTime,
     });
     if (req.body.parentStore) {
       newstore.parentStore = req.body.parentStore;

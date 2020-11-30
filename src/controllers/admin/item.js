@@ -1,4 +1,5 @@
 const item = require('../../models/item');
+const itemMiddleware = require('../../middlewares/itemMiddleware');
 
 exports.insertItem = async (req, res) => {
   try {
@@ -9,13 +10,13 @@ exports.insertItem = async (req, res) => {
       });
     }
     // check if same item name exists
-    const hasValue = await commonValidation.insertItemvalueExistsInJSON(
+    const isDuplicate = await itemMiddleware.isDuplicateItemNameCheck(
       req.body.itemList
     );
-    if (typeof hasValue !== 'undefined') {
+    if (isDuplicate) {
       return res.status(400).json({
         error: true,
-        message: 'Category already exists',
+        message: 'Same Item name exists. Please check',
       });
     }
     // check if item already exists for companyid
@@ -84,6 +85,18 @@ exports.updateItem = async (req, res) => {
         error: true,
         message: 'Not authorized to access !',
       });
+    }
+    // check if same item name exists
+    if (typeof req.body.itemList !== 'undefined' && req.body.itemList !== '') {
+      const isDuplicate = await itemMiddleware.isDuplicateItemNameCheck(
+        req.body.itemList
+      );
+      if (isDuplicate) {
+        return res.status(400).json({
+          error: true,
+          message: 'Same Item name exists. Please check',
+        });
+      }
     }
     // check if item already exists for companyid
     let validateCheck = await item.find({ companyId: req.user.companyId });
