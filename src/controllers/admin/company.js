@@ -1,6 +1,7 @@
 const company = require('../../models/company');
 const staff = require('../../models/staff');
 const bcrypt = require('bcryptjs');
+const companyMiddleware = require('../../middlewares/companyMiddleware');
 
 exports.getCompanyById = async (req, res, next, id) => {
   try {
@@ -24,14 +25,45 @@ exports.getCompanyById = async (req, res, next, id) => {
 
 exports.insertCompany = async (req, res) => {
   try {
-    const { companyName } = req.body;
     // check if same company already exists
-    let validateCheck = await company.findOne({ companyName });
-    if (validateCheck) {
-      return res.status(400).json({
-        error: true,
-        message: 'Company already exists',
-      });
+    let companies = await company.find();
+    if (companies) {
+      // check if same company exists or not
+      const isDuplicateName = await companyMiddleware.isDuplicateCheckValidation(
+        companies,
+        req.body,
+        'name'
+      );
+      if (isDuplicateName) {
+        return res.status(400).json({
+          error: true,
+          message: 'Company name already exists',
+        });
+      }
+      // check if same company mobile exists or not
+      const isDuplicateMobile = await companyMiddleware.isDuplicateCheckValidation(
+        companies,
+        req.body,
+        'mobile'
+      );
+      if (isDuplicateMobile) {
+        return res.status(400).json({
+          error: true,
+          message: 'Mobile number already exists',
+        });
+      }
+      // check if same company exists or not
+      const isDuplicateCode = await companyMiddleware.isDuplicateCheckValidation(
+        companies,
+        req.body,
+        'code'
+      );
+      if (typeof isDuplicateCode !== 'undefined') {
+        return res.status(400).json({
+          error: true,
+          message: 'Company code already exists',
+        });
+      }
     }
     // insert into company table
     const newCompany = new company({
@@ -41,11 +73,29 @@ exports.insertCompany = async (req, res) => {
       companyOwnerName: req.body.companyOwnerName,
       companyOwnerMobile: req.body.companyOwnerMobile,
       companyOwnerMobileAlternate: req.body.companyOwnerMobileAlternate,
-      //createdBy: req.user._id,
-      //createdType: req.user.userType, // staff, customer
+      createdBy: req.user._id,
+      createdType: req.user.userType, // staff, customer
     });
+    // await newCompany.save((error, company) => {
+    //   console.log('error:  ' + error);
+    //   if (error) {
+    //     return res.status(400).json({
+    //       error: true,
+    //       message: error,
+    //     });
+    //   }
+    // res.json({
+    //   error: false,
+    //   message: 'Store added successfully',
+    //   data: {
+    //     _id: store._id,
+    //   },
+    // });
+    //});
+
+    // console.log('111111');
     let insertCompany = await newCompany.save();
-    console.log(insertCompany);
+    //console.log('aaaa : ' + insertCompany);
     if (insertCompany) {
       //console.log('iffff');
       let newCompanyId = insertCompany._id;
@@ -90,20 +140,6 @@ exports.insertCompany = async (req, res) => {
         message: 'Not able to insert user in DB - company',
       });
     }
-    // newCompany.save((error, company) => {
-    //   if (error) {
-    //     return res.status(400).json({
-    //       error: 'Not able to insert user in DB - company',
-    //     });
-    //   }
-
-    // res.json({
-    //   error: null,
-    //   data: {
-    //     message: 'Company added successfully',
-    //   },
-    // });
-    //});
   } catch (error) {
     res.status(500).json({
       error: true,
@@ -152,10 +188,53 @@ exports.getCompany = async (req, res) => {
 
 exports.updateCompany = async (req, res) => {
   try {
+    // check if same company already exists
+    let companies = await company.find();
+    if (companies) {
+      // check if same company exists or not
+      const isDuplicateName = await companyMiddleware.isDuplicateCheckValidationUpdate(
+        companies,
+        req.body,
+        'name',
+        req.query.id
+      );
+      if (isDuplicateName) {
+        return res.status(400).json({
+          error: true,
+          message: 'Company name already exists',
+        });
+      }
+      // check if same company mobile exists or not
+      const isDuplicateMobile = await companyMiddleware.isDuplicateCheckValidationUpdate(
+        companies,
+        req.body,
+        'mobile',
+        req.query.id
+      );
+      if (isDuplicateMobile) {
+        return res.status(400).json({
+          error: true,
+          message: 'Mobile number already exists',
+        });
+      }
+      // check if same company exists or not
+      const isDuplicateCode = await companyMiddleware.isDuplicateCheckValidationUpdate(
+        companies,
+        req.body,
+        'code',
+        req.query.id
+      );
+      if (typeof isDuplicateCode !== 'undefined') {
+        return res.status(400).json({
+          error: true,
+          message: 'Company code already exists',
+        });
+      }
+    }
     req.body.updatedBy = req.user._id;
     req.body.updatedType = req.user.userType; // staff, customer
     let updateCompany = await company.findByIdAndUpdate(
-      { _id: req.companyData._id },
+      { _id: req.query.id },
       { $set: req.body },
       { new: true, useFindAndModify: false }
     );

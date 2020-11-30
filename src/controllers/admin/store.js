@@ -1,4 +1,5 @@
 const store = require('../../models/store');
+const storeMiddleware = require('../../middlewares/storeMiddleware');
 
 exports.getStoreById = async (req, res, next, id) => {
   try {
@@ -28,17 +29,51 @@ exports.insertStore = async (req, res) => {
         message: 'Not authorized to access !',
       });
     }
-    const { storeName } = req.body;
-    // check if same store already exists
-    let validateCheck = await store.findOne({ storeName });
-    if (validateCheck) {
-      return res.status(400).json({
-        error: true,
-        message: 'Store already exists',
-      });
+    // check if same store already exists in company
+    let stores = await store.find(
+      {
+        companyId: req.user.companyId,
+      },
+      { storeName: 1, _id: 0, storeCode: 1, storeMobile: 1 }
+    );
+    if (stores) {
+      // check if same store name exists in the company
+      const isDuplicateName = await storeMiddleware.isDuplicateCheckValidation(
+        stores,
+        req.body,
+        'storeName'
+      );
+      if (isDuplicateName) {
+        return res.status(400).json({
+          error: true,
+          message: 'Store name already exists',
+        });
+      }
+      // check if same store mobile exists or not
+      const isDuplicateMobile = await storeMiddleware.isDuplicateCheckValidation(
+        stores,
+        req.body,
+        'mobile'
+      );
+      if (isDuplicateMobile) {
+        return res.status(400).json({
+          error: true,
+          message: 'Mobile number already exists',
+        });
+      }
+      // check if same store code exists or not
+      const isDuplicateCode = await storeMiddleware.isDuplicateCheckValidation(
+        stores,
+        req.body,
+        'code'
+      );
+      if (typeof isDuplicateCode !== 'undefined') {
+        return res.status(400).json({
+          error: true,
+          message: 'Store code already exists',
+        });
+      }
     }
-    // TODO storecode
-
     // insert into store table
     const newstore = new store({
       storeName: req.body.storeName,
@@ -158,6 +193,69 @@ exports.updateStore = async (req, res) => {
         message: 'Not authorized to access !',
       });
     }
+    // check if same store already exists in company
+    let stores = await store.find(
+      {
+        companyId: req.user.companyId,
+      },
+      { storeName: 1, _id: 1, storeCode: 1, storeMobile: 1 }
+    );
+    if (stores) {
+      if (
+        typeof req.body.storeName !== 'undefined' &&
+        req.body.storeName !== ''
+      ) {
+        // check if same store name exists in the company
+        const isDuplicateName = await storeMiddleware.isDuplicateCheckValidationUpdate(
+          stores,
+          req.body,
+          'name',
+          req.query.id
+        );
+        if (isDuplicateName) {
+          return res.status(400).json({
+            error: true,
+            message: 'Store name already exists',
+          });
+        }
+      }
+      if (
+        typeof req.body.storeMobile !== 'undefined' &&
+        req.body.storeMobile !== ''
+      ) {
+        // check if same store mobile exists or not
+        const isDuplicateMobile = await storeMiddleware.isDuplicateCheckValidationUpdate(
+          stores,
+          req.body,
+          'mobile',
+          req.query.id
+        );
+        if (isDuplicateMobile) {
+          return res.status(400).json({
+            error: true,
+            message: 'Mobile number already exists',
+          });
+        }
+      }
+      if (
+        typeof req.body.storeCode !== 'undefined' &&
+        req.body.storeCode !== ''
+      ) {
+        // check if same store code exists or not
+        const isDuplicateCode = await storeMiddleware.isDuplicateCheckValidationUpdate(
+          stores,
+          req.body,
+          'code',
+          req.query.id
+        );
+        if (typeof isDuplicateCode !== 'undefined') {
+          return res.status(400).json({
+            error: true,
+            message: 'Store code already exists',
+          });
+        }
+      }
+    }
     req.body.updatedBy = req.user._id;
     req.body.updatedType = req.user.userType; // staff, customer
     if (req.body.storeCoordinates) {
@@ -192,7 +290,7 @@ exports.updateStore = async (req, res) => {
       delete req.body.ratecardOffline;
     }
     let updateStore = await store.findByIdAndUpdate(
-      { _id: req.storeData._id },
+      { _id: req.query.id },
       { $set: req.body },
       { new: true, useFindAndModify: false }
     );

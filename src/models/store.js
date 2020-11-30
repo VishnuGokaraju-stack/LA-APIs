@@ -35,11 +35,13 @@ const storeSchema = new mongoose.Schema(
     },
     storeCode: {
       type: String,
+      required: [true, 'Please enter store code'],
       trim: true,
     },
     companyId: {
       type: ObjectId,
       ref: 'company',
+      require: [true, 'Please enter company id'],
       index: true,
     },
     cityId: {
@@ -143,9 +145,11 @@ const storeSchema = new mongoose.Schema(
     },
     inTime: {
       type: Date,
+      required: [true, 'Please enter In-Time'],
     },
     outTime: {
       type: Date,
+      required: [true, 'Please enter Out-Time'],
     },
   },
   { timestamps: true }

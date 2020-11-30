@@ -25,7 +25,7 @@ const companySchema = new mongoose.Schema(
     companyOwnerMobile: {
       type: String,
       trim: true,
-      unique: true,
+      unique: [true, 'Mobile number already assigned to another company'],
     },
     companyOwnerMobileAlternate: {
       type: String,

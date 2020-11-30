@@ -33,7 +33,7 @@ router.get('/', verifyToken, getAllStores);
 router.get('/:id', verifyToken, getStore);
 
 // update category
-router.put('/:id', verifyToken, updateStore);
+router.put('/', verifyToken, updateStore);
 
 // delete category
 //router.delete("/:id", deleteCat);
