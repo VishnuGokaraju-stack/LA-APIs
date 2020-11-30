@@ -142,10 +142,10 @@ const storeSchema = new mongoose.Schema(
       default: 0,
     },
     inTime: {
-      type: String,
+      type: Date,
     },
     outTime: {
-      type: String,
+      type: Date,
     },
   },
   { timestamps: true }

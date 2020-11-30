@@ -41,11 +41,11 @@ exports.insertCompany = async (req, res) => {
       companyOwnerName: req.body.companyOwnerName,
       companyOwnerMobile: req.body.companyOwnerMobile,
       companyOwnerMobileAlternate: req.body.companyOwnerMobileAlternate,
-      createdBy: req.user._id,
-      createdType: req.user.userType, // staff, customer
+      //createdBy: req.user._id,
+      //createdType: req.user.userType, // staff, customer
     });
     let insertCompany = await newCompany.save();
-    //console.log(insertCompany);
+    console.log(insertCompany);
     if (insertCompany) {
       //console.log('iffff');
       let newCompanyId = insertCompany._id;

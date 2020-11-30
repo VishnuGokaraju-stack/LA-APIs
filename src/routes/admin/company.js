@@ -14,7 +14,7 @@ const {
 router.param('id', getCompanyById);
 
 // insert new category
-router.post('/', verifyToken, insertCompany);
+router.post('/', insertCompany);
 
 // get all categories
 router.get('/', verifyToken, getAllCompanies);

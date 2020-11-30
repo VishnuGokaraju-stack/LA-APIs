@@ -12,6 +12,7 @@ const companySchema = new mongoose.Schema(
     companyCode: {
       type: String,
       trim: true,
+      unique: true,
     },
     companyLogo: {
       type: String,
@@ -24,6 +25,7 @@ const companySchema = new mongoose.Schema(
     companyOwnerMobile: {
       type: String,
       trim: true,
+      unique: true,
     },
     companyOwnerMobileAlternate: {
       type: String,

@@ -89,10 +89,10 @@ const staffSchema = new mongoose.Schema(
       type: String,
     },
     inTime: {
-      type: String,
+      type: Date,
     },
     outTime: {
-      type: String,
+      type: Date,
     },
   },
   { timestamps: true }
