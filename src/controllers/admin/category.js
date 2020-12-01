@@ -144,6 +144,7 @@ exports.updateCat = async (req, res) => {
     if (typeof req.body._id !== 'undefined' && req.body._id !== '') {
       delete req.body._id;
     }
+    const { catName } = req.body;
     // check if same category already exists
     let getCategories = await category.find(
       {

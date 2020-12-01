@@ -122,7 +122,7 @@ exports.updateItem = async (req, res) => {
     } else {
       return res.status(400).json({
         error: true,
-        message: 'Itemlist not updated. Please try again',
+        message: 'Item list not updated. Please try again',
       });
     }
   } catch (error) {
