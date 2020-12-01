@@ -105,7 +105,7 @@ exports.updateRateCard = async (req, res) => {
         rateCardName,
         req.query.id
       );
-      if (hasValue.length > 0) {
+      if (typeof hasValue !== 'undefined') {
         return res.status(400).json({
           error: true,
           message: 'Ratecard already exists',
