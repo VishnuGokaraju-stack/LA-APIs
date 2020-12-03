@@ -34,6 +34,7 @@ exports.insertCity = async (req, res) => {
     // insert into city table
     const newcity = new city({
       cityName: req.body.cityName,
+      stateName: req.body.stateName,
       cityCode: req.body.cityCode,
       createdBy: req.user._id,
       createdType: req.user.userType, // staff, customer
@@ -60,20 +61,34 @@ exports.insertCity = async (req, res) => {
 
 exports.getAllCities = async (req, res) => {
   try {
-    await city.find().exec((error, city) => {
-      if (error || !city) {
-        return res.status(400).json({
-          error: true,
-          message: 'Cities not found',
-        });
-      }
+    let cities = await city.find({}, { cityName: 1, _id: 0 });
+    if (cities) {
       res.json({
         error: false,
         data: {
-          city,
+          cities,
         },
       });
-    });
+    } else {
+      return res.status(400).json({
+        error: true,
+        message: 'Cities not found',
+      });
+    }
+    // await city.find().exec((error, city) => {
+    //   if (error || !city) {
+    //     return res.status(400).json({
+    //       error: true,
+    //       message: 'Cities not found',
+    //     });
+    //   }
+    //   res.json({
+    //     error: false,
+    //     data: {
+    //       city,
+    //     },
+    //   });
+    // });
   } catch (error) {
     res.status(500).json({
       error: true,

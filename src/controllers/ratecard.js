@@ -139,6 +139,8 @@ exports.updateRateCard = async (req, res) => {
         });
       }
     }
+    // check if same service name exists in ratecard
+
     req.body.updatedBy = req.user._id;
     req.body.updatedType = req.user.userType; // staff, customer
     let updateRateCard = await ratecard.findByIdAndUpdate(

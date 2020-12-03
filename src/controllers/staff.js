@@ -1,6 +1,7 @@
 const staff = require('../models/staff');
 const bcrypt = require('bcryptjs');
 const uniqid = require('uniqid');
+const staffMiddleware = require('../middlewares/staffMiddleware');
 
 exports.insertStaff = async (req, res) => {
   try {
@@ -10,30 +11,45 @@ exports.insertStaff = async (req, res) => {
         message: 'Not authorized to access !',
       });
     }
-    const { staffMobile, staffEmailId, storeId } = req.body;
-    // check if mobile number already exists
-    let mobileCheck = await staff.findOne({
-      staffMobile: staffMobile,
-      //storeId: storeId,
-      // TODO companyId
-    });
-    if (mobileCheck) {
-      return res.status(400).json({
-        error: true,
-        message: 'Mobile number already exists',
-      });
-    }
-    // check if email already exists
-    let emailCheck = await staff.findOne({
-      staffEmailId: staffEmailId,
-    });
-    if (emailCheck) {
-      return res.status(400).json({
-        error: true,
-        message: 'Email already exists',
-      });
-    }
+    // check if same mobile number exists in staff table for the company
+    let getStaff = await staff.find(
+      {
+        companyId: req.user.companyId,
+      },
+      { staffMobile: 1, _id: 0, staffEmailId: 1 }
+    );
+    if (getStaff) {
+      // check if same category name exists in the company
+      const hasValue = await staffMiddleware.insertStaffValueExistsInJSON(
+        getStaff,
+        req.body,
+        'mobile'
+      );
+      if (typeof hasValue !== 'undefined') {
+        return res.status(400).json({
+          error: true,
+          message: 'Mobile number already exists',
+        });
+      }
 
+      // check if same email already exists
+      if (
+        typeof req.body.staffEmailId !== 'undefined' &&
+        req.body.staffEmailId !== ''
+      ) {
+        const hasValue = await staffMiddleware.insertStaffValueExistsInJSON(
+          getStaff,
+          req.body,
+          'email'
+        );
+        if (typeof hasValue !== 'undefined') {
+          return res.status(400).json({
+            error: true,
+            message: 'Email already exists',
+          });
+        }
+      }
+    }
     // encrypt password
     const salt = await bcrypt.genSalt(10);
     const encry_password = await bcrypt.hash(req.body.staffPassword, salt);
@@ -263,10 +279,47 @@ exports.updateStaff = async (req, res) => {
     }
     req.body.updatedBy = req.user._id;
     req.body.updatedType = req.user.userType; // staff, customer
-    // const { mobileNumber, email } = req.body;
-    // TODO - check if duplicate mobile exists
+    // check if same mobile number exists in staff table for the company
+    let getStaff = await staff.find(
+      {
+        companyId: req.user.companyId,
+      },
+      { staffMobile: 1, _id: 1, staffEmailId: 1 }
+    );
+    if (getStaff) {
+      // check if same category name exists in the company
+      const hasValue = await staffMiddleware.updateStaffValueExistsInJSON(
+        getStaff,
+        req.body,
+        'mobile',
+        req.query.id
+      );
+      if (typeof hasValue !== 'undefined') {
+        return res.status(400).json({
+          error: true,
+          message: 'Mobile number already exists',
+        });
+      }
 
-    // TODO - check if duplicate email exists
+      // check if same email already exists
+      if (
+        typeof req.body.staffMobile !== 'undefined' &&
+        req.body.staffEmailId !== ''
+      ) {
+        const hasValue = await staffMiddleware.updateStaffValueExistsInJSON(
+          getStaff,
+          req.body,
+          'email',
+          req.query.id
+        );
+        if (typeof hasValue !== 'undefined') {
+          return res.status(400).json({
+            error: true,
+            message: 'Email already exists',
+          });
+        }
+      }
+    }
 
     let updateStaff = await staff.findByIdAndUpdate(
       { _id: req.query.id },

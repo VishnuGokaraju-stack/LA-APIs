@@ -9,6 +9,11 @@ const citySchema = new mongoose.Schema(
       trim: true,
       unique: true,
     },
+    stateName: {
+      type: String,
+      required: true,
+      trim: true,
+    },
     cityCode: {
       type: String,
       trim: true,

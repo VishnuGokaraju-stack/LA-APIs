@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { ObjectId } = mongoose.Schema;
+//const beautifyUnique = require('mongoose-beautiful-unique-validation');
 
 const customerSchema = new mongoose.Schema(
   {
@@ -7,22 +8,23 @@ const customerSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
+      required: [true, 'Please enter first name'],
     },
     lastName: {
       type: String,
       required: true,
       trim: true,
+      required: [true, 'Please enter last name'],
     },
     mobileNumber: {
       type: String,
       required: true,
       trim: true,
-      unique: true,
+      //unique: true,
     },
     encryptPassword: {
       type: String,
       trim: true,
-      // required: true,
     },
     email: {
       type: String,
@@ -40,9 +42,9 @@ const customerSchema = new mongoose.Schema(
     referralCode: {
       // unique referral code for each customer
       type: String,
-      required: true,
+      required: [true, 'Please enter unique referral code'],
       trim: true,
-      unique: true,
+      // unique: true,
     },
     referarCode: {
       // used some one referral code to register
@@ -117,4 +119,18 @@ const customerSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// customerSchema.path('mobileNumber').validate(async (mobileNumber) => {
+//   const mobileCount = await mongoose.models.customer.countDocuments({
+//     mobileNumber,
+//   });
+//   return !mobileCount;
+// }, 'Mobile number already exists');
+// customerSchema.path('referralCode').validate(async (referralCode) => {
+//   const referralCount = await mongoose.models.customer.countDocuments({
+//     referralCode,
+//   });
+//   return !referralCount;
+// }, 'Referral code already exists');
+
+//customerSchema.plugin(beautifyUnique);
 module.exports = mongoose.model('customer', customerSchema);

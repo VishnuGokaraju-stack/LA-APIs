@@ -4,10 +4,31 @@ const staff = require('../../models/staff');
 // middleware to validate token
 exports.verifyToken = async (req, res, next) => {
   try {
+    const clientTypeArray = [
+      'SAAS-ADMIN',
+      'SAAS-ANDROID',
+      'SAAS-IOS',
+      'SAAS-WEBSITE',
+      'SAAS-MSITE',
+    ];
+
     //TODO
     // check cookie exists
-
+    if (
+      typeof req.header('Client-Type') === 'undefined' ||
+      req.header('Client-Type') === ''
+    ) {
+      return res.status(401).json({
+        error: 'Access denied !',
+      });
+    }
     const token = req.header('Authorization').replace('Bearer ', '');
+    // check if clienttype is in array or  not
+    if (!clientTypeArray.includes(req.header('Client-Type'))) {
+      return res.status(401).json({
+        error: 'Access denied !',
+      });
+    }
     const data = jwt.verify(token, process.env.AUTHENTICATION_SECRET);
     if (!token) {
       return res.status(401).json({
@@ -29,6 +50,7 @@ exports.verifyToken = async (req, res, next) => {
       req.user = user;
       req.userType = 'staff'; // staff, customer
       req.token = token;
+      req.clientType = req.header('Client-Type');
       next(); // to continue the flow
     } catch (error) {
       res.status(401).json({

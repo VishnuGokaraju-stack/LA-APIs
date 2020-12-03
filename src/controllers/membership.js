@@ -1,4 +1,5 @@
 const membership = require('../models/membership');
+const membershipMiddleware = require('../middlewares/membershipMiddleware');
 
 exports.insertMembership = async (req, res) => {
   try {
@@ -9,23 +10,24 @@ exports.insertMembership = async (req, res) => {
       });
     }
     // check if item already exists for companyid
-    let validateCheck = await membership.find({
-      $and: [
-        {
-          companyId: req.user.companyId,
-        },
-        {
-          planName: req.body.planName,
-        },
-      ],
-    });
-
-    //console.log(validateCheck.length);
-    if (validateCheck && validateCheck.length > 0) {
-      return res.status(400).json({
-        error: true,
-        message: 'Membership with same name already exists',
-      });
+    let memberships = await membership.find(
+      {
+        companyId: req.user.companyId,
+      },
+      { planName: 1, _id: 0 }
+    );
+    if (memberships) {
+      // check if same category name exists in the company
+      const hasValue = await membershipMiddleware.insertMembershipExistsInJSON(
+        memberships,
+        req.body.planName
+      );
+      if (typeof hasValue !== 'undefined') {
+        return res.status(400).json({
+          error: true,
+          message: 'Membership with same name already exists',
+        });
+      }
     }
     // insert into item table
     const newPlan = new membership({
@@ -74,6 +76,28 @@ exports.updateMembership = async (req, res) => {
         message: 'Please enter valid query input',
       });
     }
+    // check if item already exists for companyid
+    let memberships = await membership.find(
+      {
+        companyId: req.user.companyId,
+      },
+      { planName: 1, _id: 1 }
+    );
+    if (memberships) {
+      // check if same category name exists in the company
+      const hasValue = await membershipMiddleware.updateMembershipExistsInJSON(
+        memberships,
+        req.body.planName,
+        req.query.id
+      );
+      if (typeof hasValue !== 'undefined') {
+        return res.status(400).json({
+          error: true,
+          message: 'Membership with same name already exists',
+        });
+      }
+    }
+
     req.body.updatedBy = req.user._id;
     req.body.updatedType = req.user.userType; // staff, customer
     let updatemembership = await membership.findByIdAndUpdate(

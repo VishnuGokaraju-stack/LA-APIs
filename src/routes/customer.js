@@ -23,6 +23,6 @@ router.post('/', verifyToken, insertCustomer);
 router.get('/', verifyToken, getCustomer);
 
 // update customer
-router.put('/:id', verifyToken, updateCustomer);
+router.put('/', verifyToken, updateCustomer);
 
 module.exports = router;

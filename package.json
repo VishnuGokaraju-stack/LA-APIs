@@ -36,6 +36,7 @@
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.15",
     "mongoose": "^5.9.17",
+    "mongoose-beautiful-unique-validation": "^7.1.1",
     "nodemon": "^2.0.4",
     "npm": "^6.13.0",
     "uniqid": "^5.2.0",

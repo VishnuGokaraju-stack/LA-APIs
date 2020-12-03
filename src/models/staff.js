@@ -10,21 +10,21 @@ const staffSchema = new mongoose.Schema(
     },
     staffFirstName: {
       type: String,
-      required: true,
+      required: [true, 'Please enter staff first name'],
       trim: true,
     },
     staffLastName: {
       type: String,
       trim: true,
+      required: [true, 'Please enter staff last name'],
     },
     staffEmailId: {
       type: String,
-      //required: true,
       trim: true,
     },
     staffMobile: {
       type: String,
-      required: true,
+      required: [true, 'Please enter mobile number'],
       trim: true,
     },
     password: {
