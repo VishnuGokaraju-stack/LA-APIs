@@ -71,7 +71,8 @@ exports.insertCustomer = async (req, res) => {
 
     // TODO
     // check if unique referral id is generated and check if it exists or not
-    const uniqueReferralCode = 'KHQ79SI8';
+    const uniqueReferralCode = uniqid.time().toUpperCase();
+
     // insert into store table
     const newCustomer = new customer({
       firstName: req.body.firstName,
@@ -102,7 +103,8 @@ exports.insertCustomer = async (req, res) => {
         newCustomer.referarCode = req.body.referarCode;
       } else {
         return res.status(400).json({
-          error: 'Referrar Customer not exist',
+          error: true,
+          message: 'Referrar Customer not exist',
         });
       }
     }
@@ -113,24 +115,6 @@ exports.insertCustomer = async (req, res) => {
     if (typeof regFrom !== 'undefined') {
       newCustomer.registeredFrom = regFrom;
     }
-    // console.log(newCustomer);
-    // await newCustomer.save((error, customer) => {
-    //   console.log('error:  ' + error);
-    //   console.log(error.code);
-    //   console.log(error.message);
-    //   console.log('customer : ' + customer);
-
-    //   // if (error) {
-    //   //   return res.status(400).json({
-    //   //     error: true,
-    //   //     message: error,
-    //   //   });
-    //   // }
-    // });
-    // res.json({
-    //   error: false,
-    //   message: 'Store added successfully checking jrwekgfw',
-    // });
     let insertCustomer = await newCustomer.save();
     if (insertCustomer) {
       res.status(200).json({
@@ -142,18 +126,20 @@ exports.insertCustomer = async (req, res) => {
       });
     } else {
       return res.status(400).json({
-        error: 'Something went wrong. Please try again - customer & address',
+        error: true,
+        message: 'Something went wrong. Please try again - customer & address',
       });
     }
   } catch (error) {
     // console.log(error);
     // console.log('msg : ' + error.message);
     // console.log('name: ' + error.name);
-    // if (error.name === 'ValidationError') {
+    // if (error instanceof mongoose.Error.ValidationError) {
     //   console.log('ifffff');
     // }
     res.status(500).json({
-      error: error.message,
+      error: true,
+      message: error.message,
     });
   }
 };

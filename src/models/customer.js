@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const { ObjectId } = mongoose.Schema;
-//const beautifyUnique = require('mongoose-beautiful-unique-validation');
 
 const customerSchema = new mongoose.Schema(
   {
@@ -44,7 +43,7 @@ const customerSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Please enter unique referral code'],
       trim: true,
-      // unique: true,
+      unique: true,
     },
     referarCode: {
       // used some one referral code to register
@@ -132,5 +131,4 @@ const customerSchema = new mongoose.Schema(
 //   return !referralCount;
 // }, 'Referral code already exists');
 
-//customerSchema.plugin(beautifyUnique);
 module.exports = mongoose.model('customer', customerSchema);
