@@ -146,12 +146,12 @@ exports.insertCustomer = async (req, res) => {
       });
     }
   } catch (error) {
-    console.log(error);
-    console.log('msg : ' + error.message);
-    console.log('name: ' + error.name);
-    if (error.name === 'ValidationError') {
-      console.log('ifffff');
-    }
+    // console.log(error);
+    // console.log('msg : ' + error.message);
+    // console.log('name: ' + error.name);
+    // if (error.name === 'ValidationError') {
+    //   console.log('ifffff');
+    // }
     res.status(500).json({
       error: error.message,
     });
