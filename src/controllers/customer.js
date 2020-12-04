@@ -1,16 +1,15 @@
 const customer = require('../models/customer');
 const bcrypt = require('bcryptjs');
 const uniqid = require('uniqid');
-const commonMiddleware = require('../middlewares/commonMiddleware');
 const customerMiddleware = require('../middlewares/customerMiddleware');
-const mongoose = require('mongoose');
 
 exports.getCustomerById = async (req, res, next, id) => {
   try {
     await customer.findById(id).exec((error, customer) => {
       if (error || !customer) {
         return res.status(400).json({
-          error: 'Customer not exist',
+          error: true,
+          message: 'Customer not exist',
         });
       }
       req.customerData = customer;
@@ -18,7 +17,8 @@ exports.getCustomerById = async (req, res, next, id) => {
     });
   } catch (error) {
     return res.status(500).json({
-      error: error.message,
+      error: true,
+      message: error.message,
     });
   }
 };
@@ -184,7 +184,8 @@ exports.getCustomer = async (req, res) => {
         });
       } else {
         return res.status(400).json({
-          error: 'Customer not exist with mobile number',
+          error: true,
+          message: 'Customer not exist with mobile number',
         });
       }
     }
@@ -200,7 +201,8 @@ exports.getCustomer = async (req, res) => {
         });
       } else {
         return res.status(400).json({
-          error: 'Customer not exist with mobile number',
+          error: true,
+          message: 'Customer not exist with mobile number',
         });
       }
     }
@@ -214,16 +216,20 @@ exports.getCustomer = async (req, res) => {
         });
       } else {
         return res.status(400).json({
-          error: 'Customer not exist',
+          error: true,
+          message: 'Customer not exist',
         });
       }
     }
     return res.status(400).json({
-      error: 'Something went wrong. Please try again - get customer & address',
+      error: true,
+      message:
+        'Something went wrong. Please try again - get customer & address',
     });
   } catch (error) {
     res.status(500).json({
-      error: error.message,
+      error: true,
+      message: error.message,
     });
   }
 };
@@ -235,51 +241,97 @@ exports.updateCustomer = async (req, res) => {
         error: 'Not authorized to access !',
       });
     }
+    // check if mobile number exists in company or not
+    let customers = await customer.find(
+      {
+        companyId: req.user.companyId,
+      },
+      { mobileNumber: 1, _id: 1, email: 1, referralCode: 1 }
+    );
+    if (customers) {
+      // check mobile number exists or not
+      const isDuplicateMobile = await customerMiddleware.updateIsDuplicateCheckValidation(
+        customers,
+        req.body,
+        'mobile',
+        req.query.id
+      );
+      if (isDuplicateMobile) {
+        return res.status(400).json({
+          error: true,
+          message: 'Mobile number already exists in the company',
+        });
+      }
+
+      // check if email exists or not
+      if (typeof req.body.email !== 'undefined' && req.body.email !== '') {
+        const isDuplicateEmail = await customerMiddleware.updateIsDuplicateCheckValidation(
+          customers,
+          req.body,
+          'email',
+          req.query.id
+        );
+        if (isDuplicateEmail) {
+          return res.status(400).json({
+            error: true,
+            message: 'Email already exists in the company',
+          });
+        }
+      }
+    }
+
     // check if same mobile already exists
-    if (
-      typeof req.body.mobileNumber !== 'undefined' &&
-      req.body.mobileNumber !== ''
-    ) {
-      let mobileCheck = await customer.findOne({
-        mobileNumber: req.body.mobileNumber,
-        _id: { $ne: req.query.id },
-      });
-      if (mobileCheck) {
-        return res.status(400).json({
-          error: true,
-          message: 'Mobile already exists',
-        });
-      }
-    }
-    // check if same email already exists
-    if (typeof req.body.email !== 'undefined' && req.body.email !== '') {
-      let emailCheck = await customer.findOne({ email: req.body.email });
-      if (emailCheck) {
-        return res.status(400).json({
-          error: true,
-          message: 'Email already exists',
-        });
-      }
-    }
+    // if (
+    //   typeof req.body.mobileNumber !== 'undefined' &&
+    //   req.body.mobileNumber !== ''
+    // ) {
+    //   // check notin condition
+    //   let mobileCheck = await customer.findOne({
+    //     mobileNumber: req.body.mobileNumber,
+    //     _id: { $ne: req.query.id },
+    //   });
+    //   if (mobileCheck) {
+    //     return res.status(400).json({
+    //       error: true,
+    //       message: 'Mobile already exists',
+    //     });
+    //   }
+    // }
+    // // check if same email already exists
+    // if (typeof req.body.email !== 'undefined' && req.body.email !== '') {
+    //   let emailCheck = await customer.findOne({ email: req.body.email });
+    //   if (emailCheck) {
+    //     return res.status(400).json({
+    //       error: true,
+    //       message: 'Email already exists',
+    //     });
+    //   }
+    // }
     req.body.updatedBy = req.user._id;
     req.body.updatedType = req.user.userType; // staff, customer
-    // if referarCode is not empty check if customer exists or not
     if (
       typeof req.body.referarCode !== 'undefined' &&
       req.body.referarCode !== ''
     ) {
-      let referarCustomer = await customer.findOne({
-        referralCode: req.body.referarCode,
-      });
-      if (referarCustomer) {
-        req.body.referarId = referarCustomer._id;
-        req.body.referarCode = req.body.referarCode;
-      } else {
-        return res.status(400).json({
-          error: 'Referrar Customer not exist',
-        });
-      }
+      delete req.body.referarCode;
     }
+    // if referarCode is not empty check if customer exists or not
+    // if (
+    //   typeof req.body.referarCode !== 'undefined' &&
+    //   req.body.referarCode !== ''
+    // ) {
+    //   let referarCustomer = await customer.findOne({
+    //     referralCode: req.body.referarCode,
+    //   });
+    //   if (referarCustomer) {
+    //     req.body.referarId = referarCustomer._id;
+    //     req.body.referarCode = req.body.referarCode;
+    //   } else {
+    //     return res.status(400).json({
+    //       error: 'Referrar Customer not exist',
+    //     });
+    //   }
+    // }
     let updateCustomer = await customer.findByIdAndUpdate(
       { _id: req.query.id },
       { $set: req.body },
@@ -293,12 +345,14 @@ exports.updateCustomer = async (req, res) => {
       });
     } else {
       return res.status(400).json({
-        error: 'Customer not updated. Please try again',
+        error: true,
+        message: 'Customer not updated. Please try again',
       });
     }
   } catch (error) {
     return res.status(500).json({
-      error: error.message,
+      error: true,
+      message: error.message,
     });
   }
 };

@@ -63,6 +63,7 @@ exports.getAllCities = async (req, res) => {
   try {
     let cities = await city.find({}, { cityName: 1, _id: 0 });
     if (cities) {
+      console.log();
       res.json({
         error: false,
         data: {
