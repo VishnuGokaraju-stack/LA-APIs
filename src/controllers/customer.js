@@ -27,51 +27,52 @@ exports.insertCustomer = async (req, res) => {
   try {
     if (!req.user) {
       return res.status(401).json({
-        error: 'Not authorized to access !',
+        error: true,
+        message: 'Not authorized to access !',
       });
     }
     // check if mobile number exists in company or not
-    // let customers = await motherCategory.find(
-    //   {
-    //     companyId: req.user.companyId,
-    //   },
-    //   { mobileNumber: 1, _id: 0, email: 1 }
-    // );
-    // if (customers) {
-    //   // check mobile number exists or not
-    //   const isDuplicateMobile = await customerMiddleware.isDuplicateCheckValidation(
-    //     customers,
-    //     req.body,
-    //     'mobile'
-    //   );
-    //   if (isDuplicateMobile) {
-    //     return res.status(400).json({
-    //       error: true,
-    //       message: 'Mobile number already exists in the company',
-    //     });
-    //   }
+    let customers = await customer.find(
+      {
+        companyId: req.user.companyId,
+      },
+      { mobileNumber: 1, _id: 1, email: 1, referralCode: 1 }
+    );
+    if (customers) {
+      // check mobile number exists or not
+      const isDuplicateMobile = await customerMiddleware.insertIsDuplicateCheckValidation(
+        customers,
+        req.body,
+        'mobile'
+      );
+      if (isDuplicateMobile) {
+        return res.status(400).json({
+          error: true,
+          message: 'Mobile number already exists in the company',
+        });
+      }
 
-    //   // check if email exists or not
-    //   if (typeof req.body.email !== 'undefined' && req.body.email !== '') {
-    //     const isDuplicateEmail = await customerMiddleware.isDuplicateCheckValidation(
-    //       customers,
-    //       req.body,
-    //       'email'
-    //     );
-    //     if (isDuplicateEmail) {
-    //       return res.status(400).json({
-    //         error: true,
-    //         message: 'Email already exists in the company',
-    //       });
-    //     }
-    //   }
-    // }
+      // check if email exists or not
+      if (typeof req.body.email !== 'undefined' && req.body.email !== '') {
+        const isDuplicateEmail = await customerMiddleware.insertIsDuplicateCheckValidation(
+          customers,
+          req.body,
+          'email'
+        );
+        if (isDuplicateEmail) {
+          return res.status(400).json({
+            error: true,
+            message: 'Email already exists in the company',
+          });
+        }
+      }
+    }
     //const salt = await bcrypt.genSalt(10);
     //const encry_password = await bcrypt.hash(req.body.password, salt);
 
-    // TODO
-    // check if unique referral id is generated and check if it exists or not
+    // validation checked from mongoose side
     const uniqueReferralCode = uniqid.time().toUpperCase();
+    //const uniqueReferralCode = 'KHQ79SI8';
 
     // insert into store table
     const newCustomer = new customer({
@@ -87,33 +88,32 @@ exports.insertCustomer = async (req, res) => {
       companyId: req.user.companyId,
       createdBy: req.user._id,
       createdType: req.user.userType, // staff, customer
-      // TODO
-      //registeredFrom: req.body.registeredFrom, // admin, ios, android, msite, website
+      registeredFrom: req.clientType, // admin, ios, android, msite, website
     });
     // if referarCode is not empty check if customer exists or not
     if (
       typeof req.body.referarCode !== 'undefined' &&
       req.body.referarCode !== ''
     ) {
-      let referarCustomer = await customer.findOne({
-        referralCode: req.body.referarCode,
-      });
-      if (referarCustomer) {
-        newCustomer.referarId = referarCustomer._id;
-        newCustomer.referarCode = req.body.referarCode;
-      } else {
-        return res.status(400).json({
-          error: true,
-          message: 'Referrar Customer not exist',
-        });
+      if (customers) {
+        const getReferralCodeExists = await customerMiddleware.insertIsDuplicateCheckValidation(
+          customers,
+          req.body,
+          'referarCode'
+        );
+        if (getReferralCodeExists) {
+          newCustomer.referarId = getReferralCodeExists._id;
+          newCustomer.referarCode = req.body.referarCode;
+        } else {
+          return res.status(400).json({
+            error: true,
+            message: 'Referrar Customer not exist',
+          });
+        }
       }
     }
     if (typeof req.body.address !== 'undefined' && req.body.address !== '') {
       newCustomer.address = req.body.address;
-    }
-    let regFrom = commonMiddleware.clientType(req.user.clientType);
-    if (typeof regFrom !== 'undefined') {
-      newCustomer.registeredFrom = regFrom;
     }
     let insertCustomer = await newCustomer.save();
     if (insertCustomer) {

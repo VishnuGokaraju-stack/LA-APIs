@@ -19,7 +19,6 @@ const customerSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
-      //unique: true,
     },
     encryptPassword: {
       type: String,
@@ -124,11 +123,11 @@ const customerSchema = new mongoose.Schema(
 //   });
 //   return !mobileCount;
 // }, 'Mobile number already exists');
-// customerSchema.path('referralCode').validate(async (referralCode) => {
-//   const referralCount = await mongoose.models.customer.countDocuments({
-//     referralCode,
-//   });
-//   return !referralCount;
-// }, 'Referral code already exists');
+customerSchema.path('referralCode').validate(async (referralCode) => {
+  const referralCount = await mongoose.models.customer.countDocuments({
+    referralCode,
+  });
+  return !referralCount;
+}, 'Referral code already exists');
 
 module.exports = mongoose.model('customer', customerSchema);

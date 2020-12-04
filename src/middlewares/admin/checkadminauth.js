@@ -12,6 +12,13 @@ exports.verifyToken = async (req, res, next) => {
       'SAAS-MSITE',
     ];
 
+    const clientTypeValue = {
+      'SAAS-ADMIN': 'ADMIN',
+      'SAAS-ANDROID': 'ANDROID',
+      'SAAS-IOS': 'IOS',
+      'SAAS-WEBSITE': 'WEBSITE',
+      'SAAS-MSITE': 'MSITE',
+    };
     //TODO
     // check cookie exists
     if (
@@ -50,7 +57,7 @@ exports.verifyToken = async (req, res, next) => {
       req.user = user;
       req.userType = 'staff'; // staff, customer
       req.token = token;
-      req.clientType = req.header('Client-Type');
+      req.clientType = clientTypeValue[req.header('Client-Type')];
       next(); // to continue the flow
     } catch (error) {
       res.status(401).json({
