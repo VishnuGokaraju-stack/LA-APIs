@@ -61,9 +61,8 @@ exports.insertCity = async (req, res) => {
 
 exports.getAllCities = async (req, res) => {
   try {
-    let cities = await city.find({}, { cityName: 1, _id: 0 });
+    let cities = await city.find({}, { cityName: 1, _id: 1 });
     if (cities) {
-      console.log();
       res.json({
         error: false,
         data: {
@@ -76,20 +75,6 @@ exports.getAllCities = async (req, res) => {
         message: 'Cities not found',
       });
     }
-    // await city.find().exec((error, city) => {
-    //   if (error || !city) {
-    //     return res.status(400).json({
-    //       error: true,
-    //       message: 'Cities not found',
-    //     });
-    //   }
-    //   res.json({
-    //     error: false,
-    //     data: {
-    //       city,
-    //     },
-    //   });
-    // });
   } catch (error) {
     res.status(500).json({
       error: true,

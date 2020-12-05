@@ -66,31 +66,38 @@ const couponSchema = new mongoose.Schema(
       default: 0,
     },
     serviceType: {
-      type: String,
-      enum: ['express', 'regular', 'all'],
+      type: JSON,
     },
     orderMode: {
-      type: String,
-      enum: ['online', 'walkin', 'all'],
+      type: JSON,
     },
-    pickupStartDate: {
-      type: Date,
+    pickupTime: {
+      type: JSON,
     },
-    pickupEndDate: {
-      type: Date,
+    bookingTime: {
+      type: JSON,
     },
-    orderCreationStartDate: {
-      type: Date,
+    geoArea: {
+      type: JSON,
     },
-    orderCreationEndDate: {
-      type: Date,
-    },
-    startTime: {
-      type: String,
-    },
-    endTime: {
-      type: String,
-    },
+    // pickupStartDate: {
+    //   type: Date,
+    // },
+    // pickupEndDate: {
+    //   type: Date,
+    // },
+    // orderCreationStartDate: {
+    //   type: Date,
+    // },
+    // orderCreationEndDate: {
+    //   type: Date,
+    // },
+    // startTime: {
+    //   type: String,
+    // },
+    // endTime: {
+    //   type: String,
+    // },
     cityId: {
       type: ObjectId,
       ref: 'city',

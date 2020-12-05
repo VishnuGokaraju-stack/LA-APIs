@@ -54,6 +54,7 @@ const customerRoutes = require('./src/routes/customer');
 const rateCardRoutes = require('./src/routes/ratecard');
 const membershipRoutes = require('./src/routes/membership');
 const walletRoutes = require('./src/routes/wallet');
+const couponRoutes = require('./src/routes/coupon');
 
 app.use('/admin/customer', customerRoutes);
 app.use('/admin/city', cityRoutes);
@@ -61,21 +62,23 @@ app.use('/admin/staff', staffRoutes);
 app.use('/admin/ratecard', rateCardRoutes);
 app.use('/membership', membershipRoutes);
 app.use('/wallet', walletRoutes);
+app.use('/coupon', couponRoutes);
 // api Routes
 
 // if not routes found show error
-// app.use((req, res, next) => {
-//   // const error = new Error('Not found');
-//   // error.status(404);
-//   // next(error);
-//   next(createError(404, 'Not found'));
-// });
-// app.use((err, req, res, next) => {
-//   res.status(err.status || 500);
-//   res.json({
-//     error: err.error,
-//   });
-// });
+app.use((req, res, next) => {
+  const error = new Error('Request not found');
+  error.status = 404;
+  next(error);
+});
+// Error handler
+app.use((err, req, res, next) => {
+  res.status(err.status || 500);
+  return res.status(err.status).json({
+    error: true,
+    message: 'Request not found',
+  });
+});
 
 // Port
 const port = process.env.PORT || 1338;
