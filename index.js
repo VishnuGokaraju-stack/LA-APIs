@@ -62,7 +62,7 @@ app.use('/admin/staff', staffRoutes);
 app.use('/admin/ratecard', rateCardRoutes);
 app.use('/membership', membershipRoutes);
 app.use('/wallet', walletRoutes);
-app.use('/coupon', couponRoutes);
+app.use('/admin/coupon', couponRoutes);
 // api Routes
 
 // if not routes found show error
