@@ -9,68 +9,9 @@ const couponSchema = new mongoose.Schema(
       ref: 'company',
       index: true,
     },
-    storeId: {
-      type: ObjectId,
-      ref: 'store',
-      index: true,
-    },
-    couponName: {
-      type: String,
-      required: [true, 'Please enter valid coupon name'],
-      trim: true,
-    },
-    couponDescription: {
-      type: String,
-      trim: true,
-    },
-    couponImage: {
-      type: String,
-      trim: true,
-    },
-    couponCode: {
-      type: String,
-      required: [true, 'Please enter coupon code'],
-      trim: true,
-    },
-    minOrderValue: {
-      // check if this coupon code is applicable for this min order value (coupon applicable amount)
-      type: Number,
-      default: 0,
-    },
-    discountType: {
-      type: String,
-      enum: [
-        'amount',
-        'percentage',
-        'deliverywaiveoff',
-        'expresschargewaiveoff',
-        'cashback',
-      ],
-    },
-    discountAmount: {
-      type: Number,
-      default: 0,
-    },
-    maxDiscount: {
-      type: Number,
-      default: 0,
-    },
-    maxCountPerUser: {
-      // maximum times each user can use the coupon
-      type: Number,
-      default: 0,
-    },
-    overallUsageCount: {
-      // coupon can not be used more than this limit for all users
-      type: Number,
-      default: 0,
-    },
-    serviceType: {
-      type: JSON,
-    },
-    orderMode: {
-      type: JSON,
-    },
+    // storeId: {
+    //   type: Array,
+    // },
     pickupTime: {
       type: JSON,
     },
@@ -80,33 +21,25 @@ const couponSchema = new mongoose.Schema(
     geoArea: {
       type: JSON,
     },
-    // pickupStartDate: {
-    //   type: Date,
-    // },
-    // pickupEndDate: {
-    //   type: Date,
-    // },
-    // orderCreationStartDate: {
-    //   type: Date,
-    // },
-    // orderCreationEndDate: {
-    //   type: Date,
-    // },
-    // startTime: {
-    //   type: String,
-    // },
-    // endTime: {
-    //   type: String,
-    // },
-    cityId: {
-      type: ObjectId,
-      ref: 'city',
+    category: {
+      type: JSON,
     },
-    couponValidStartDate: {
-      type: Date,
+    orderMode: {
+      JSON,
     },
-    couponValidEndDate: {
-      type: Date,
+    serviceType: {
+      JSON,
+    },
+    couponName: {
+      type: String,
+      trim: true,
+      required: [true, 'Please enter coupon name'],
+    },
+    couponMeta: {
+      type: JSON,
+    },
+    couponScheme: {
+      type: JSON,
     },
     status: {
       type: String,
@@ -115,15 +48,7 @@ const couponSchema = new mongoose.Schema(
       default: 'Active',
     },
     applicableClient: {
-      type: String,
-      enum: [
-        'SAAS-ADMIN',
-        'SAAS-ANDROID',
-        'SAAS-IOS',
-        'SAAS-WEBSITE',
-        'SAAS-MSITE',
-        'ALL',
-      ],
+      type: Array,
     },
     createdBy: {
       type: ObjectId,
