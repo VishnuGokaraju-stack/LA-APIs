@@ -1,4 +1,5 @@
 const coupon = require('../models/coupon');
+const couponMiddleware = require('../middlewares/couponMiddleware');
 
 exports.insertCoupon = async (req, res) => {
   try {
@@ -8,6 +9,27 @@ exports.insertCoupon = async (req, res) => {
         message: 'Not authorized to access !',
       });
     }
+    // check same coupon name exists on company level
+    const insertValidateData = await couponMiddleware.couponValidation(
+      req.body
+    );
+    if (Object.keys(insertValidateData).length > 0) {
+      return res.status(401).json({
+        error: insertValidateData.error,
+        message: insertValidateData.message,
+      });
+    }
+    console.log('validate: ' + Object.keys(insertValidateData).length);
+    return res.status(401).json({
+      error: true,
+      message: 'Not authorized to access !',
+    });
+    // check pickupTime - fromtime should be less than toTime
+
+    // check bookingTime - fromDate sould be less than endDate
+
+    // check bookingTime - fromtime sould be less than endtime
+
     // insert into coupon table
     const newCoupon = new coupon({
       companyId: req.user.companyId,
