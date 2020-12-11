@@ -1,4 +1,6 @@
-exports.couponValidation = (postData) => {
+const store = require('../models/store');
+
+exports.couponValidation = async (postData, regUser) => {
   var returnVal = {};
   if (
     typeof postData.pickupTime !== 'undefined' &&
@@ -157,11 +159,107 @@ exports.couponValidation = (postData) => {
     returnVal.message = 'Coupon name is empty';
     return returnVal;
   }
-  //TODO Geo area  store we need to check
-
-  //TODO  category
-
-  // TODO coupon Schema
-
+  //category
+  if (typeof postData.category !== 'undefined' && postData.category !== '') {
+    if (postData.category.selected) {
+      // check if criteriaType is defined or not
+      if (
+        typeof postData.category.criteriaType === 'undefined' &&
+        postData.category.criteriaType === ''
+      ) {
+        returnVal.error = true;
+        returnVal.message = 'Please select category criteria type';
+        return returnVal;
+      }
+      // check if selectionArray empty or not
+      if (
+        typeof postData.category.selectionArray === 'undefined' &&
+        postData.category.selectionArray === ''
+      ) {
+        returnVal.error = true;
+        returnVal.message = 'Please select mothercategories or categories';
+        return returnVal;
+      }
+      // check if selecttionArray is empty or not
+      if (postData.category.selectionArray.length === 0) {
+        returnVal.error = true;
+        returnVal.message = 'Please select mothercategories or categories';
+        return returnVal;
+      }
+    }
+  }
+  //Geo area  store we need to check
+  if (typeof postData.geoArea !== 'undefined' && postData.geoArea !== '') {
+    if (postData.geoArea.selected) {
+      // check if selectionArray empty or not
+      if (
+        typeof postData.geoArea.selectionArray === 'undefined' &&
+        postData.geoArea.selectionArray === ''
+      ) {
+        returnVal.error = true;
+        returnVal.message = 'Please select stores to apply coupon';
+        return returnVal;
+      }
+      // check if selecttionArray is empty or not
+      if (postData.geoArea.selectionArray.length === 0) {
+        returnVal.error = true;
+        returnVal.message = 'Please select stores to apply coupon';
+        return returnVal;
+      }
+      postData.geoArea.couponCheck = postData.geoArea.selectionArray;
+    } else {
+      // check if  geoArea selected is false
+      // if company owner insert dont insert any store ids
+      // if store owner insert all stores he is handling
+      let storeIds;
+      if (regUser.isCompanyOwner) {
+        // get storeIds based on companyId
+        storeIds = await this.getStoresByStaff(regUser.companyId);
+        //postData.geoArea.couponCheck = [];
+      } else {
+        // get storeIds based on login
+        storeIds = await this.getStoresByStaff(regUser.companyId, regUser._id);
+      }
+      if (Object.keys(storeIds).length > 0) {
+        let newArray = [];
+        storeIds.map((c) => {
+          newArray.push(c._id.toString());
+        });
+        postData.geoArea.couponCheck = newArray;
+      } else {
+        returnVal.error = true;
+        returnVal.message = 'Please select stores to apply coupon';
+        return returnVal;
+      }
+    }
+  }
   return returnVal;
+};
+
+// get staff stores based on companyId
+exports.getStoresByStaff = (companyId, staffId = '') => {
+  let getStores;
+  if (companyId !== '' && staffId !== '') {
+    getStores = store.find(
+      {
+        $and: [
+          {
+            companyId: companyId,
+          },
+          {
+            storeOwners: staffId,
+          },
+        ],
+      },
+      { _id: 1 }
+    );
+  } else {
+    getStores = store.find(
+      {
+        companyId: companyId,
+      },
+      { _id: 1 }
+    );
+  }
+  return getStores;
 };

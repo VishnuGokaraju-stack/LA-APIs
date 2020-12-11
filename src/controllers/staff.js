@@ -52,7 +52,8 @@ exports.insertStaff = async (req, res) => {
     }
     // encrypt password
     const salt = await bcrypt.genSalt(10);
-    const encry_password = await bcrypt.hash(req.body.staffPassword, salt);
+    //const encry_password = await bcrypt.hash(req.body.staffPassword, salt);
+    const encry_password = await bcrypt.hash(req.body.staffMobile, salt);
     const newStaff = new staff({
       companyId: req.user.companyId,
       staffFirstName: req.body.staffFirstName,

@@ -54,7 +54,7 @@ exports.signin = async (req, res) => {
     user.password
   );
   if (!validatePassword) {
-    return res.stats(400).json({
+    return res.status(400).json({
       error: 'Username and Password do not match',
     });
   }

@@ -110,6 +110,7 @@ const storeSchema = new mongoose.Schema(
       //required: true,
       default: 'Incomplete',
     },
+    //TODO convert string to objectid
     storeOwners: {
       type: String,
       trim: true,

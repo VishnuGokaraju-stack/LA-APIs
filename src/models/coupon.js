@@ -9,9 +9,6 @@ const couponSchema = new mongoose.Schema(
       ref: 'company',
       index: true,
     },
-    // storeId: {
-    //   type: Array,
-    // },
     pickupTime: {
       type: JSON,
     },

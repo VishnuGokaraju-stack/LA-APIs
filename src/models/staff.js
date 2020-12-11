@@ -94,6 +94,10 @@ const staffSchema = new mongoose.Schema(
     outTime: {
       type: Date,
     },
+    // storeIds: {
+    //   // storeIds he is working
+    //   type: Array,
+    // },
   },
   { timestamps: true }
 );

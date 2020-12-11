@@ -124,21 +124,21 @@ exports.insertStore = async (req, res) => {
       };
       newstore.storePolygon = storePolygon;
     }
-    newstore.save((error, store) => {
-      if (error) {
-        return res.status(400).json({
-          error: true,
-          message: error,
-        });
-      }
-      res.json({
+    let insertStore = await newstore.save();
+    if (insertStore) {
+      res.status(200).json({
         error: false,
         message: 'Store added successfully',
         data: {
-          _id: store._id,
+          _id: insertStore._id,
         },
       });
-    });
+    } else {
+      return res.status(400).json({
+        error: true,
+        message: 'Something went wrong. Please try again - Add Store',
+      });
+    }
   } catch (error) {
     res.status(500).json({
       error: true,
@@ -149,6 +149,7 @@ exports.insertStore = async (req, res) => {
 
 exports.getAllStores = async (req, res) => {
   try {
+    console.log('req : ' + req);
     await store.find({ companyId: req.user.companyId }).exec((error, store) => {
       if (error || !store) {
         return res.status(400).json({

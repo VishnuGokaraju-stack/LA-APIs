@@ -1,5 +1,6 @@
 const coupon = require('../models/coupon');
 const couponMiddleware = require('../middlewares/couponMiddleware');
+const storeController = require('../controllers/admin/store');
 
 exports.insertCoupon = async (req, res) => {
   try {
@@ -11,7 +12,8 @@ exports.insertCoupon = async (req, res) => {
     }
     // check same coupon name exists on company level
     const insertValidateData = await couponMiddleware.couponValidation(
-      req.body
+      req.body,
+      req.user
     );
     if (Object.keys(insertValidateData).length > 0) {
       return res.status(401).json({
@@ -19,17 +21,6 @@ exports.insertCoupon = async (req, res) => {
         message: insertValidateData.message,
       });
     }
-    console.log('validate: ' + Object.keys(insertValidateData).length);
-    return res.status(401).json({
-      error: true,
-      message: 'Not authorized to access !',
-    });
-    // check pickupTime - fromtime should be less than toTime
-
-    // check bookingTime - fromDate sould be less than endDate
-
-    // check bookingTime - fromtime sould be less than endtime
-
     // insert into coupon table
     const newCoupon = new coupon({
       companyId: req.user.companyId,
@@ -44,7 +35,7 @@ exports.insertCoupon = async (req, res) => {
       couponScheme: req.body.couponScheme,
       applicableClient: req.body.applicableClient,
       createdBy: req.user._id,
-      createdType: req.user.userType, // staff, customer
+      createdType: req.userType, // staff, customer
       registeredFrom: req.clientType, // admin, ios, android, msite, website
     });
     let insertCoupon = await newCoupon.save();
@@ -81,7 +72,7 @@ exports.getCoupon = async (req, res) => {
             companyId: req.user.companyId,
           },
           {
-            firstName: { $regex: req.query.couponName, $options: 'i' },
+            couponName: { $regex: req.query.couponName, $options: 'i' },
           },
         ],
       });
@@ -110,7 +101,7 @@ exports.getCoupon = async (req, res) => {
         });
       }
     } else {
-      let couponData = await coupon.find();
+      let couponData = await coupon.find({ companyId: req.user.companyId });
       if (couponData) {
         return res.json({
           error: null,
@@ -135,11 +126,23 @@ exports.updateCoupon = async (req, res) => {
   try {
     if (!req.user) {
       return res.status(401).json({
-        error: 'Not authorized to access !',
+        error: true,
+        message: 'Not authorized to access !',
+      });
+    }
+    // check same coupon name exists on company level
+    const insertValidateData = await couponMiddleware.couponValidation(
+      req.body,
+      req.user
+    );
+    if (Object.keys(insertValidateData).length > 0) {
+      return res.status(401).json({
+        error: insertValidateData.error,
+        message: insertValidateData.message,
       });
     }
     req.body.updatedBy = req.user._id;
-    req.body.updatedType = req.user.userType; // staff, customer
+    req.body.updatedType = req.userType; // staff, customer
     let updateCoupon = await coupon.findByIdAndUpdate(
       { _id: req.query.id },
       { $set: req.body },
