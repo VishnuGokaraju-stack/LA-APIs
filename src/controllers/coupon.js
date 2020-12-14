@@ -10,22 +10,22 @@ exports.insertCoupon = async (req, res) => {
         message: 'Not authorized to access !',
       });
     }
-    // let couponData = await coupon.find({
-    //   $and: [
-    //     {
-    //       companyId: req.user.companyId,
-    //     },
-    //     {
-    //       couponName: req.body.couponName.toUpperCase(),
-    //     },
-    //   ],
-    // });
-    // if (couponData) {
-    //   return res.status(401).json({
-    //     error: true,
-    //     message: 'Same coupon name already exists',
-    //   });
-    // }
+    let couponData = await coupon.findOne({
+      $and: [
+        {
+          companyId: req.user.companyId,
+        },
+        {
+          couponName: req.body.couponName.toUpperCase(),
+        },
+      ],
+    });
+    if (couponData) {
+      return res.status(401).json({
+        error: true,
+        message: 'Same coupon name already exists',
+      });
+    }
     // check same coupon name exists on company level
     const insertValidateData = await couponMiddleware.couponValidation(
       req.body,
@@ -152,7 +152,7 @@ exports.updateCoupon = async (req, res) => {
     ) {
       req.body.couponName = req.body.couponName.toUpperCase();
     }
-    let couponData = await coupon.find({
+    let couponData = await coupon.findOne({
       $and: [
         {
           companyId: req.user.companyId,
