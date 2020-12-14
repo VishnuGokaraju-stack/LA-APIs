@@ -10,6 +10,22 @@ exports.insertCoupon = async (req, res) => {
         message: 'Not authorized to access !',
       });
     }
+    let couponData = await coupon.find({
+      $and: [
+        {
+          companyId: req.user.companyId,
+        },
+        {
+          couponName: req.body.couponName.toUpperCase(),
+        },
+      ],
+    });
+    if (couponData) {
+      return res.status(401).json({
+        error: true,
+        message: 'Same coupon name already exists',
+      });
+    }
     // check same coupon name exists on company level
     const insertValidateData = await couponMiddleware.couponValidation(
       req.body,
@@ -30,7 +46,7 @@ exports.insertCoupon = async (req, res) => {
       category: req.body.category,
       orderMode: req.body.orderMode,
       serviceType: req.body.serviceType,
-      couponName: req.body.couponName,
+      couponName: req.body.couponName.toUpperCase(),
       couponMeta: req.body.couponMeta,
       couponScheme: req.body.couponScheme,
       applicableClient: req.body.applicableClient,
@@ -128,6 +144,31 @@ exports.updateCoupon = async (req, res) => {
       return res.status(401).json({
         error: true,
         message: 'Not authorized to access !',
+      });
+    }
+    if (
+      typeof req.body.couponName !== 'undefined' &&
+      req.body.couponName !== ''
+    ) {
+      req.body.couponName = req.body.couponName.toUpperCase();
+    }
+    let couponData = await coupon.find({
+      $and: [
+        {
+          companyId: req.user.companyId,
+        },
+        {
+          couponName: req.body.couponName.toUpperCase(),
+        },
+        {
+          _id: { $ne: req.query.id },
+        },
+      ],
+    });
+    if (couponData) {
+      return res.status(401).json({
+        error: true,
+        message: 'Same coupon name already exists',
       });
     }
     // check same coupon name exists on company level
