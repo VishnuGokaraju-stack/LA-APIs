@@ -22,10 +22,10 @@ const couponSchema = new mongoose.Schema(
       type: JSON,
     },
     orderMode: {
-      JSON,
+      type: JSON,
     },
     serviceType: {
-      JSON,
+      type: JSON,
     },
     couponName: {
       type: String,
