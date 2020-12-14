@@ -47,6 +47,7 @@ exports.insertCoupon = async (req, res) => {
       orderMode: req.body.orderMode,
       serviceType: req.body.serviceType,
       couponName: req.body.couponName.toUpperCase(),
+      customerLvl: req.body.customerLvl,
       couponMeta: req.body.couponMeta,
       couponScheme: req.body.couponScheme,
       applicableClient: req.body.applicableClient,

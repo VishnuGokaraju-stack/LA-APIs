@@ -38,6 +38,9 @@ const couponSchema = new mongoose.Schema(
     couponScheme: {
       type: JSON,
     },
+    customerLvl: {
+      type: JSON,
+    },
     status: {
       type: String,
       enum: ['Active', 'Inactive'],
