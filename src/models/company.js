@@ -52,6 +52,9 @@ const companySchema = new mongoose.Schema(
       type: String,
       enum: ['staff', 'customer'],
     },
+    timeSlots: {
+      type: JSON,
+    },
   },
   { timestamps: true }
 );

@@ -55,6 +55,7 @@ const rateCardRoutes = require('./src/routes/ratecard');
 const membershipRoutes = require('./src/routes/membership');
 const walletRoutes = require('./src/routes/wallet');
 const couponRoutes = require('./src/routes/coupon');
+const timeslotsRoutes = require('./src/routes/timeslot');
 
 app.use('/admin/customer', customerRoutes);
 app.use('/admin/city', cityRoutes);
@@ -63,6 +64,7 @@ app.use('/admin/ratecard', rateCardRoutes);
 app.use('/membership', membershipRoutes);
 app.use('/wallet', walletRoutes);
 app.use('/admin/coupon', couponRoutes);
+app.use('/admin/timeslot', timeslotsRoutes);
 // api Routes
 
 // if not routes found show error

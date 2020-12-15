@@ -47,7 +47,6 @@ exports.verifyToken = async (req, res, next) => {
         _id: data._id,
         //"tokens.token": token,
       });
-      //console.log("user : "+user);
       if (!user) {
         return res.status(401).json({
           error: 'Not authorized to access !',

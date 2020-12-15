@@ -152,6 +152,9 @@ const storeSchema = new mongoose.Schema(
       type: Date,
       required: [true, 'Please enter Out-Time'],
     },
+    timeSlots: {
+      type: JSON,
+    },
   },
   { timestamps: true }
 );
