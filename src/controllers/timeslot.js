@@ -157,7 +157,7 @@ exports.updateTimeslot = async (req, res) => {
       if (req.query.slotType === 'masterSlots') {
         let updateStore = await store.findOneAndUpdate(
           { _id: req.query.storeId },
-          { $set: { masterSlots: req.body.timeSlots } },
+          { $set: { masterSlots: req.body.masterSlots } },
           { new: true, useFindAndModify: false }
         );
         if (updateStore) {
@@ -175,7 +175,7 @@ exports.updateTimeslot = async (req, res) => {
       } else if (req.query.slotType === 'tempSlots') {
         let updateStore = await store.findOneAndUpdate(
           { _id: req.query.storeId },
-          { $set: { tempSlots: req.body.timeSlots } },
+          { $set: { tempSlots: req.body.tempSlots } },
           { new: true, useFindAndModify: false }
         );
         if (updateStore) {
