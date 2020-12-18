@@ -152,7 +152,10 @@ const storeSchema = new mongoose.Schema(
       type: Date,
       required: [true, 'Please enter Out-Time'],
     },
-    timeSlots: {
+    masterSlots: {
+      type: JSON,
+    },
+    tempSlots: {
       type: JSON,
     },
   },
